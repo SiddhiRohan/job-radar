@@ -1,9 +1,12 @@
 """Score new postings against the resume with Claude; write verdicts back into jobs.jsonl."""
+import html
 import json
 import os
+import re
 import subprocess
 import sys
 import time
+import zipfile
 from pathlib import Path
 
 import requests
@@ -36,17 +39,31 @@ SCHEMA = {
 }
 
 
+def find_resume():
+    """resume.md / resume.pdf first, else any *resume*.{md,pdf,docx} in the folder."""
+    for name in ("resume.md", "resume.pdf"):
+        if Path(name).exists():
+            return Path(name)
+    hits = [p for p in Path(".").iterdir() if "resume" in p.name.lower() and p.suffix.lower() in (".md", ".pdf", ".docx")]
+    return hits[0] if hits else sys.exit("no resume.md / resume.pdf / *resume*.docx in this folder")
+
+
 def read_resume():
-    if Path("resume.md").exists():
-        return Path("resume.md").read_text(encoding="utf-8")
-    if Path("resume.pdf").exists():
-        try:
-            return subprocess.run(["pdftotext", "-layout", "resume.pdf", "-"], capture_output=True,
-                                  text=True, encoding="utf-8", check=True).stdout
-        except (FileNotFoundError, subprocess.CalledProcessError):
-            from pypdf import PdfReader
-            return "\n".join(p.extract_text() or "" for p in PdfReader("resume.pdf").pages)
-    sys.exit("no resume.md or resume.pdf in this folder")
+    path = find_resume()
+    if path.suffix.lower() == ".md":
+        return path.read_text(encoding="utf-8")
+    if path.suffix.lower() == ".docx":  # a docx is a zip; paragraphs are <w:p>, runs are <w:t>
+        xml = zipfile.ZipFile(path).read("word/document.xml").decode("utf-8")
+        xml = re.sub(r"<w:tab/>", " ", xml)
+        paras = re.findall(r"<w:p[ >].*?</w:p>", xml, flags=re.S)
+        return "\n".join(html.unescape("".join(re.findall(r"<w:t(?:\s[^>]*)?>(.*?)</w:t>", p, flags=re.S)))
+                         for p in paras)
+    try:
+        return subprocess.run(["pdftotext", "-layout", str(path), "-"], capture_output=True,
+                              text=True, encoding="utf-8", check=True).stdout
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        from pypdf import PdfReader
+        return "\n".join(p.extract_text() or "" for p in PdfReader(path).pages)
 
 
 def ask_claude(api_key, resume, job, description):
@@ -81,8 +98,19 @@ def load_jobs():
     return [json.loads(l) for l in p.read_text(encoding="utf-8").splitlines() if l.strip()] if p.exists() else []
 
 
+def load_api_key():
+    """ANTHROPIC_API_KEY from the environment, else from a KEY=VALUE line in .env."""
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if not key and Path(".env").exists():
+        for raw in Path(".env").read_text(encoding="utf-8").splitlines():
+            name, _, value = raw.strip().partition("=")
+            if name == "ANTHROPIC_API_KEY":
+                key = value.strip().strip('"').strip("'")
+    return key or sys.exit("ANTHROPIC_API_KEY is not set (put it in .env as ANTHROPIC_API_KEY=sk-ant-...)")
+
+
 def main():
-    api_key = os.environ.get("ANTHROPIC_API_KEY") or sys.exit("ANTHROPIC_API_KEY is not set")
+    api_key = load_api_key()
     resume = read_resume()
     terms = json.load(open("config.json", encoding="utf-8"))["search_terms"]
     sites = {c["name"]: c for c in json.load(open("companies.json", encoding="utf-8"))}
