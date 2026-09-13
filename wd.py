@@ -88,15 +88,17 @@ def search(tenant, shard, site, text, max_pages=10, company=None, limit=20):
     """Page through Workday search results; return list of normalized postings."""
     company = company or tenant
     url = f"{base_url(tenant, shard)}/wday/cxs/{tenant}/{site}/jobs"
-    out = []
+    out, total = [], None
     for page in range(max_pages):
         body = {"appliedFacets": {}, "limit": limit, "offset": page * limit, "searchText": text}
         data = request_json(url, body)
         if "jobPostings" not in data:
             raise ValueError(f"unexpected Workday response keys: {list(data)[:10]}")
+        if total is None:  # Workday only reports total on the first page (0 afterwards)
+            total = data.get("total", 0)
         postings = data["jobPostings"]
         out.extend(normalize(company, tenant, shard, site, p) for p in postings)
-        if len(postings) < limit or len(out) >= data.get("total", 0):
+        if len(postings) < limit or len(out) >= total:
             break
     return out
 
