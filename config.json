@@ -58,5 +58,14 @@
     "early career",
     "associate"
   ],
-  "score_cap": 40
+  "score_cap": 40,
+  "max_pages_by_tier": {
+    "1": 5,
+    "2": 3,
+    "3": 2
+  },
+  "tier3_weekdays": [
+    0,
+    3
+  ]
 }

@@ -24,8 +24,9 @@ def search_all(cfg, companies, max_days, removed):
     found, errors = {}, {}
     for c in companies:
         for term in cfg["search_terms"]:
+            pages = cfg.get("max_pages_by_tier", {}).get(str(c.get("tier", 1)), 10)
             try:
-                jobs = wd.search(c["tenant"], c["shard"], c["site"], term, company=c["name"])
+                jobs = wd.search(c["tenant"], c["shard"], c["site"], term, max_pages=pages, company=c["name"])
             except Exception as e:  # keep polling the other companies
                 errors[c["name"]] = f"{term}: {str(e)[:150]}"
                 print(f"  ! {c['name']} / {term}: {str(e)[:90]}", flush=True)
@@ -69,10 +70,14 @@ def enrich(j, company, cfg):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, help="override max_days_ago")
+    ap.add_argument("--all-tiers", action="store_true", help="poll tier 3 too, regardless of weekday")
     args = ap.parse_args()
     cfg = load_json("config.json", {})
     max_days = args.days if args.days is not None else cfg["max_days_ago"]
-    companies = {c["name"]: c for c in load_json("companies.json", []) if c.get("verified")}
+    # Tier 1 and 2 daily; tier 3 on the weekdays listed in config (default Monday and Thursday).
+    tier3_today = args.all_tiers or datetime.now().weekday() in cfg.get("tier3_weekdays", [0, 3])
+    companies = {c["name"]: c for c in load_json("companies.json", [])
+                 if c.get("verified") and (c.get("tier", 1) <= 2 or tier3_today)}
     seen = set(load_json("seen.json", []))
     removed = {r: set() for r in RULES}
 

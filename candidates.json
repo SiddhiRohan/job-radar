@@ -1,0 +1,1405 @@
+{
+ "Cisco": {
+  "tenant": "cisco",
+  "shard": "wd5",
+  "site": "Cisco_Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1323,
+  "verified_at": "2026-09-13T22:41:21+00:00"
+ },
+ "Broadcom": {
+  "tenant": "broadcom",
+  "shard": "wd1",
+  "site": "External_Career",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 369,
+  "verified_at": "2026-09-13T22:41:23+00:00"
+ },
+ "Micron": {
+  "tenant": "micron",
+  "shard": "wd1",
+  "site": "External",
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 2916,
+  "verified_at": "2026-09-13T22:41:25+00:00"
+ },
+ "Texas Instruments": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site careers.ti.com"
+ },
+ "Applied Materials": {
+  "tenant": "amat",
+  "shard": "wd1",
+  "site": "External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2000,
+  "verified_at": "2026-09-13T22:41:28+00:00"
+ },
+ "Lam Research": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site careers.lamresearch.com"
+ },
+ "Western Digital": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site westerndigital.com/careers"
+ },
+ "Marvell": {
+  "tenant": "marvell",
+  "shard": "wd1",
+  "site": "MarvellCareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 170,
+  "verified_at": "2026-09-13T22:41:31+00:00"
+ },
+ "Analog Devices": {
+  "tenant": "analogdevices",
+  "shard": "wd1",
+  "site": "External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 805,
+  "verified_at": "2026-09-13T22:41:33+00:00"
+ },
+ "PayPal": {
+  "tenant": "paypal",
+  "shard": "wd1",
+  "site": "jobs",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 132,
+  "verified_at": "2026-09-13T22:41:36+00:00"
+ },
+ "Block": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "SmartRecruiters and Greenhouse",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Chime": {
+  "tenant": "chime",
+  "shard": "wd3",
+  "site": "CSM",
+  "status": "failed",
+  "source": "web search",
+  "error": "422 Client Error: Unprocessable Entity for url: https://chime.wd3.myworkdayjobs.com/wday/cxs/chime/CSM/jobs"
+ },
+ "Truist": {
+  "tenant": "truist",
+  "shard": "wd1",
+  "site": "Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1115,
+  "verified_at": "2026-09-13T22:41:46+00:00"
+ },
+ "Wells Fargo": {
+  "tenant": "wf",
+  "shard": "wd1",
+  "site": "WellsFargoJobs",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1733,
+  "verified_at": "2026-09-13T22:41:50+00:00"
+ },
+ "Bank of America": {
+  "tenant": "ghr",
+  "shard": "wd1",
+  "site": "Lateral-US",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2001,
+  "verified_at": "2026-09-13T22:41:52+00:00"
+ },
+ "PNC": {
+  "tenant": "pnc",
+  "shard": "wd5",
+  "site": "External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2000,
+  "verified_at": "2026-09-13T22:41:55+00:00"
+ },
+ "US Bank": {
+  "tenant": "usbank",
+  "shard": "wd1",
+  "site": "US_Bank_Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1298,
+  "verified_at": "2026-09-13T22:41:58+00:00"
+ },
+ "Vanguard": {
+  "tenant": "vanguard",
+  "shard": "wd5",
+  "site": "vanguard_external",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 440,
+  "verified_at": "2026-09-13T22:42:01+00:00"
+ },
+ "State Street": {
+  "tenant": "statestreet",
+  "shard": "wd1",
+  "site": "Global",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1217,
+  "verified_at": "2026-09-13T22:42:04+00:00"
+ },
+ "BlackRock": {
+  "tenant": "blackrock",
+  "shard": "wd1",
+  "site": "BlackRock_Professional",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 316,
+  "verified_at": "2026-09-13T22:42:06+00:00"
+ },
+ "Nasdaq": {
+  "tenant": "nasdaq",
+  "shard": "wd1",
+  "site": "Global_External_Site",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 176,
+  "verified_at": "2026-09-13T22:42:09+00:00"
+ },
+ "S&P Global": {
+  "tenant": "spgi",
+  "shard": "wd5",
+  "site": "SPGI_Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 299,
+  "verified_at": "2026-09-13T22:42:11+00:00"
+ },
+ "Moody's": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site careers.moodys.com"
+ },
+ "FactSet": {
+  "tenant": "factset",
+  "shard": "wd108",
+  "site": "FactSetCareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 69,
+  "verified_at": "2026-09-13T22:46:05+00:00"
+ },
+ "UnitedHealth": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site careers.unitedhealthgroup.com"
+ },
+ "Optum": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site careers.unitedhealthgroup.com"
+ },
+ "Elevance": {
+  "tenant": "elevancehealth",
+  "shard": "wd1",
+  "site": "ANT",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 292,
+  "verified_at": "2026-09-13T22:42:21+00:00"
+ },
+ "Cigna": {
+  "tenant": "cigna",
+  "shard": "wd5",
+  "site": "cignacareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 560,
+  "verified_at": "2026-09-13T22:42:23+00:00"
+ },
+ "McKesson": {
+  "tenant": "mckesson",
+  "shard": "wd3",
+  "site": "External_Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 497,
+  "verified_at": "2026-09-13T22:42:26+00:00"
+ },
+ "Cardinal Health": {
+  "tenant": "cardinalhealth",
+  "shard": "wd1",
+  "site": "EXT",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 783,
+  "verified_at": "2026-09-13T22:42:29+00:00"
+ },
+ "Abbott": {
+  "tenant": "abbott",
+  "shard": "wd5",
+  "site": "abbottcareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2000,
+  "verified_at": "2026-09-13T22:42:34+00:00"
+ },
+ "Medtronic": {
+  "tenant": "medtronic",
+  "shard": "wd1",
+  "site": "MedtronicCareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1140,
+  "verified_at": "2026-09-13T22:42:38+00:00"
+ },
+ "Pfizer": {
+  "tenant": "pfizer",
+  "shard": "wd1",
+  "site": "PfizerCareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 574,
+  "verified_at": "2026-09-13T22:42:40+00:00"
+ },
+ "Merck": {
+  "tenant": "msd",
+  "shard": "wd5",
+  "site": "SearchJobs",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1151,
+  "verified_at": "2026-09-13T22:46:07+00:00"
+ },
+ "Bristol Myers Squibb": {
+  "tenant": "bristolmyerssquibb",
+  "shard": "wd5",
+  "site": "BMS",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 611,
+  "verified_at": "2026-09-13T22:42:43+00:00"
+ },
+ "Thermo Fisher": {
+  "tenant": "thermofisher",
+  "shard": "wd5",
+  "site": "thermofishercareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2897,
+  "verified_at": "2026-09-13T22:46:09+00:00"
+ },
+ "Nike": {
+  "tenant": "nike",
+  "shard": "wd1",
+  "site": "nke",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 775,
+  "verified_at": "2026-09-13T22:42:45+00:00"
+ },
+ "Home Depot": {
+  "tenant": "homedepot",
+  "shard": "wd5",
+  "site": "CareerDepot",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1076,
+  "verified_at": "2026-09-13T22:42:48+00:00"
+ },
+ "Lowe's": {
+  "tenant": "lowes",
+  "shard": "wd5",
+  "site": "LWS_External_CS",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 12389,
+  "verified_at": "2026-09-13T22:42:51+00:00"
+ },
+ "Best Buy": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "only bestbuycanada.wd3 Canada tenant seen"
+ },
+ "Kroger": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site"
+ },
+ "Marriott": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "only Marriott Vacations mymvw.wd5 seen"
+ },
+ "Hilton": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site jobs.hilton.com"
+ },
+ "Expedia": {
+  "tenant": "expedia",
+  "shard": "wd108",
+  "site": "search",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 154,
+  "verified_at": "2026-09-13T22:46:12+00:00"
+ },
+ "Booking": {
+  "tenant": "priceline",
+  "shard": "wd1",
+  "site": "BookingHoldings",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 23,
+  "verified_at": "2026-09-13T22:43:00+00:00"
+ },
+ "Autodesk": {
+  "tenant": "autodesk",
+  "shard": "wd1",
+  "site": "Ext",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 403,
+  "verified_at": "2026-09-13T22:43:03+00:00"
+ },
+ "Workday": {
+  "tenant": "workday",
+  "shard": "wd5",
+  "site": "Workday",
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 391,
+  "verified_at": "2026-09-13T22:43:07+00:00"
+ },
+ "ServiceNow": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site careers.servicenow.com"
+ },
+ "VMware": {
+  "tenant": "vmware",
+  "shard": "wd1",
+  "site": "VMware",
+  "status": "failed",
+  "source": "web search",
+  "error": "422 Client Error: Unprocessable Entity for url: https://vmware.wd1.myworkdayjobs.com/wday/cxs/vmware/VMware/jobs"
+ },
+ "Splunk": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "now under Cisco Workday"
+ },
+ "Palo Alto Networks": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site jobs.paloaltonetworks.com"
+ },
+ "Fortinet": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site"
+ },
+ "Dropbox": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "Greenhouse"
+ },
+ "DocuSign": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site"
+ },
+ "Zoom": {
+  "tenant": "zoom",
+  "shard": "wd5",
+  "site": "Zoom",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 86,
+  "verified_at": "2026-09-13T22:43:17+00:00"
+ },
+ "Twilio": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "Greenhouse"
+ },
+ "HubSpot": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site"
+ },
+ "Snowflake": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site careers.snowflake.com"
+ },
+ "Databricks": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "Greenhouse"
+ },
+ "Okta": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site"
+ },
+ "CrowdStrike": {
+  "tenant": "crowdstrike",
+  "shard": "wd5",
+  "site": "crowdstrikecareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 394,
+  "verified_at": "2026-09-13T22:43:19+00:00"
+ },
+ "Deloitte": {
+  "status": "not_on_workday",
+  "ats": "own site (US); deloitteie.wd3 is Ireland only",
+  "source": "round 1 verification"
+ },
+ "EY": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "SuccessFactors careers.ey.com"
+ },
+ "KPMG": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site kpmguscareers.com"
+ },
+ "PwC": {
+  "tenant": "pwc",
+  "shard": "wd3",
+  "site": "US_Experienced_Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 473,
+  "verified_at": "2026-09-13T22:43:21+00:00"
+ },
+ "Accenture": {
+  "tenant": "accenture",
+  "shard": "wd103",
+  "site": "AccentureCareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2000,
+  "verified_at": "2026-09-13T22:43:25+00:00"
+ },
+ "Capgemini": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site jobs.capgemini.com"
+ },
+ "Cognizant": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site careers.cognizant.com"
+ },
+ "Infosys": {
+  "tenant": "infosys",
+  "shard": "wd103",
+  "site": "Simplus_Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 14,
+  "verified_at": "2026-09-13T22:46:14+00:00"
+ },
+ "Wipro": {
+  "status": "not_on_workday",
+  "misses": 2,
+  "ats": "own site careers.wipro.com"
+ },
+ "TCS": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "HCL": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site hcltech.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "SAIC": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jobs.saic.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "CACI": {
+  "tenant": "caci",
+  "shard": "wd1",
+  "site": "External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1866,
+  "verified_at": "2026-09-13T22:43:28+00:00"
+ },
+ "GDIT": {
+  "tenant": "gdit",
+  "shard": "wd5",
+  "site": "External_Career_Site",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1217,
+  "verified_at": "2026-09-13T22:43:30+00:00"
+ },
+ "Peraton": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.peraton.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Northrop Grumman": {
+  "tenant": "ngc",
+  "shard": "wd1",
+  "site": "Northrop_Grumman_External_Site",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 3751,
+  "verified_at": "2026-09-13T22:43:33+00:00"
+ },
+ "Lockheed Martin": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "Brassring Kenexa lockheedmartinjobs.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Raytheon": {
+  "tenant": "globalhr",
+  "shard": "wd5",
+  "site": "REC_RTX_Ext_Gateway",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 4685,
+  "verified_at": "2026-09-13T22:43:35+00:00"
+ },
+ "Boeing": {
+  "tenant": "boeing",
+  "shard": "wd1",
+  "site": "EXTERNAL_CAREERS",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 724,
+  "verified_at": "2026-09-13T22:43:38+00:00"
+ },
+ "GE": {
+  "tenant": "geaerospace",
+  "shard": "wd5",
+  "site": "GE_ExternalSite",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 502,
+  "verified_at": "2026-09-13T22:43:40+00:00"
+ },
+ "Honeywell": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.honeywell.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "3M": {
+  "tenant": "3m",
+  "shard": "wd1",
+  "site": "Search",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 666,
+  "verified_at": "2026-09-13T22:43:43+00:00"
+ },
+ "Caterpillar": {
+  "tenant": "cat",
+  "shard": "wd5",
+  "site": "CaterpillarCareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 898,
+  "verified_at": "2026-09-13T22:43:46+00:00"
+ },
+ "John Deere": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site deere.com careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Ford": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.ford.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "GM": {
+  "tenant": "generalmotors",
+  "shard": "wd5",
+  "site": "Careers_GM",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 825,
+  "verified_at": "2026-09-13T22:43:49+00:00"
+ },
+ "Rivian": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site rivian.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Tesla": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site tesla.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Toyota": {
+  "tenant": "toyota",
+  "shard": "wd503",
+  "site": "TMNA",
+  "status": "verified",
+  "source": "web search",
+  "note": "first shard returned 422; wd503 also appeared in search results",
+  "open_roles": 105,
+  "verified_at": "2026-09-13T22:46:17+00:00"
+ },
+ "Verizon": {
+  "tenant": "verizon",
+  "shard": "wd5",
+  "site": "verizon-careers",
+  "status": "failed",
+  "source": "web search",
+  "error": "422 Client Error: Unprocessable Entity for url: https://verizon.wd5.myworkdayjobs.com/wday/cxs/verizon/verizon-careers/j"
+ },
+ "AT&T": {
+  "tenant": "att",
+  "shard": "wd1",
+  "site": "ATTGeneral",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1218,
+  "verified_at": "2026-09-13T22:44:06+00:00"
+ },
+ "T-Mobile": {
+  "tenant": "tmobile",
+  "shard": "wd1",
+  "site": "External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2000,
+  "verified_at": "2026-09-13T22:46:20+00:00"
+ },
+ "Comcast": {
+  "tenant": "comcast",
+  "shard": "wd115",
+  "site": "Comcast_Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 676,
+  "verified_at": "2026-09-13T22:44:08+00:00"
+ },
+ "Disney": {
+  "tenant": "disney",
+  "shard": "wd5",
+  "site": "disneycareer",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 620,
+  "verified_at": "2026-09-13T22:44:11+00:00"
+ },
+ "Warner Bros Discovery": {
+  "tenant": "warnerbros",
+  "shard": "wd5",
+  "site": "global",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 333,
+  "verified_at": "2026-09-13T22:44:14+00:00"
+ },
+ "Netflix": {
+  "tenant": "netflix",
+  "shard": "wd108",
+  "site": "Netflix",
+  "status": "verified",
+  "source": "web search",
+  "note": "first shard returned 422; wd108 also appeared in search results",
+  "open_roles": 646,
+  "verified_at": "2026-09-13T22:46:22+00:00"
+ },
+ "Spotify": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "Lever jobs.lever.co/spotify",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Uber": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jobs.uber.com iCIMS for university",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Lyft": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site lyft.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "DoorDash": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "Greenhouse",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Airbnb": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.airbnb.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Stripe": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site stripe.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Coinbase": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site coinbase.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Robinhood": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.robinhood.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Intuit": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jobs.intuit.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Oracle": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.oracle.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "IBM": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site ibm.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "HP": {
+  "tenant": "hp",
+  "shard": "wd5",
+  "site": "ExternalCareerSite",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 844,
+  "verified_at": "2026-09-13T22:44:23+00:00"
+ },
+ "HPE": {
+  "tenant": "hpe",
+  "shard": "wd5",
+  "site": "Jobsathpe",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1161,
+  "verified_at": "2026-09-13T22:44:26+00:00"
+ },
+ "Dell": {
+  "status": "not_on_workday",
+  "ats": "Oracle HCM",
+  "source": "round 1 verification"
+ },
+ "AMD": {
+  "status": "not_on_workday",
+  "ats": "own site (careers.amd.com)",
+  "source": "round 1 verification"
+ },
+ "Qualcomm": {
+  "status": "not_on_workday",
+  "ats": "own site (careers.qualcomm.com)",
+  "source": "round 1 verification"
+ },
+ "JPMorgan Chase": {
+  "status": "not_on_workday",
+  "ats": "Oracle HCM",
+  "source": "round 1 verification"
+ },
+ "Goldman Sachs": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site goldmansachs.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Morgan Stanley": {
+  "tenant": "ms",
+  "shard": "wd5",
+  "site": "External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1284,
+  "verified_at": "2026-09-13T22:44:29+00:00"
+ },
+ "Citi": {
+  "tenant": "citi",
+  "shard": "wd5",
+  "site": "2",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2000,
+  "verified_at": "2026-09-13T22:44:33+00:00"
+ },
+ "American Express": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "Taleo axp.taleo.net",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Discover": {
+  "tenant": "discover",
+  "shard": "wd5",
+  "site": "Discover",
+  "status": "failed",
+  "source": "web search",
+  "error": "401 Client Error: Unauthorized for url: https://discover.wd5.myworkdayjobs.com/wday/cxs/discover/Discover/jobs"
+ },
+ "Synchrony": {
+  "tenant": "synchronyfinancial",
+  "shard": "wd5",
+  "site": "careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 37,
+  "verified_at": "2026-09-13T22:44:43+00:00"
+ },
+ "Ally": {
+  "tenant": "ally",
+  "shard": "wd1",
+  "site": "Ally",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 89,
+  "verified_at": "2026-09-13T22:44:46+00:00"
+ },
+ "Fannie Mae": {
+  "tenant": "fanniemae",
+  "shard": "wd1",
+  "site": "FannieMaeCareers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 61,
+  "verified_at": "2026-09-13T22:44:48+00:00"
+ },
+ "Freddie Mac": {
+  "tenant": "freddiemac",
+  "shard": "wd5",
+  "site": "External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 104,
+  "verified_at": "2026-09-13T22:44:51+00:00"
+ },
+ "Navy Federal": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "Oracle HCM jobs.navyfederal.org",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Geico": {
+  "tenant": "geico",
+  "shard": "wd1",
+  "site": "External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 283,
+  "verified_at": "2026-09-13T22:44:53+00:00"
+ },
+ "Progressive": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.progressive.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Allstate": {
+  "tenant": "allstate",
+  "shard": "wd5",
+  "site": "allstate_careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 477,
+  "verified_at": "2026-09-13T22:44:56+00:00"
+ },
+ "Liberty Mutual": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jobs.libertymutualgroup.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Travelers": {
+  "tenant": "travelers",
+  "shard": "wd5",
+  "site": "External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 344,
+  "verified_at": "2026-09-13T22:44:59+00:00"
+ },
+ "MetLife": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site metlifecareers.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Prudential": {
+  "tenant": "pru",
+  "shard": "wd5",
+  "site": "Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 174,
+  "verified_at": "2026-09-13T22:45:01+00:00"
+ },
+ "Charles Schwab": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site schwabjobs.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "TIAA": {
+  "tenant": "tiaa",
+  "shard": "wd1",
+  "site": "Search",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 237,
+  "verified_at": "2026-09-13T22:45:04+00:00"
+ },
+ "Walgreens": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jobs.walgreens.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Costco": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.costco.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Amazon": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site amazon.jobs",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "McKinsey": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site mckinsey.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Tiger Analytics": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "Workable",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "BCG": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.bcg.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Citadel": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site citadel.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Cummins": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site cummins.jobs",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Eli Lilly": {
+  "tenant": "lilly",
+  "shard": "wd5",
+  "site": "LLY",
+  "status": "failed",
+  "source": "web search",
+  "error": "422 Client Error: Unprocessable Entity for url: https://lilly.wd5.myworkdayjobs.com/wday/cxs/lilly/LLY/jobs"
+ },
+ "ZS Associates": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jobs.zs.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "AbbVie": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "SmartRecruiters careers.abbvie.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Charter Communications": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jobs.spectrum.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Chewy": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.chewy.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Medline": {
+  "tenant": "medline",
+  "shard": "wd5",
+  "site": "Medline",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 587,
+  "verified_at": "2026-09-13T22:46:31+00:00"
+ },
+ "LexisNexis": {
+  "tenant": "relx",
+  "shard": "wd3",
+  "site": "RiskSolutions",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 172,
+  "verified_at": "2026-09-13T22:46:34+00:00"
+ },
+ "Wayfair": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site aboutwayfair.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Amgen": {
+  "tenant": "amgen",
+  "shard": "wd1",
+  "site": "careers",
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 1782,
+  "verified_at": "2026-09-13T22:46:37+00:00"
+ },
+ "IQVIA": {
+  "tenant": "iqvia",
+  "shard": "wd1",
+  "site": "IQVIA",
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 1917,
+  "verified_at": "2026-09-13T22:46:40+00:00"
+ },
+ "Siemens": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site parent only subsidiaries on Workday",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "FedEx": {
+  "tenant": "fedex",
+  "shard": "wd1",
+  "site": "FCC_External",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2,
+  "verified_at": "2026-09-13T22:46:43+00:00"
+ },
+ "American Airlines": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jobs.aa.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Meta": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site metacareers.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Google": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site google.com/about/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Microsoft": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.microsoft.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Apple": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jobs.apple.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "LinkedIn": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.linkedin.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Palantir": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "Lever jobs.lever.co/palantir",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Datadog": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site careers.datadoghq.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "MongoDB": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site mongodb.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Deutsche Bank": {
+  "tenant": "db",
+  "shard": "wd3",
+  "site": "DBWebsite",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1129,
+  "verified_at": "2026-09-13T22:46:45+00:00"
+ },
+ "Barclays": {
+  "tenant": "barclays",
+  "shard": "wd3",
+  "site": "External_Career_Site_Barclays",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 994,
+  "verified_at": "2026-09-13T22:46:48+00:00"
+ },
+ "UBS": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "Brassring jobs.ubs.com",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "ASML": {
+  "tenant": "asml",
+  "shard": "wd3",
+  "site": "ASMLEXT1",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 607,
+  "verified_at": "2026-09-13T22:46:50+00:00"
+ },
+ "Jefferies": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site jefferies.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Nomura": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Royal Bank of Canada": {
+  "tenant": "rbc",
+  "shard": "wd3",
+  "site": "RBCGLOBAL1",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 1395,
+  "verified_at": "2026-09-13T22:46:54+00:00"
+ },
+ "Genpact": {
+  "tenant": "genpact",
+  "shard": "wd108",
+  "site": "External_Careers",
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 2000,
+  "verified_at": "2026-09-13T22:46:56+00:00"
+ },
+ "EXL Service": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site exlservice.com/careers",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Grant Thornton": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site US only non-US tenants",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "BDO": {
+  "status": "not_on_workday",
+  "misses": 1,
+  "ats": "own site US only Canada and Australia tenants",
+  "second_search": "skipped: session web-search budget exhausted"
+ },
+ "Crowe": {
+  "tenant": "crowe",
+  "shard": "wd12",
+  "site": "External_Careers",
+  "status": "resolved",
+  "source": "web search"
+ },
+ "SHI International": {
+  "tenant": "shi",
+  "shard": "wd12",
+  "site": "shicareers",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Guidehouse": {
+  "tenant": "guidehouse",
+  "shard": "wd1",
+  "site": "External",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Pax8": {
+  "tenant": "pax8inc",
+  "shard": "wd12",
+  "site": "Pax8Careers",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Amplify": {
+  "tenant": "amplify",
+  "shard": "wd1",
+  "site": "amplify_careers",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "JLL": {
+  "tenant": "jll",
+  "shard": "wd1",
+  "site": "jllcareers",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "T. Rowe Price": {
+  "tenant": "troweprice",
+  "shard": "wd5",
+  "site": "TRowePrice",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Barry-Wehmiller": {
+  "tenant": "barrywehmiller",
+  "shard": "wd1",
+  "site": "BWCareers",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "WellSky": {
+  "tenant": "wellsky",
+  "shard": "wd1",
+  "site": "WellSkyCareers",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Carnegie Mellon University": {
+  "tenant": "cmu",
+  "shard": "wd5",
+  "site": "CMU",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Premier Inc": {
+  "tenant": "premierinc",
+  "shard": "wd1",
+  "site": "External_Professional",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "DLA Piper": {
+  "tenant": "dlapiper",
+  "shard": "wd1",
+  "site": "dlapiper",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Thomson Reuters": {
+  "tenant": "thomsonreuters",
+  "shard": "wd5",
+  "site": "External_Career_Site",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "University of Chicago": {
+  "tenant": "uchicago",
+  "shard": "wd5",
+  "site": "External",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Federal Reserve Bank of NY": {
+  "tenant": "rb",
+  "shard": "wd5",
+  "site": "FRS",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "BMO": {
+  "tenant": "bmo",
+  "shard": "wd3",
+  "site": "Privileged",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Proofpoint": {
+  "tenant": "proofpoint",
+  "shard": "wd5",
+  "site": "ProofpointCareers",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Snap": {
+  "tenant": "snapchat",
+  "shard": "wd1",
+  "site": "snap",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "GE Healthcare": {
+  "tenant": "gehc",
+  "shard": "wd5",
+  "site": "GEHC_ExternalSite",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Northeastern University": {
+  "tenant": "northeastern",
+  "shard": "wd1",
+  "site": "careers",
+  "status": "resolved",
+  "source": "search result URL"
+ },
+ "Siemens Healthineers": {
+  "tenant": "onehealthineers",
+  "shard": "wd3",
+  "site": "SHSJB",
+  "status": "resolved",
+  "source": "web search"
+ }
+}

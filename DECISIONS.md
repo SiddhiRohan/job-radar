@@ -34,5 +34,14 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
    constrained retry, else the base summary with the headline rotated. The guard cannot catch new phrases built from
    existing words (for example "fraud and abuse detection" from "friendly-fraud" and "detection logic"), so the summary
    still needs a human read. The Adobe run was redone after the guard went in.
-10. **No pushes this round.** The remote stays configured (it is private) but nothing is pushed, per the round-2
+10. **Company expansion: web search budget ran out.** The session allows 200 web searches. After the first pass over
+    all candidates (one search each) and a second pass over 26 of the misses, the budget was exhausted. The remaining
+    57 first-pass misses are recorded in `not_on_workday.json` with `second_search: skipped` and the ATS seen in the
+    first search (own site, Greenhouse, Lever, SmartRecruiters, Taleo, Brassring, Oracle, SuccessFactors, Workable).
+    Rerun `python ledger.py show` next session to see them; a second search for each is cheap if you want it.
+11. **Slug resolution only from URLs actually seen.** Tenant roots return 406 for valid and invalid tenants alike, so
+    nothing could be probed. Every slug in `candidates.json` came from a `*.myworkdayjobs.com` URL in a search result.
+    Two failures (FactSet on wd1, Expedia on wd5) were retried on a second shard that also appeared in the results.
+    Chime's `CSM` site and VMware (absorbed by Broadcom) failed twice and were dropped.
+12. **No pushes this round.** The remote stays configured (it is private) but nothing is pushed, per the round-2
    rules.
