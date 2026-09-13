@@ -1259,147 +1259,187 @@
   "tenant": "crowe",
   "shard": "wd12",
   "site": "External_Careers",
-  "status": "resolved",
-  "source": "web search"
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 182,
+  "verified_at": "2026-09-13T22:46:58+00:00"
  },
  "SHI International": {
   "tenant": "shi",
   "shard": "wd12",
   "site": "shicareers",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 231,
+  "verified_at": "2026-09-13T22:47:01+00:00"
  },
  "Guidehouse": {
   "tenant": "guidehouse",
   "shard": "wd1",
   "site": "External",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 744,
+  "verified_at": "2026-09-13T22:47:03+00:00"
  },
  "Pax8": {
   "tenant": "pax8inc",
   "shard": "wd12",
   "site": "Pax8Careers",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 50,
+  "verified_at": "2026-09-13T22:47:06+00:00"
  },
  "Amplify": {
   "tenant": "amplify",
   "shard": "wd1",
   "site": "amplify_careers",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "failed",
+  "source": "search result URL",
+  "error": "403 Client Error: Forbidden for url: https://amplify.wd1.myworkdayjobs.com/wday/cxs/amplify/amplify_careers/jobs"
  },
  "JLL": {
   "tenant": "jll",
   "shard": "wd1",
   "site": "jllcareers",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 2000,
+  "verified_at": "2026-09-13T22:47:16+00:00"
  },
  "T. Rowe Price": {
   "tenant": "troweprice",
   "shard": "wd5",
   "site": "TRowePrice",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 135,
+  "verified_at": "2026-09-13T22:47:18+00:00"
  },
  "Barry-Wehmiller": {
   "tenant": "barrywehmiller",
   "shard": "wd1",
   "site": "BWCareers",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 405,
+  "verified_at": "2026-09-13T22:47:21+00:00"
  },
  "WellSky": {
   "tenant": "wellsky",
   "shard": "wd1",
   "site": "WellSkyCareers",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 51,
+  "verified_at": "2026-09-13T22:47:24+00:00"
  },
  "Carnegie Mellon University": {
   "tenant": "cmu",
   "shard": "wd5",
   "site": "CMU",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "failed",
+  "source": "search result URL",
+  "error": "422 Client Error: Unprocessable Entity for url: https://cmu.wd5.myworkdayjobs.com/wday/cxs/cmu/CMU/jobs"
  },
  "Premier Inc": {
   "tenant": "premierinc",
   "shard": "wd1",
   "site": "External_Professional",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 30,
+  "verified_at": "2026-09-13T22:47:34+00:00"
  },
  "DLA Piper": {
   "tenant": "dlapiper",
   "shard": "wd1",
   "site": "dlapiper",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 138,
+  "verified_at": "2026-09-13T22:47:36+00:00"
  },
  "Thomson Reuters": {
   "tenant": "thomsonreuters",
   "shard": "wd5",
   "site": "External_Career_Site",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 442,
+  "verified_at": "2026-09-13T22:47:39+00:00"
  },
  "University of Chicago": {
   "tenant": "uchicago",
   "shard": "wd5",
   "site": "External",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 411,
+  "verified_at": "2026-09-13T22:47:41+00:00"
  },
  "Federal Reserve Bank of NY": {
   "tenant": "rb",
   "shard": "wd5",
   "site": "FRS",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 138,
+  "verified_at": "2026-09-13T22:47:44+00:00"
  },
  "BMO": {
   "tenant": "bmo",
   "shard": "wd3",
   "site": "Privileged",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 74,
+  "verified_at": "2026-09-13T22:47:47+00:00"
  },
  "Proofpoint": {
   "tenant": "proofpoint",
   "shard": "wd5",
   "site": "ProofpointCareers",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 146,
+  "verified_at": "2026-09-13T22:47:49+00:00"
  },
  "Snap": {
   "tenant": "snapchat",
   "shard": "wd1",
   "site": "snap",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 174,
+  "verified_at": "2026-09-13T22:47:52+00:00"
  },
  "GE Healthcare": {
   "tenant": "gehc",
   "shard": "wd5",
   "site": "GEHC_ExternalSite",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 989,
+  "verified_at": "2026-09-13T22:47:54+00:00"
  },
  "Northeastern University": {
   "tenant": "northeastern",
   "shard": "wd1",
   "site": "careers",
-  "status": "resolved",
-  "source": "search result URL"
+  "status": "verified",
+  "source": "search result URL",
+  "open_roles": 384,
+  "verified_at": "2026-09-13T22:47:56+00:00"
  },
  "Siemens Healthineers": {
   "tenant": "onehealthineers",
   "shard": "wd3",
   "site": "SHSJB",
-  "status": "resolved",
-  "source": "web search"
+  "status": "verified",
+  "source": "web search",
+  "open_roles": 464,
+  "verified_at": "2026-09-13T22:47:59+00:00"
  }
 }

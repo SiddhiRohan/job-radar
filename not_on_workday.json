@@ -1,0 +1,578 @@
+{
+ "Texas Instruments": {
+  "ats": "own site careers.ti.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Lam Research": {
+  "ats": "own site careers.lamresearch.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Western Digital": {
+  "ats": "own site westerndigital.com/careers",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Block": {
+  "ats": "SmartRecruiters and Greenhouse",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Chime": {
+  "ats": "Workday tenant found but failed verification twice: 422 Client Error: Unprocessable Entity for url: https://chime.wd3.myworkdayjobs.",
+  "searches": 0,
+  "second_search": null,
+  "source": "web search"
+ },
+ "Moody's": {
+  "ats": "own site careers.moodys.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "UnitedHealth": {
+  "ats": "own site careers.unitedhealthgroup.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Optum": {
+  "ats": "own site careers.unitedhealthgroup.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Best Buy": {
+  "ats": "only bestbuycanada.wd3 Canada tenant seen",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Kroger": {
+  "ats": "own site",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Marriott": {
+  "ats": "only Marriott Vacations mymvw.wd5 seen",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Hilton": {
+  "ats": "own site jobs.hilton.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "ServiceNow": {
+  "ats": "own site careers.servicenow.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "VMware": {
+  "ats": "Workday tenant found but failed verification twice: 422 Client Error: Unprocessable Entity for url: https://vmware.wd1.myworkdayjobs",
+  "searches": 0,
+  "second_search": null,
+  "source": "web search"
+ },
+ "Splunk": {
+  "ats": "now under Cisco Workday",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Palo Alto Networks": {
+  "ats": "own site jobs.paloaltonetworks.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Fortinet": {
+  "ats": "own site",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Dropbox": {
+  "ats": "Greenhouse",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "DocuSign": {
+  "ats": "own site",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Twilio": {
+  "ats": "Greenhouse",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "HubSpot": {
+  "ats": "own site",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Snowflake": {
+  "ats": "own site careers.snowflake.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Databricks": {
+  "ats": "Greenhouse",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Okta": {
+  "ats": "own site",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Deloitte": {
+  "ats": "own site (US); deloitteie.wd3 is Ireland only",
+  "searches": 0,
+  "second_search": null,
+  "source": "round 1 verification"
+ },
+ "EY": {
+  "ats": "SuccessFactors careers.ey.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "KPMG": {
+  "ats": "own site kpmguscareers.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Capgemini": {
+  "ats": "own site jobs.capgemini.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Cognizant": {
+  "ats": "own site careers.cognizant.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "Wipro": {
+  "ats": "own site careers.wipro.com",
+  "searches": 2,
+  "second_search": null,
+  "source": null
+ },
+ "TCS": {
+  "ats": "own site",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "HCL": {
+  "ats": "own site hcltech.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "SAIC": {
+  "ats": "own site jobs.saic.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Peraton": {
+  "ats": "own site careers.peraton.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Lockheed Martin": {
+  "ats": "Brassring Kenexa lockheedmartinjobs.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Honeywell": {
+  "ats": "own site careers.honeywell.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "John Deere": {
+  "ats": "own site deere.com careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Ford": {
+  "ats": "own site careers.ford.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Rivian": {
+  "ats": "own site rivian.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Tesla": {
+  "ats": "own site tesla.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Verizon": {
+  "ats": "Workday tenant found but failed verification twice: 422 Client Error: Unprocessable Entity for url: https://verizon.wd5.myworkdayjob",
+  "searches": 0,
+  "second_search": null,
+  "source": "web search"
+ },
+ "Spotify": {
+  "ats": "Lever jobs.lever.co/spotify",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Uber": {
+  "ats": "own site jobs.uber.com iCIMS for university",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Lyft": {
+  "ats": "own site lyft.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "DoorDash": {
+  "ats": "Greenhouse",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Airbnb": {
+  "ats": "own site careers.airbnb.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Stripe": {
+  "ats": "own site stripe.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Coinbase": {
+  "ats": "own site coinbase.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Robinhood": {
+  "ats": "own site careers.robinhood.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Intuit": {
+  "ats": "own site jobs.intuit.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Oracle": {
+  "ats": "own site careers.oracle.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "IBM": {
+  "ats": "own site ibm.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Dell": {
+  "ats": "Oracle HCM",
+  "searches": 0,
+  "second_search": null,
+  "source": "round 1 verification"
+ },
+ "AMD": {
+  "ats": "own site (careers.amd.com)",
+  "searches": 0,
+  "second_search": null,
+  "source": "round 1 verification"
+ },
+ "Qualcomm": {
+  "ats": "own site (careers.qualcomm.com)",
+  "searches": 0,
+  "second_search": null,
+  "source": "round 1 verification"
+ },
+ "JPMorgan Chase": {
+  "ats": "Oracle HCM",
+  "searches": 0,
+  "second_search": null,
+  "source": "round 1 verification"
+ },
+ "Goldman Sachs": {
+  "ats": "own site goldmansachs.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "American Express": {
+  "ats": "Taleo axp.taleo.net",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Discover": {
+  "ats": "Workday tenant found but failed verification twice: 401 Client Error: Unauthorized for url: https://discover.wd5.myworkdayjobs.com/w",
+  "searches": 0,
+  "second_search": null,
+  "source": "web search"
+ },
+ "Navy Federal": {
+  "ats": "Oracle HCM jobs.navyfederal.org",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Progressive": {
+  "ats": "own site careers.progressive.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Liberty Mutual": {
+  "ats": "own site jobs.libertymutualgroup.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "MetLife": {
+  "ats": "own site metlifecareers.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Charles Schwab": {
+  "ats": "own site schwabjobs.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Walgreens": {
+  "ats": "own site jobs.walgreens.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Costco": {
+  "ats": "own site careers.costco.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Amazon": {
+  "ats": "own site amazon.jobs",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "McKinsey": {
+  "ats": "own site mckinsey.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Tiger Analytics": {
+  "ats": "Workable",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "BCG": {
+  "ats": "own site careers.bcg.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Citadel": {
+  "ats": "own site citadel.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Cummins": {
+  "ats": "own site cummins.jobs",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Eli Lilly": {
+  "ats": "Workday tenant found but failed verification twice: 422 Client Error: Unprocessable Entity for url: https://lilly.wd5.myworkdayjobs.",
+  "searches": 0,
+  "second_search": null,
+  "source": "web search"
+ },
+ "ZS Associates": {
+  "ats": "own site jobs.zs.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "AbbVie": {
+  "ats": "SmartRecruiters careers.abbvie.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Charter Communications": {
+  "ats": "own site jobs.spectrum.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Chewy": {
+  "ats": "own site careers.chewy.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Wayfair": {
+  "ats": "own site aboutwayfair.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Siemens": {
+  "ats": "own site parent only subsidiaries on Workday",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "American Airlines": {
+  "ats": "own site jobs.aa.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Meta": {
+  "ats": "own site metacareers.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Google": {
+  "ats": "own site google.com/about/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Microsoft": {
+  "ats": "own site careers.microsoft.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Apple": {
+  "ats": "own site jobs.apple.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "LinkedIn": {
+  "ats": "own site careers.linkedin.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Palantir": {
+  "ats": "Lever jobs.lever.co/palantir",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Datadog": {
+  "ats": "own site careers.datadoghq.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "MongoDB": {
+  "ats": "own site mongodb.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "UBS": {
+  "ats": "Brassring jobs.ubs.com",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Jefferies": {
+  "ats": "own site jefferies.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Nomura": {
+  "ats": "own site",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "EXL Service": {
+  "ats": "own site exlservice.com/careers",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Grant Thornton": {
+  "ats": "own site US only non-US tenants",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "BDO": {
+  "ats": "own site US only Canada and Australia tenants",
+  "searches": 1,
+  "second_search": "skipped: session web-search budget exhausted",
+  "source": null
+ },
+ "Amplify": {
+  "ats": "Workday tenant found but failed verification twice: 403 Client Error: Forbidden for url: https://amplify.wd1.myworkdayjobs.com/wday/",
+  "searches": 0,
+  "second_search": null,
+  "source": "search result URL"
+ },
+ "Carnegie Mellon University": {
+  "ats": "Workday tenant found but failed verification twice: 422 Client Error: Unprocessable Entity for url: https://cmu.wd5.myworkdayjobs.co",
+  "searches": 0,
+  "second_search": null,
+  "source": "search result URL"
+ }
+}
