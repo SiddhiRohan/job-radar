@@ -28,7 +28,7 @@ No flattery. Quote sponsorship/visa/citizenship/clearance language verbatim if p
 SCHEMA = {
     "type": "object",
     "properties": {
-        "score": {"type": "integer", "minimum": 1, "maximum": 5},
+        "score": {"type": "integer", "enum": [1, 2, 3, 4, 5]},
         "hard_requirements_missing": {"type": "array", "items": {"type": "string"}},
         "why": {"type": "string", "description": "two sentences max"},
         "sponsorship_note": {"type": ["string", "null"]},
@@ -84,7 +84,8 @@ def ask_claude(api_key, resume, job, description):
         if r.status_code == 404 and "not_found" in r.text:
             print(f"  model {model} not available, trying next", flush=True)
             continue
-        r.raise_for_status()
+        if r.status_code != 200:
+            raise RuntimeError(f"API {r.status_code}: {r.text[:300]}")
         data = r.json()
         if data.get("stop_reason") == "refusal":
             return {"error": "refusal"}, model
@@ -116,11 +117,13 @@ def main():
     sites = {c["name"]: c for c in json.load(open("companies.json", encoding="utf-8"))}
     jobs = load_jobs()
 
-    todo = [j for j in jobs if "verdict" not in j]
+    def unscored(j):  # never scored, or a previous attempt errored out
+        return "verdict" not in j or "error" in (j["verdict"] or {})
+    todo = [j for j in jobs if unscored(j)]
     todo.sort(key=lambda j: (terms.index(j["search_term"]) if j.get("search_term") in terms else 99,
                              j["posted_days_ago"]))
     todo = todo[:MAX_PER_RUN]
-    print(f"scoring {len(todo)} of {sum('verdict' not in j for j in jobs)} unscored postings")
+    print(f"scoring {len(todo)} of {sum(unscored(j) for j in jobs)} unscored postings")
 
     for j in todo:
         c = sites[j["company"]]
