@@ -27,7 +27,7 @@ NON_US = [
 
 def looks_non_us(location):
     s = location.lower()
-    if re.search(r"\b(us|usa|united states|u\.s\.)\b", s) or re.search(r"\b[A-Z]{2}\b", location) and "us" in s:
+    if re.search(r"\b(us|usa|united states|u\.s\.)\b", s):
         return False
     return any(re.search(r"\b" + re.escape(w) + r"\b", s) for w in NON_US)
 
