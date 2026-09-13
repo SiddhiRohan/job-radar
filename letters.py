@@ -25,12 +25,13 @@ def cover_letter(job, jd, profile, resume_text):
     return text.replace("—", "-").strip()
 
 
-def outreach(job, jd, profile):
-    user = f"POSTING: {job['title']} at {job['company']}\n{jd[:8000]}\n\nWrite both pieces."
-    for _ in range(2):
+def outreach(job, jd, profile, resume_text=""):
+    user = (f"POSTING: {job['title']} at {job['company']}\n{jd[:8000]}\n\nRESUME (mention only tools and experience "
+            f"that appear here):\n{resume_text[:6000]}\n\nWrite both pieces.")
+    for _ in range(3):
         o, _ = llm.complete(OUTREACH_RULES + "\n\nCANDIDATE PROFILE:\n" + profile, user, OUTREACH_SCHEMA)
         o = {k: v.replace("—", "-").strip() for k, v in o.items()}
-        if len(o["linkedin_note"]) < 300 and 90 <= len(o["message"].split()) <= 130:
+        if 200 <= len(o["linkedin_note"]) < 285 and 100 <= len(o["message"].split()) <= 120:
             return o
         user += f"\n\nPrevious attempt was out of range (note {len(o['linkedin_note'])} chars, message " \
                 f"{len(o['message'].split())} words). Fix the lengths."

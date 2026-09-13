@@ -122,7 +122,7 @@ def main():
         letters.write_docx(text, folder / "cover_letter.docx", base)
         notes += ["", "## Cover letter", "", text]
     if a.outreach:
-        o = letters.outreach(j, jd, profile)
+        o = letters.outreach(j, jd, profile, resumes.docx_text(out))
         (folder / "outreach.md").write_text(f"# Outreach\n\n## LinkedIn note ({len(o['linkedin_note'])} chars)\n\n"
                                             f"{o['linkedin_note']}\n\n## Message ({len(o['message'].split())} words)\n\n"
                                             f"{o['message']}\n", encoding="utf-8")
