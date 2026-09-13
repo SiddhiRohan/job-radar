@@ -6,7 +6,8 @@
     "site": "NVIDIAExternalCareerSite",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 2000
+    "open_roles": 2000,
+    "sponsors_h1b": true
   },
   {
     "name": "Salesforce",
@@ -15,7 +16,8 @@
     "site": "External_Career_Site",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 1442
+    "open_roles": 1442,
+    "sponsors_h1b": true
   },
   {
     "name": "Adobe",
@@ -24,7 +26,8 @@
     "site": "external_experienced",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 739
+    "open_roles": 739,
+    "sponsors_h1b": true
   },
   {
     "name": "Capital One",
@@ -33,7 +36,8 @@
     "site": "Capital_One",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 1939
+    "open_roles": 1939,
+    "sponsors_h1b": false
   },
   {
     "name": "Walmart",
@@ -42,7 +46,8 @@
     "site": "WalmartExternal",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 2000
+    "open_roles": 2000,
+    "sponsors_h1b": true
   },
   {
     "name": "Target",
@@ -51,7 +56,8 @@
     "site": "targetcareers",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 2000
+    "open_roles": 2000,
+    "sponsors_h1b": true
   },
   {
     "name": "Intel",
@@ -60,7 +66,8 @@
     "site": "External",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 590
+    "open_roles": 590,
+    "sponsors_h1b": true
   },
   {
     "name": "KLA",
@@ -69,7 +76,8 @@
     "site": "Search",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 997
+    "open_roles": 997,
+    "sponsors_h1b": true
   },
   {
     "name": "Mastercard",
@@ -78,7 +86,8 @@
     "site": "CorporateCareers",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 1040
+    "open_roles": 1040,
+    "sponsors_h1b": true
   },
   {
     "name": "Visa",
@@ -87,7 +96,8 @@
     "site": "Visa",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 760
+    "open_roles": 760,
+    "sponsors_h1b": true
   },
   {
     "name": "Fidelity",
@@ -96,7 +106,8 @@
     "site": "FidelityCareers",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 633
+    "open_roles": 633,
+    "sponsors_h1b": true
   },
   {
     "name": "Humana",
@@ -105,7 +116,8 @@
     "site": "Humana_External_Career_Site",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 364
+    "open_roles": 364,
+    "sponsors_h1b": true
   },
   {
     "name": "CVS Health",
@@ -114,7 +126,8 @@
     "site": "CVS_Health_Careers",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 18150
+    "open_roles": 18150,
+    "sponsors_h1b": true
   },
   {
     "name": "Booz Allen",
@@ -123,7 +136,8 @@
     "site": "BAH_Jobs",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 2000
+    "open_roles": 2000,
+    "sponsors_h1b": false
   },
   {
     "name": "Leidos",
@@ -132,6 +146,7 @@
     "site": "External",
     "verified": true,
     "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 2000
+    "open_roles": 2000,
+    "sponsors_h1b": false
   }
 ]
