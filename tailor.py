@@ -89,7 +89,7 @@ def apply_plan(doc, info, plan):
             changes.append((where, old, new))
     unsupported = new_terms(plan["summary"], base_lower)
     if unsupported:
-        plan["questions_for_rohan"].append("Summary uses terms not on the base resume, check them: " + ", ".join(unsupported))
+        plan["questions_for_rohan"].append("Summary uses terms outside the base resume and skills_confirmed.md: " + ", ".join(unsupported))
     change("summary", info["summary"], plan["summary"])
     for pj in plan["jobs"]:
         job = info["jobs"][pj["job"]]
@@ -109,7 +109,7 @@ def apply_plan(doc, info, plan):
     skills = [s.strip() for s in plan["skills"].split(",")]
     pruned = [s for s in skills if s and s.lower() not in base_lower]
     if pruned:
-        plan["questions_for_rohan"].append("Dropped skills not on the base resume: " + ", ".join(pruned))
+        plan["questions_for_rohan"].append("Dropped skills not on the base resume or in skills_confirmed.md: " + ", ".join(pruned))
     change("skills", info["skills"], ", ".join(s for s in skills if s and s not in pruned))
     if info["coursework"] is not None and plan["coursework"]:
         old = marked_text(ps[info["coursework"]])

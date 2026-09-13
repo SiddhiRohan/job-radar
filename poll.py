@@ -23,7 +23,7 @@ def search_all(cfg, companies, max_days, removed):
     """Search every company x term; return (found dict keyed company|req_id, errors) after title/location rules."""
     found, errors = {}, {}
     for c in companies:
-        for term in cfg["search_terms"]:
+        for term in cfg["search_terms"] + list(c.get("extra_terms") or []):
             pages = cfg.get("max_pages_by_tier", {}).get(str(c.get("tier", 1)), 10)
             try:
                 jobs = wd.search(c["tenant"], c["shard"], c["site"], term, max_pages=pages, company=c["name"])

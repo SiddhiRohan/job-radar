@@ -14,6 +14,7 @@ from docx import Document
 import letters
 import plan as planner
 import resumes
+import skills
 import tailor
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -76,6 +77,7 @@ def main():
     ap.add_argument("company"); ap.add_argument("req_id")
     ap.add_argument("--cover", action="store_true"); ap.add_argument("--outreach", action="store_true")
     ap.add_argument("--force", action="store_true"); ap.add_argument("--yes", action="store_true")
+    ap.add_argument("--no-prompt", action="store_true", help="never ask JD-skill y/n; write them to notes.md instead")
     a = ap.parse_args()
     rules = Path("RESUME_RULES.md").read_text(encoding="utf-8")
     profile = Path("profile.md").read_text(encoding="utf-8")
@@ -95,10 +97,17 @@ def main():
     doc = Document(base)
     info = tailor.parse(doc)
     plan = planner.make_plan(doc, info, jd, j, profile + "\n\nRULES:\n" + rules)
+    accepted, declined, deferred = skills.confirm(plan.get("jd_skills_not_confirmed", []), allow_prompt=not a.no_prompt)
+    if accepted:  # newly confirmed skills may now be used: re-plan once
+        plan = planner.make_plan(doc, info, jd, j, profile + "\n\nRULES:\n" + rules)
+    skill_notes = [f"JD asks for {s}: confirmed, added to skills_confirmed.md" for s in accepted]
+    skill_notes += [f"JD asks for {s}: not used, left out (gap to acknowledge if asked)" for s in declined]
+    skill_notes += [f"JD asks for {s}. Have you used it? [y/n] (unattended run: answer by adding it to "
+                    f"skills_confirmed.md and rerunning)" for s in deferred]
     planner.fix_summary(plan, doc, info, profile)
     if not HEADLINE.match(plan["summary"]):
         plan["summary"] = f"**{plan['headline']}** " + plan["summary"]
-    changes = tailor.apply_plan(doc, info, plan)
+    changes = tailor.apply_plan(doc, info, plan, extra_allowed=skills.text())
     print(f"\nbase: {base_label} ({base})\n{len(changes)} changes:")
     for where, before, after in changes:
         print(f"\n[{where}]\n  BEFORE: {before}\n  AFTER:  {after}")
@@ -113,6 +122,7 @@ def main():
     for where, before, after in changes:
         notes += [f"### {where}", "", f"BEFORE: {before}", "", f"AFTER: {after}", ""]
     notes += ["## Hard to defend", ""] + ([f"- {x}" for x in plan["hard_to_defend"]] or ["- none"])
+    notes += ["", "## JD skills outside skills_confirmed.md", ""] + ([f"- {s}" for s in skill_notes] or ["- none"])
     notes += ["", "## Questions for Rohan (nothing below went into the resume)", ""]
     notes += [f"- {q}" for q in plan["questions_for_rohan"]] or ["- none"]
     notes += ["", "## Date overlap explanations", ""] + [f"- {o}" for o in OVERLAPS]

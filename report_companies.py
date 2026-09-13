@@ -2,7 +2,7 @@
 import json
 from collections import Counter
 
-SEC_PER_PAGE = 2.0  # 1.5 s politeness gap plus roughly 0.5 s of request time, measured on the first runs
+SEC_PER_PAGE = 1.6  # measured: 1122 pages in 30 min on the 2026-09-13 run (1.5 s gap, cache hits are free)
 
 
 def main():
@@ -16,7 +16,8 @@ def main():
     seeded = 15  # verified before this expansion
 
     def minutes(tiers):
-        return sum(terms * pages.get(c["tier"], 10) * SEC_PER_PAGE for c in companies if c["tier"] in tiers) / 60
+        return sum((terms + len(c.get("extra_terms") or [])) * pages.get(c["tier"], 10) * SEC_PER_PAGE
+                   for c in companies if c["tier"] in tiers) / 60
 
     daily, tier3 = minutes({1, 2}), minutes({3})
     ats = Counter((v.get("ats") or "unknown").split(" ")[0].split("(")[0].rstrip(";,") for v in not_wd.values())

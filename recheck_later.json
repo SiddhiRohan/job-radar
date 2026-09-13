@@ -1,0 +1,292 @@
+{
+ "Block": {
+  "ats_seen": "SmartRecruiters and Greenhouse",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "TCS": {
+  "ats_seen": "own site",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "HCL": {
+  "ats_seen": "own site hcltech.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "SAIC": {
+  "ats_seen": "own site jobs.saic.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Peraton": {
+  "ats_seen": "own site careers.peraton.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Lockheed Martin": {
+  "ats_seen": "Brassring Kenexa lockheedmartinjobs.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Honeywell": {
+  "ats_seen": "own site careers.honeywell.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "John Deere": {
+  "ats_seen": "own site deere.com careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Ford": {
+  "ats_seen": "own site careers.ford.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Rivian": {
+  "ats_seen": "own site rivian.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Tesla": {
+  "ats_seen": "own site tesla.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Spotify": {
+  "ats_seen": "Lever jobs.lever.co/spotify",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Uber": {
+  "ats_seen": "own site jobs.uber.com iCIMS for university",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Lyft": {
+  "ats_seen": "own site lyft.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "DoorDash": {
+  "ats_seen": "Greenhouse",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Airbnb": {
+  "ats_seen": "own site careers.airbnb.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Stripe": {
+  "ats_seen": "own site stripe.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Coinbase": {
+  "ats_seen": "own site coinbase.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Robinhood": {
+  "ats_seen": "own site careers.robinhood.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Intuit": {
+  "ats_seen": "own site jobs.intuit.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Oracle": {
+  "ats_seen": "own site careers.oracle.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "IBM": {
+  "ats_seen": "own site ibm.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Goldman Sachs": {
+  "ats_seen": "own site goldmansachs.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "American Express": {
+  "ats_seen": "Taleo axp.taleo.net",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Navy Federal": {
+  "ats_seen": "Oracle HCM jobs.navyfederal.org",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Progressive": {
+  "ats_seen": "own site careers.progressive.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Liberty Mutual": {
+  "ats_seen": "own site jobs.libertymutualgroup.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "MetLife": {
+  "ats_seen": "own site metlifecareers.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Charles Schwab": {
+  "ats_seen": "own site schwabjobs.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Walgreens": {
+  "ats_seen": "own site jobs.walgreens.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Costco": {
+  "ats_seen": "own site careers.costco.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Amazon": {
+  "ats_seen": "own site amazon.jobs",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "McKinsey": {
+  "ats_seen": "own site mckinsey.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Tiger Analytics": {
+  "ats_seen": "Workable",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "BCG": {
+  "ats_seen": "own site careers.bcg.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Citadel": {
+  "ats_seen": "own site citadel.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Cummins": {
+  "ats_seen": "own site cummins.jobs",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "ZS Associates": {
+  "ats_seen": "own site jobs.zs.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "AbbVie": {
+  "ats_seen": "SmartRecruiters careers.abbvie.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Charter Communications": {
+  "ats_seen": "own site jobs.spectrum.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Chewy": {
+  "ats_seen": "own site careers.chewy.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Wayfair": {
+  "ats_seen": "own site aboutwayfair.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Siemens": {
+  "ats_seen": "own site parent only subsidiaries on Workday",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "American Airlines": {
+  "ats_seen": "own site jobs.aa.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Meta": {
+  "ats_seen": "own site metacareers.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Google": {
+  "ats_seen": "own site google.com/about/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Microsoft": {
+  "ats_seen": "own site careers.microsoft.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Apple": {
+  "ats_seen": "own site jobs.apple.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "LinkedIn": {
+  "ats_seen": "own site careers.linkedin.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Palantir": {
+  "ats_seen": "Lever jobs.lever.co/palantir",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Datadog": {
+  "ats_seen": "own site careers.datadoghq.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "MongoDB": {
+  "ats_seen": "own site mongodb.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "UBS": {
+  "ats_seen": "Brassring jobs.ubs.com",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Jefferies": {
+  "ats_seen": "own site jefferies.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Nomura": {
+  "ats_seen": "own site",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "EXL Service": {
+  "ats_seen": "own site exlservice.com/careers",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "Grant Thornton": {
+  "ats_seen": "own site US only non-US tenants",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ },
+ "BDO": {
+  "ats_seen": "own site US only Canada and Australia tenants",
+  "searches_done": 1,
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+ }
+}

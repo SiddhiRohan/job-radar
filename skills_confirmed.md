@@ -1,0 +1,260 @@
+# Confirmed skills
+
+Every tool, library, platform, method, and domain term found under Resume/ on 2026-09-13,
+one per line, cleaned of numbers, names, and full sentences. Add anything you have actually used.
+Tailoring may use any line here in the summary, bullets, and Skills line. apply.py appends to this file
+when you answer y to a JD-skill prompt.
+
+- A/B
+- A/B testing and causal inference
+- A/B testing and experiment design
+- acceptance-versus-loss
+- acceptance-versus-loss economics
+- Agile delivery
+- AI
+- AI governance middleware (Python/FastAPI
+- AI-assisted
+- AI-assisted development (Claude Code
+- Airflow (MWAA
+- Amazon MWAA (Airflow
+- API
+- API design
+- APIs
+- ArcGIS
+- ArcGIS integration
+- AUC
+- AWS
+- AWS (SageMaker
+- AWS Glue
+- behavioral analytics
+- behavioral cohorts
+- behavioral embeddings
+- BigQuery
+- blast-radius
+- business case
+- causal ROI
+- churn-model
+- clickstream
+- clickstream, cohort and funnel analysis
+- client-agreed
+- code review
+- cohort and behavioral segmentation
+- cohort and funnel analysis
+- confidence-based
+- confidence-based routing
+- confidence-based routing to human review
+- constrained optimization
+- constrained optimization (scipy.optimize
+- conversion KPIs and risk thresholds
+- county-level
+- course-evaluation
+- customer-facing
+- data contracts
+- data engineering
+- data modeling and schema design
+- data modeling and warehousing
+- data modeling, warehousing, and data hygiene
+- data models and Tableau and Plotly dashboards
+- data quality and performance tuning
+- data quality and validation
+- data-entry
+- data-quality
+- day-to-day
+- day-to-day analytics counterpart
+- dbt
+- de-risking
+- de-risking migrations across LLM versions
+- deep-dive
+- detection logic
+- diagnosis-to-hypothesis
+- distributed feature pipelines
+- Docker
+- DynamoDB
+- embeddings
+- EMR
+- EMR using PySpark and TensorFlow
+- end-to-end
+- end-to-end ML lifecycle
+- ETL
+- ETL/ELT
+- evaluation and governance standard
+- evaluation standard the org shipped against
+- experiment design and readouts
+- experimentation bar
+- experimentation framework
+- explainable models
+- failed-renewal
+- FastAPI
+- Feature Store
+- field-type
+- fine-tunes
+- first data-quality framework
+- form-field
+- fraud and abuse detection
+- fraud-loss
+- friendly-fraud
+- GenAI-enhanced
+- GenAI-enhanced data tooling
+- GenAI-enhanced pipelines
+- generative-AI
+- generative-AI systems
+- georeferenced point files
+- Git
+- GitHub Actions
+- GitHub Actions CI
+- GitHub Copilot
+- golden benchmark datasets
+- GPU
+- GraphQL
+- GraphQL API integration
+- Great Expectations
+- high-decline
+- high-stakes
+- hybrid search and reranking
+- IAM
+- in-house
+- JupyterLab
+- k-NN
+- Kinesis
+- KPIs
+- Lambda
+- ledger and gateway event data
+- LLM
+- LLM evaluation
+- LLM-based
+- LLM-enhanced
+- LLM-enhanced ingestion pipeline
+- LLM-powered
+- LLM-powered natural language interface
+- LLM-powered natural-language-to-SQL interface
+- LLMs
+- longitudinal production study
+- LoRA
+- machine learning
+- machine learning, feature engineering
+- MAPE
+- metrics and dashboarding
+- ML
+- ML lifecycle
+- model drift
+- MS in Data Science
+- multi-source
+- multi-source ledger and gateway event data
+- MWAA
+- natural-language
+- natural-language-to-SQL
+- natural-language-to-SQL interface
+- Network-based
+- NLP/OCR
+- non-blocking
+- non-technical
+- OCR
+- OCR/NLP
+- on-demand
+- on-demand API
+- on-demand REST API
+- open-source
+- open-source PySpark and TensorFlow
+- OpenSearch
+- OpenSearch k-NN
+- optimized SQL
+- orchestration and rules changes
+- pay-in
+- pay-in lifecycle
+- payments and financial services
+- Plotly
+- PostgreSQL
+- PostgreSQL database on Supabase (AWS
+- predictive accuracy
+- prioritized roadmap
+- privacy-compliant
+- PySpark
+- Python
+- Python OCR/NLP ETL pipeline
+- Python, SQL, Airflow, and AWS
+- Python/FastAPI
+- Python/NLP
+- Python/NLP ETL pipeline using OCR
+- quantifiable business impact
+- QuickSight
+- RAG
+- RAG and LLM systems
+- RAG architecture
+- RAG chatbot
+- recommendation that redirected the roadmap
+- recommendations on a prioritized roadmap
+- recovered-revenue
+- redirected the roadmap
+- Redshift
+- Redshift marts built in dbt
+- referential-integrity
+- release-blocking
+- release-blocking guardrails
+- reliable metrics
+- reliable models
+- response-rate
+- REST
+- REST and GraphQL APIs
+- REST API
+- retrieval architecture
+- reviewed teammates' pull requests
+- risk profile
+- ROI
+- ROI case
+- role-based
+- role-based access and policy checks
+- row-level
+- SageMaker
+- SageMaker Pipelines
+- SageMaker Pipelines with Feature Store
+- schema-conformance
+- scipy.optimize
+- secure-by-default
+- secure-by-default controls
+- self-service
+- separate model impact from usage shifts
+- source-system
+- source-system and API ingestion
+- Spark
+- spatial clustering
+- spatial clustering in Python
+- SQL
+- state-of-the-art
+- state-of-the-art LLM methods
+- state-of-the-art retrieval methods
+- statistical modeling
+- statistical modeling, experimentation
+- statistical power
+- step-up
+- straight-through
+- streaming pipelines
+- structured experiments
+- Supabase
+- supply-chain
+- supply-chain concentration risk
+- Tableau
+- Tableau and Plotly
+- Tableau and Plotly dashboards
+- TensorFlow
+- Terraform
+- testable hypotheses
+- time-series
+- time-series decomposition
+- time-series forecasting
+- timely, accurate, and repeatable
+- transaction and event data
+- transaction processing systems
+- transaction success scorecard
+- transaction-state
+- translation-and-join
+- trilingual Pedon description generator
+- two-week
+- two-week Agile sprints
+- university-wide
+- USDA classification standard
+- USDA classification standards
+- validation layer the department now runs on
+- vector search
+- VRAM
+- well-modeled
+- year-long

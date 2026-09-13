@@ -15,13 +15,21 @@ Read by `apply.py` on every run. These are the rules Rohan set; do not relax the
 - If the assessment says skip, say so plainly and stop unless `--force` is passed.
 
 ## What may change and what may not
-- LOCKED: header, employer names, titles, dates, GPA, and every number.
-- Tailor by mirroring the JD's phrasing in the summary, reordering bullets by relevance, adjusting the
-  Skills line, and picking coursework.
+- LOCKED, always: numbers, dates, titles, employers, GPA, and the header.
+- Vocabulary: everything on the base resumes is real, and `skills_confirmed.md` lists every tool, library,
+  platform, method, and domain term found under `Resume/` plus anything Rohan has added by hand. Tailoring may
+  freely reword the summary, reorder and reword bullets, and edit the Skills line using anything in that file,
+  phrased to mirror the JD.
+- Nothing outside the base text plus `skills_confirmed.md` goes into the resume. A bullet rewrite that adds a
+  term outside that vocabulary is reverted and written to `notes.md` as a question.
+- Defensibility flag: if a rewrite overstates depth on a confirmed skill ("led" where the base says "supported",
+  "production" where the base says "prototype"), it is flagged under "Hard to defend" in `notes.md`.
+- JD skills outside `skills_confirmed.md`: before building the docx, `apply.py` asks one yes/no per skill,
+  "JD asks for <skill>. Have you used it? [y/n]". y appends it to `skills_confirmed.md` and re-plans once so the
+  tailoring can use it; n leaves it out and notes the gap. With `--no-prompt`, or when stdin is not a terminal,
+  the questions are written to `notes.md` instead so unattended runs do not stall.
 - Headline rotates between Data Engineer, Data Scientist, ML Engineer, AI Engineer by role.
 - Inline bold on methods, domain terms, and headline metrics.
-- Never fabricate. Only tools and experience already on the base resume. If a bullet needs something
-  new, write it in `notes.md` as a question for Rohan; do not put it in the resume.
 
 ## Review gate
 - Print every changed bullet as before/after in the terminal for approval BEFORE building the docx.
