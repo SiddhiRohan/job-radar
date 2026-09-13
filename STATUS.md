@@ -1,0 +1,77 @@
+# STATUS, round 2 (2026-09-13, run unattended)
+
+## Completed
+
+- **Housekeeping.** Remote confirmed private (`gh repo view` -> private: true). Nothing pushed this round. `.gitignore`
+  covers Resume/, profile.md, jobs.jsonl, seen.json, last_run.json, digests/, .cache/, logs/, .env, and the stray root
+  resume file. Dell, AMD, Qualcomm, Deloitte, JPMorgan Chase removed from companies.json. Cap was 120 for the Part B
+  run and is back to 40 (`score_cap` in config.json).
+- **Part A.** `profile.md` written verbatim; `score.py` puts it in the cached system prompt on every run.
+- **Part B.** Key confirmed set (`ANTHROPIC_API_KEY set: True`, never printed). The earlier "unscored for everything"
+  was a 400 from `minimum`/`maximum` in the JSON schema; fixed with an enum. 5 postings scored end to end before the
+  full run. Sponsorship tagging (`sponsor.py`), `sponsors_h1b` seeded per company, new title lists with
+  `include_override`, years gate, detail-record US check (real fields: `location`, `additionalLocations`,
+  `jobRequisitionLocation.country.alpha2Code`), URL-path city check, two-resume scoring with the new verdict schema,
+  `RESUME_MAP.md`, new digest layout. Files: filters.py, sponsor.py, resumes.py, poll.py, score.py, digest.py, wd.py.
+- **Part C.** `apply.py`, `tailor.py`, `plan.py`, `letters.py`, `RESUME_RULES.md`. Ran on the top Apply posting,
+  Adobe R171718 Machine Learning Engineer. Output in `Resume/For Adobe/R171718_Machine-Learning-Engineer/`:
+  `jd.txt`, `Resume - Siddhi Rohan (ML Engineer).docx`, `outreach.md`, `notes.md` (fit assessment, every before/after
+  change, hard-to-defend flags, questions, overlap explanations). No cover letter: the posting does not ask for one.
+- **Part D.** `finalize.py` ran on that folder: humanized 12 of 38 prose paragraphs (diff in notes.md), invisible
+  Unicode stripped (0 in the docx, 5 in jd.txt), docx author/lastModifiedBy/app properties cleared. Report appended
+  to notes.md. Digests were also swept.
+- **Part E.** Schedule shown below, not installed.
+
+## Skipped or changed, and why
+
+- Approval gates skipped per your instruction; `--yes` used. Before/after is in notes.md.
+- The first tailoring pass fabricated (scikit-learn, feature engineering, anomaly detection). I added guards and redid
+  the run; see DECISIONS.md items 9. The summary can still combine existing words into new phrases ("fraud and abuse
+  detection"), so read it once.
+- First outreach draft cited scikit-learn and PyTorch; regenerated from the tailored resume text. The humanize pass
+  shortened the message to 92 words (target 100 to 120), so add a sentence if you use it.
+- remove-ai-marks service not running; exiftool and qpdf not installed. Local fallback used. No PDFs were produced.
+- Cover letter path is implemented but untested on a real posting (none in Apply required one).
+- Empty `AI Engineer` role folder untouched: the scorer recommended `DS and DE Resumes/two-page` for every Apply row.
+
+## Part E: schedule (not installed)
+
+Windows Task Scheduler, 7:30 AM local daily, output appended to logs/run.log:
+
+    mkdir logs
+    schtasks /Create /SC DAILY /ST 07:30 /TN "JobRadar" /TR "cmd /c cd /d C:\Users\siddh\Downloads\job-radar && python run.py >> logs\run.log 2>&1"
+
+Cron equivalent (WSL or Mac):
+
+    30 7 * * * cd /c/Users/siddh/Downloads/job-radar && python run.py >> logs/run.log 2>&1
+
+## Part B header stats (3-day window, 15 companies)
+
+    Companies polled: 15 | Window: last 3 day(s) | New postings kept: 117
+    Removed by rule: seniority 242, domain 35, non_us 45, years_gate 17, sponsorship_no 38, perm_ad 0
+    API calls: 68 (rule-decided postings skip the API) | Lower scores: score 3: 7, score 2: 21, score 1: 28 (years gate 10)
+    Skipped section: 45 (all Booz Allen / Leidos clearance, Capital One no-sponsorship) | Errors: none
+
+## Apply (6)
+
+- **Adobe** | Machine Learning Engineer | San Jose | Posted 2 Days Ago | E3/X4 | experienced · DS and DE Resumes/two-page | https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/San-Jose/Machine-Learning-Engineer_R171718
+    Payment fraud analytics at Adventaus and production ML/data engineering (SageMaker, PySpark/EMR, OpenSearch) align with the ML lifecycle and fraud focus. Platform tools missing: Databricks.
+- **Humana** | Senior Data Scientist | Louisville, KY | Posted 2 Days Ago | E2/X4 | experienced · DS and DE Resumes/two-page
+    Hits nearly every must-have: production LLM/RAG, agentic-style systems, Python/SQL/PySpark, ETL, ML frameworks; clears Master's + 3 years.
+- **KLA** | AI Software Engineer|Manufacturing | Ann Arbor, MI | Posted 3 Days Ago | E3/X4 | experienced · DS and DE Resumes/two-page
+    RAG, LLM, data engineering, MLOps map well. Platform tools missing: Snowflake, Azure.
+- **Mastercard** | Data Engineer II | O'Fallon, Missouri | Posted 3 Days Ago | E3/X4 | experienced · DS and DE Resumes/two-page
+    ETL/ELT, SQL, Python, PostgreSQL, data modeling, data quality, AWS, Spark via EMR, plus payments domain. Platform tools missing: Databricks.
+- **Target** | Data Engineer - Finance AI Solutions | Brooklyn Park, MN | Posted 2 Days Ago | E3/X4 | experienced · DS and DE Resumes/two-page
+    Spark/PySpark, AWS, ETL, dbt, Airflow, FastAPI match; Scala/Java absent but not mandatory. Platform tools missing: GCP, Azure.
+- **Walmart** | (USA) Senior, Data Scientist | Bentonville, AR | Posted 2 Days Ago | E2/X4 | experienced · DS and DE Resumes/two-page
+    ML modeling, Python, SQL, experimentation, production deployment; main gap is mathematical optimization depth.
+
+Full lines with links: digests/2026-09-13.md.
+
+## Maybe (0)
+
+No posting with sponsorship "unknown" scored 4 or higher. All 15 companies have a seeded `sponsors_h1b`, so
+"unknown" only appears when a company is null; that will change once the expanded list adds null companies.
+
+## Contract / backup (0)
