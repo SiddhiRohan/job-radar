@@ -1,23 +1,177 @@
 [
-  {"name": "NVIDIA",      "tenant": "nvidia",     "shard": "wd5",  "site": "NVIDIAExternalCareerSite", "verified": false},
-  {"name": "Salesforce",  "tenant": "salesforce", "shard": "wd12", "site": "External_Career_Site",     "verified": false},
-  {"name": "Adobe",       "tenant": "adobe",      "shard": "wd5",  "site": "external_experienced",     "verified": false},
-  {"name": "Capital One", "tenant": "capitalone", "shard": "wd12", "site": "Capital_One",              "verified": false},
-  {"name": "Walmart",     "tenant": "walmart",    "shard": "wd5",  "site": "WalmartExternal",          "verified": false},
-  {"name": "Target",      "tenant": "target",     "shard": "wd5",  "site": "targetcareers",            "verified": false},
-  {"name": "Dell",        "tenant": "dell",       "shard": "wd1",  "site": "Dell_Careers",             "verified": false},
-  {"name": "Intel",       "tenant": "intel",      "shard": "wd1",  "site": "External",                 "verified": false},
-  {"name": "AMD",         "tenant": "amd",        "shard": "wd1",  "site": "External",                 "verified": false},
-  {"name": "Qualcomm",    "tenant": "qualcomm",   "shard": "wd5",  "site": "External",                 "verified": false},
-  {"name": "KLA",         "tenant": "kla",        "shard": "wd1",  "site": "Search",                   "verified": false},
-  {"name": "Mastercard",  "tenant": "mastercard", "shard": "wd1",  "site": "CorporateCareers",         "verified": false},
-
-  {"name": "Visa",             "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
-  {"name": "Fidelity",         "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
-  {"name": "JPMorgan Chase",   "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
-  {"name": "Humana",           "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
-  {"name": "CVS Health",       "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
-  {"name": "Deloitte",         "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
-  {"name": "Booz Allen",       "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
-  {"name": "Leidos",           "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"}
+  {
+    "name": "NVIDIA",
+    "tenant": "nvidia",
+    "shard": "wd5",
+    "site": "NVIDIAExternalCareerSite",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 2000
+  },
+  {
+    "name": "Salesforce",
+    "tenant": "salesforce",
+    "shard": "wd12",
+    "site": "External_Career_Site",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 1442
+  },
+  {
+    "name": "Adobe",
+    "tenant": "adobe",
+    "shard": "wd5",
+    "site": "external_experienced",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 739
+  },
+  {
+    "name": "Capital One",
+    "tenant": "capitalone",
+    "shard": "wd12",
+    "site": "Capital_One",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 1939
+  },
+  {
+    "name": "Walmart",
+    "tenant": "walmart",
+    "shard": "wd504",
+    "site": "WalmartExternal",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 2000
+  },
+  {
+    "name": "Target",
+    "tenant": "target",
+    "shard": "wd5",
+    "site": "targetcareers",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 2000
+  },
+  {
+    "name": "Dell",
+    "tenant": null,
+    "shard": null,
+    "site": null,
+    "verified": false,
+    "todo": "not on Workday: moved to Oracle HCM (enterpriseplatform.dell.com); no Workday site"
+  },
+  {
+    "name": "Intel",
+    "tenant": "intel",
+    "shard": "wd1",
+    "site": "External",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 590
+  },
+  {
+    "name": "AMD",
+    "tenant": null,
+    "shard": null,
+    "site": null,
+    "verified": false,
+    "todo": "not on Workday: moved to careers.amd.com; Workday tenant returns 422"
+  },
+  {
+    "name": "Qualcomm",
+    "tenant": null,
+    "shard": null,
+    "site": null,
+    "verified": false,
+    "todo": "not on Workday: moved to careers.qualcomm.com; qualcomm.wd12/External returns 0 roles"
+  },
+  {
+    "name": "KLA",
+    "tenant": "kla",
+    "shard": "wd1",
+    "site": "Search",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 997
+  },
+  {
+    "name": "Mastercard",
+    "tenant": "mastercard",
+    "shard": "wd1",
+    "site": "CorporateCareers",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 1040
+  },
+  {
+    "name": "Visa",
+    "tenant": "visa",
+    "shard": "wd5",
+    "site": "Visa",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 760
+  },
+  {
+    "name": "Fidelity",
+    "tenant": "fmr",
+    "shard": "wd1",
+    "site": "FidelityCareers",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 633
+  },
+  {
+    "name": "JPMorgan Chase",
+    "tenant": null,
+    "shard": null,
+    "site": null,
+    "verified": false,
+    "todo": "not on Workday: uses Oracle (jpmorganchase.com/careers); no Workday tenant"
+  },
+  {
+    "name": "Humana",
+    "tenant": "humana",
+    "shard": "wd5",
+    "site": "Humana_External_Career_Site",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 364
+  },
+  {
+    "name": "CVS Health",
+    "tenant": "cvshealth",
+    "shard": "wd1",
+    "site": "CVS_Health_Careers",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 18150
+  },
+  {
+    "name": "Deloitte",
+    "tenant": null,
+    "shard": null,
+    "site": null,
+    "verified": false,
+    "todo": "not on Workday: US Deloitte not on Workday (only deloitteie.wd3 = Ireland)"
+  },
+  {
+    "name": "Booz Allen",
+    "tenant": "bah",
+    "shard": "wd1",
+    "site": "BAH_Jobs",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 2000
+  },
+  {
+    "name": "Leidos",
+    "tenant": "leidos",
+    "shard": "wd5",
+    "site": "External",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 2000
+  }
 ]
