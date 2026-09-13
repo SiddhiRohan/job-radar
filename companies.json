@@ -1,0 +1,23 @@
+[
+  {"name": "NVIDIA",      "tenant": "nvidia",     "shard": "wd5",  "site": "NVIDIAExternalCareerSite", "verified": false},
+  {"name": "Salesforce",  "tenant": "salesforce", "shard": "wd12", "site": "External_Career_Site",     "verified": false},
+  {"name": "Adobe",       "tenant": "adobe",      "shard": "wd5",  "site": "external_experienced",     "verified": false},
+  {"name": "Capital One", "tenant": "capitalone", "shard": "wd12", "site": "Capital_One",              "verified": false},
+  {"name": "Walmart",     "tenant": "walmart",    "shard": "wd5",  "site": "WalmartExternal",          "verified": false},
+  {"name": "Target",      "tenant": "target",     "shard": "wd5",  "site": "targetcareers",            "verified": false},
+  {"name": "Dell",        "tenant": "dell",       "shard": "wd1",  "site": "Dell_Careers",             "verified": false},
+  {"name": "Intel",       "tenant": "intel",      "shard": "wd1",  "site": "External",                 "verified": false},
+  {"name": "AMD",         "tenant": "amd",        "shard": "wd1",  "site": "External",                 "verified": false},
+  {"name": "Qualcomm",    "tenant": "qualcomm",   "shard": "wd5",  "site": "External",                 "verified": false},
+  {"name": "KLA",         "tenant": "kla",        "shard": "wd1",  "site": "Search",                   "verified": false},
+  {"name": "Mastercard",  "tenant": "mastercard", "shard": "wd1",  "site": "CorporateCareers",         "verified": false},
+
+  {"name": "Visa",             "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
+  {"name": "Fidelity",         "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
+  {"name": "JPMorgan Chase",   "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
+  {"name": "Humana",           "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
+  {"name": "CVS Health",       "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
+  {"name": "Deloitte",         "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
+  {"name": "Booz Allen",       "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"},
+  {"name": "Leidos",           "tenant": null, "shard": null, "site": null, "verified": false, "todo": "resolve slug"}
+]
