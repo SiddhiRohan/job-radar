@@ -4,8 +4,6 @@ import re
 
 from docx import Document
 
-import llm
-
 HEADINGS = ("PROFESSIONAL SUMMARY", "WORK EXPERIENCE", "RESEARCH PUBLICATIONS", "SKILLS", "EDUCATION", "PROJECTS")
 DATE = re.compile(r"(19|20)\d\d\s*$|Present\s*$")
 
@@ -70,63 +68,53 @@ def reorder(doc, job, order):
         anchor = el
 
 
-PLAN_SCHEMA = {"type": "object", "additionalProperties": False, "properties": {
-    "headline": {"type": "string", "enum": ["Data Engineer", "Data Scientist", "ML Engineer", "AI Engineer"]},
-    "summary": {"type": "string"},
-    "jobs": {"type": "array", "items": {"type": "object", "additionalProperties": False, "properties": {
-        "job": {"type": "integer"}, "order": {"type": "array", "items": {"type": "integer"}},
-        "rewrites": {"type": "array", "items": {"type": "object", "additionalProperties": False, "properties": {
-            "bullet": {"type": "integer"}, "text": {"type": "string"}, "reason": {"type": "string"}},
-            "required": ["bullet", "text", "reason"]}}}, "required": ["job", "order", "rewrites"]}},
-    "skills": {"type": "string"}, "coursework": {"type": "string"},
-    "hard_to_defend": {"type": "array", "items": {"type": "string"}},
-    "questions_for_rohan": {"type": "array", "items": {"type": "string"}},
-    "fit_notes": {"type": "string"}},
-    "required": ["headline", "summary", "jobs", "skills", "coursework", "hard_to_defend", "questions_for_rohan", "fit_notes"]}
-
-PLAN_RULES = """You tailor a resume to one job posting. LOCKED: header, employer names, titles, dates, GPA, every number.
-Allowed: rewrite the summary to mirror the posting's phrasing; reorder bullets within a job by relevance;
-lightly reword bullets to mirror the posting's terms WITHOUT adding tools, scope, or facts not already in the base;
-adjust the Skills line (only tools already on the base resume, reordered/pruned); pick coursework already listed.
-Keep **bold** markers on methods, domain terms, and headline metrics; use ** in your text the same way.
-Never use em dashes. If a bullet would need something new to match the posting, put a question in questions_for_rohan
-instead of writing it. Flag bullets that would be hard to defend in an interview. Return only text for bullets you
-actually change; keep rewrites minimal. Headline rotates by role: Data Engineer, Data Scientist, ML Engineer, AI Engineer."""
-
-
-def make_plan(doc, info, jd_text, job_meta, profile):
-    ps = doc.paragraphs
-    blocks = [f"SUMMARY: {marked_text(ps[info['summary']])}"]
-    for k, j in enumerate(info["jobs"]):
-        blocks.append(f"JOB {k}: {ps[j['header']].text.strip()}")
-        blocks += [f"  bullet {b}: {marked_text(ps[i])}" for b, i in enumerate(j["bullets"])]
-    blocks.append(f"SKILLS: {ps[info['skills']].text.strip()}")
-    if info["coursework"] is not None:
-        blocks.append(f"COURSEWORK: {ps[info['coursework']].text.strip()}")
-    user = (f"POSTING: {job_meta['title']} at {job_meta['company']}\n{jd_text[:12000]}\n\nBASE RESUME:\n"
-            + "\n".join(blocks) + "\n\nReturn the tailoring plan.")
-    return llm.complete(PLAN_RULES + "\n\nCANDIDATE PROFILE:\n" + profile, user, PLAN_SCHEMA, max_tokens=6000)[0]
+def new_terms(text, base_lower):
+    """Words of 5+ letters in `text` that appear nowhere on the base resume: a fabrication signal."""
+    words = set(re.findall(r"[A-Za-z][A-Za-z\-]{4,}", re.sub(r"\*\*", "", text)))
+    return sorted(w for w in words if w.lower() not in base_lower)
 
 
 def apply_plan(doc, info, plan):
-    """Apply the plan; return [(where, before, after)] for the terminal diff and notes.md."""
+    """Apply the plan; return [(where, before, after)] for the terminal diff and notes.md.
+    Guards: bullet rewrites that add terms absent from the base are reverted and turned into questions;
+    skills not on the base are pruned; the coursework label and leading tabs are preserved."""
     ps, changes = doc.paragraphs, []
+    base_lower = "\n".join(p.text for p in ps).lower()
     def change(where, idx, new):
         old = marked_text(ps[idx])
+        lead = re.match(r"\s*", old.replace("**", "")).group(0)
+        new = lead + new.lstrip() if lead and not new.startswith(lead) else new
         if new and new.strip() != old.strip():
             set_text(ps[idx], new)
             changes.append((where, old, new))
+    unsupported = new_terms(plan["summary"], base_lower)
+    if unsupported:
+        plan["questions_for_rohan"].append("Summary uses terms not on the base resume, check them: " + ", ".join(unsupported))
     change("summary", info["summary"], plan["summary"])
     for pj in plan["jobs"]:
         job = info["jobs"][pj["job"]]
         for rw in pj["rewrites"]:
-            if 0 <= rw["bullet"] < len(job["bullets"]):
-                change(f"job {pj['job']} bullet {rw['bullet']}", job["bullets"][rw["bullet"]], rw["text"])
+            if not 0 <= rw["bullet"] < len(job["bullets"]):
+                continue
+            added = new_terms(rw["text"], base_lower)
+            if added:
+                plan["questions_for_rohan"].append(f"Reverted job {pj['job']} bullet {rw['bullet']} rewrite: it added "
+                                                   f"{', '.join(added)}. Is that accurate? Proposed: {rw['text']}")
+                continue
+            change(f"job {pj['job']} bullet {rw['bullet']}", job["bullets"][rw["bullet"]], rw["text"])
         order = [i for i in pj["order"] if 0 <= i < len(job["bullets"])]
         if order and order != sorted(order) and len(set(order)) == len(job["bullets"]):
             changes.append((f"job {pj['job']} order", " ".join(map(str, range(len(order)))), " ".join(map(str, order))))
             reorder(doc, job, order)
-    change("skills", info["skills"], plan["skills"])
+    skills = [s.strip() for s in plan["skills"].split(",")]
+    pruned = [s for s in skills if s and s.lower() not in base_lower]
+    if pruned:
+        plan["questions_for_rohan"].append("Dropped skills not on the base resume: " + ", ".join(pruned))
+    change("skills", info["skills"], ", ".join(s for s in skills if s and s not in pruned))
     if info["coursework"] is not None and plan["coursework"]:
-        change("coursework", info["coursework"], plan["coursework"])
+        old = marked_text(ps[info["coursework"]])
+        if "capstone" in old.lower() and "capstone" not in plan["coursework"].lower():
+            plan["questions_for_rohan"].append("Coursework rewrite dropped the capstone line; kept the original.")
+        else:
+            change("coursework", info["coursework"], "**Coursework: **" + re.sub(r"^\**Coursework:\**\s*", "", plan["coursework"]))
     return changes

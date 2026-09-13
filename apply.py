@@ -12,6 +12,7 @@ from pathlib import Path
 from docx import Document
 
 import letters
+import plan as planner
 import resumes
 import tailor
 
@@ -93,7 +94,8 @@ def main():
 
     doc = Document(base)
     info = tailor.parse(doc)
-    plan = tailor.make_plan(doc, info, jd, j, profile + "\n\nRULES:\n" + rules)
+    plan = planner.make_plan(doc, info, jd, j, profile + "\n\nRULES:\n" + rules)
+    planner.fix_summary(plan, doc, info, profile)
     if not HEADLINE.match(plan["summary"]):
         plan["summary"] = f"**{plan['headline']}** " + plan["summary"]
     changes = tailor.apply_plan(doc, info, plan)
@@ -110,7 +112,7 @@ def main():
                                           f"- {plan['fit_notes']}", "", "## Changes (before / after)", ""]
     for where, before, after in changes:
         notes += [f"### {where}", "", f"BEFORE: {before}", "", f"AFTER: {after}", ""]
-    notes += ["## Hard to defend", ""] + [f"- {x}" for x in plan["hard_to_defend"]] or ["- none"]
+    notes += ["## Hard to defend", ""] + ([f"- {x}" for x in plan["hard_to_defend"]] or ["- none"])
     notes += ["", "## Questions for Rohan (nothing below went into the resume)", ""]
     notes += [f"- {q}" for q in plan["questions_for_rohan"]] or ["- none"]
     notes += ["", "## Date overlap explanations", ""] + [f"- {o}" for o in OVERLAPS]

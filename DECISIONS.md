@@ -28,5 +28,11 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
    `finalize.py` uses the local fallback: invisible-Unicode strip plus core/app property clearing for .docx.
    No PDFs are produced by this pipeline, so nothing was skipped there. To use the service later, start it and
    set `WATERMARKS_SERVICE_URL` (default `http://127.0.0.1:8765`).
-9. **No pushes this round.** The remote stays configured (it is private) but nothing is pushed, per the round-2
+9. **Fabrication guard is word-level.** The first tailoring pass added "scikit-learn", "feature engineering", and
+   "anomaly detection", none of which are on the base. I added a guard: bullet rewrites that introduce any 5+ letter
+   word absent from the base are reverted into a question; skills not on the base are pruned; the summary gets one
+   constrained retry, else the base summary with the headline rotated. The guard cannot catch new phrases built from
+   existing words (for example "fraud and abuse detection" from "friendly-fraud" and "detection logic"), so the summary
+   still needs a human read. The Adobe run was redone after the guard went in.
+10. **No pushes this round.** The remote stays configured (it is private) but nothing is pushed, per the round-2
    rules.
