@@ -1,9 +1,23 @@
 {
-  "search_terms": ["data scientist", "data engineer", "machine learning",
-                   "New College Grad 2026", "AI engineer", "applied scientist"],
+  "search_terms": [
+    "data scientist",
+    "data engineer",
+    "machine learning",
+    "New College Grad 2026",
+    "AI engineer",
+    "applied scientist"
+  ],
   "max_days_ago": 1,
   "us_only": true,
-  "exclude_title_words": ["senior", "principal", "staff", "director",
-                          "manager", "intern", "phd"],
-  "include_title_words": []
+  "exclude_title_words": [
+    "senior",
+    "principal",
+    "staff",
+    "director",
+    "manager",
+    "intern",
+    "phd"
+  ],
+  "include_title_words": [],
+  "title_must_match_term": true
 }

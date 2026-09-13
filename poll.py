@@ -40,6 +40,18 @@ def title_ok(title, cfg):
     return not inc or any(w.lower() in t for w in inc)
 
 
+def title_matches_term(title, term):
+    """Some tenants (Salesforce) do keyword-OR search; require a term word in the title.
+    Short words (ai, ml) must match whole; longer ones may match as substrings (grad/graduate)."""
+    t = title.lower()
+    for w in term.lower().split():
+        if len(w) <= 3 and re.search(r"\b" + re.escape(w) + r"\b", t):
+            return True
+        if len(w) > 3 and w in t:
+            return True
+    return False
+
+
 def load_json(path, default):
     p = Path(path)
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else default
@@ -60,6 +72,7 @@ def poll(max_days_ago, cfg, companies):
             for j in fresh:
                 key = f"{c['name']}|{j['req_id']}"
                 if key not in found and title_ok(j["title"], cfg) \
+                        and (not cfg.get("title_must_match_term", True) or title_matches_term(j["title"], term)) \
                         and not (cfg["us_only"] and looks_non_us(j["location"])):
                     j["search_term"] = term
                     found[key] = j
