@@ -75,3 +75,24 @@ No posting with sponsorship "unknown" scored 4 or higher. All 15 companies have 
 "unknown" only appears when a company is null; that will change once the expanded list adds null companies.
 
 ## Contract / backup (0)
+
+## Company expansion (after STATUS.md was first written)
+
+- Candidates: 209 (15 already verified + 194 new). Resolved from search-result URLs: 105. Verified: 98 new, 113 total.
+  Failed twice and dropped: 7 (Chime, VMware, Verizon, Discover, Eli Lilly, Amplify, CMU). Not on Workday: 96, by ATS in
+  `not_on_workday.json` and COMPANIES_REPORT.md. 58 of those got only one search: the session's web-search budget (200)
+  ran out, see DECISIONS.md item 10.
+- Tiers: 47 tier 1, 46 tier 2, 20 tier 3. `sponsors_h1b` true 93 / false 9 / null 11, each with `sponsorship_source`.
+- Tier 3 polls on Monday and Thursday (`tier3_weekdays` in config.json, or `--all-tiers`). Pages per search by tier:
+  3 / 1 / 1 (`max_pages_by_tier`). Estimate: about 37 min daily, 41 on tier-3 days. Measured: the run below took
+  about 29 min wall time for 93 companies. The 30-minute target holds only at 1 page for tier 2; to get tier 1 to more
+  pages, drop search terms or demote some tier-1 names.
+
+### `python run.py --days 1` with the new list (Sunday, so tier 3 skipped)
+
+    Companies polled: 93 | Window: last 1 day(s) | New postings kept: 6
+    Removed by rule: seniority 20, domain 3, non_us 2, years_gate 2, sponsorship_no 0, perm_ad 0
+    API calls: 4 | Apply: 1 (McKesson Data Scientist, USA Remote, E3/X4) | Maybe: 0 | Errors: none
+
+The low count is a one-day window on a Sunday with one page per search for tier 2; the 3-day backlog for the 98 new
+companies has not been polled. Run `python run.py --days 3 --all-tiers` once to catch up (expect 40+ minutes).
