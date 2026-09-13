@@ -121,19 +121,22 @@ def html_to_text(s):
     return re.sub(r"\n\s*\n+", "\n\n", s).strip()
 
 
-def fetch_description(tenant, shard, detail_path):
-    """Plain-text job description (and country if Workday provides it)."""
+def fetch_detail(tenant, shard, detail_path):
+    """Detail record: plain-text description plus the real location fields Workday exposes."""
     data = request_json(base_url(tenant, shard) + detail_path)
     info = data.get("jobPostingInfo")
     if not info or "jobDescription" not in info:
         raise ValueError(f"unexpected detail response keys: {list(data)[:10]}")
-    return html_to_text(info["jobDescription"])
+    req_loc = info.get("jobRequisitionLocation") or {}
+    return {
+        "description": html_to_text(info["jobDescription"]),
+        "location": info.get("location"),
+        "additional_locations": info.get("additionalLocations") or [],
+        "country": (info.get("country") or {}).get("descriptor"),
+        "country_code": (req_loc.get("country") or {}).get("alpha2Code"),
+        "time_type": info.get("timeType"),
+    }
 
 
-if __name__ == "__main__":
-    import sys
-    jobs = search("nvidia", "wd5", "NVIDIAExternalCareerSite", " ".join(sys.argv[1:]) or "data scientist",
-                  max_pages=1, company="NVIDIA")
-    for j in jobs[:5]:
-        print(j["posted_days_ago"], j["req_id"], j["title"], "|", j["location"])
-    print(fetch_description("nvidia", "wd5", jobs[0]["detail_path"])[:400])
+def fetch_description(tenant, shard, detail_path):
+    return fetch_detail(tenant, shard, detail_path)["description"]

@@ -9,15 +9,54 @@
   ],
   "max_days_ago": 1,
   "us_only": true,
-  "exclude_title_words": [
-    "senior",
+  "title_must_match_term": true,
+  "exclude_seniority": [
+    "sr",
+    "sr.",
+    "lead",
     "principal",
     "staff",
+    "distinguished",
     "director",
     "manager",
+    "vp",
+    "vice president",
+    "avp",
+    "architect",
+    "sme",
+    "pmts",
+    "smts",
     "intern",
-    "phd"
+    "internship",
+    "phd",
+    "fellow"
   ],
-  "include_title_words": [],
-  "title_must_match_term": true
+  "exclude_domain": [
+    "verification",
+    "module",
+    "packaging",
+    "physical design",
+    "devops",
+    "sre",
+    "site reliability",
+    "security",
+    "cyber",
+    "quality",
+    "test engineer",
+    "manufacturing engineer",
+    "asic",
+    "rtl",
+    "firmware",
+    "front end",
+    "android",
+    "ios",
+    "mobile"
+  ],
+  "include_override": [
+    "data scientist, junior",
+    "new college grad",
+    "early career",
+    "associate"
+  ],
+  "score_cap": 120
 }

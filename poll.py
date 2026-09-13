@@ -1,55 +1,17 @@
-"""Poll verified Workday sites for recent postings; track new ones in jobs.jsonl / seen.json."""
+"""Poll verified Workday sites, apply title/location rules, enrich new postings, track them in jobs.jsonl."""
 import argparse
 import json
-import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import filters
+import sponsor
 import wd
 
 sys.stdout.reconfigure(encoding="utf-8")
-
-NON_US = [
-    "canada", "mexico", "brazil", "argentina", "colombia", "chile", "united kingdom", "uk", "england",
-    "london", "ireland", "dublin", "germany", "france", "paris", "spain", "italy", "netherlands", "amsterdam",
-    "poland", "warsaw", "czech", "prague", "romania", "sweden", "stockholm", "denmark", "finland", "norway",
-    "switzerland", "zurich", "austria", "belgium", "portugal", "lisbon", "hungary", "israel", "tel aviv",
-    "india", "bangalore", "bengaluru", "hyderabad", "pune", "chennai", "mumbai", "gurgaon", "gurugram",
-    "noida", "delhi", "china", "shanghai", "beijing", "shenzhen", "taiwan", "taipei", "hsinchu", "japan",
-    "tokyo", "korea", "seoul", "singapore", "malaysia", "kuala lumpur", "philippines", "manila", "vietnam",
-    "thailand", "bangkok", "indonesia", "jakarta", "australia", "sydney", "melbourne", "new zealand",
-    "hong kong", "dubai", "uae", "saudi", "riyadh", "egypt", "south africa", "nigeria", "kenya", "turkey",
-    "costa rica", "guatemala", "puerto rico", "bermuda", "toronto", "vancouver", "montreal", "ottawa",
-    "calgary", "munich", "berlin", "madrid", "barcelona", "milan", "krakow", "cambridge, uk", "reading, uk",
-]
-
-
-def looks_non_us(location):
-    s = location.lower()
-    if re.search(r"\b(us|usa|united states|u\.s\.)\b", s):
-        return False
-    return any(re.search(r"\b" + re.escape(w) + r"\b", s) for w in NON_US)
-
-
-def title_ok(title, cfg):
-    t = title.lower()
-    if any(re.search(r"\b" + re.escape(w.lower()) + r"\b", t) for w in cfg["exclude_title_words"]):
-        return False
-    inc = cfg.get("include_title_words") or []
-    return not inc or any(w.lower() in t for w in inc)
-
-
-def title_matches_term(title, term):
-    """Some tenants (Salesforce) do keyword-OR search; require a term word in the title.
-    Short words (ai, ml) must match whole; longer ones may match as substrings (grad/graduate)."""
-    t = title.lower()
-    for w in term.lower().split():
-        if len(w) <= 3 and re.search(r"\b" + re.escape(w) + r"\b", t):
-            return True
-        if len(w) > 3 and w in t:
-            return True
-    return False
+MAX_DESC = 15000
+RULES = ("seniority", "domain", "non_us", "years_gate", "sponsorship_no", "perm_ad")
 
 
 def load_json(path, default):
@@ -57,27 +19,51 @@ def load_json(path, default):
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else default
 
 
-def poll(max_days_ago, cfg, companies):
-    """Return (kept postings dict keyed by company|req_id, errors dict)."""
+def search_all(cfg, companies, max_days, removed):
+    """Search every company x term; return (found dict keyed company|req_id, errors) after title/location rules."""
     found, errors = {}, {}
     for c in companies:
         for term in cfg["search_terms"]:
             try:
                 jobs = wd.search(c["tenant"], c["shard"], c["site"], term, company=c["name"])
-            except Exception as e:  # keep polling other companies
-                errors[c["name"]] = f"{term}: {e}"
+            except Exception as e:  # keep polling the other companies
+                errors[c["name"]] = f"{term}: {str(e)[:150]}"
                 print(f"  ! {c['name']} / {term}: {str(e)[:90]}", flush=True)
                 break
-            fresh = [j for j in jobs if j["posted_days_ago"] <= max_days_ago]
-            for j in fresh:
+            fresh = 0
+            for j in jobs:
                 key = f"{c['name']}|{j['req_id']}"
-                if key not in found and title_ok(j["title"], cfg) \
-                        and (not cfg.get("title_must_match_term", True) or title_matches_term(j["title"], term)) \
-                        and not (cfg["us_only"] and looks_non_us(j["location"])):
+                if j["posted_days_ago"] > max_days or key in found:
+                    continue
+                fresh += 1
+                if cfg.get("title_must_match_term", True) and not filters.title_matches_term(j["title"], term):
+                    continue
+                reason = filters.title_exclusion(j["title"], cfg)
+                if reason:
+                    removed[reason].add(key)
+                elif cfg["us_only"] and (filters.looks_non_us(j["location"]) or filters.path_non_us(j["url"])):
+                    removed["non_us"].add(key)
+                else:
                     j["search_term"] = term
                     found[key] = j
-            print(f"  {c['name']:<12} {term:<22} {len(jobs):>4} results, {len(fresh):>3} recent", flush=True)
+            print(f"  {c['name']:<12} {term:<22} {len(jobs):>4} results, {fresh:>3} recent", flush=True)
     return found, errors
+
+
+def enrich(j, company, cfg):
+    """Fetch the detail record; derive US check, years gate, sponsorship, and contract flags."""
+    d = wd.fetch_detail(company["tenant"], company["shard"], j["detail_path"])
+    text = d["description"]
+    j.update(description=text[:MAX_DESC], detail_location=d["location"], country=d["country"],
+             additional_locations=d["additional_locations"], country_code=d["country_code"],
+             time_type=d["time_type"])
+    j["non_us"] = bool(cfg["us_only"] and filters.detail_non_us(d))
+    j["years_required"] = filters.years_required(text)
+    j["years_gate"] = j["years_required"] is not None and j["years_required"] >= 6
+    tag, evidence = sponsor.classify(j["title"] + "\n" + text)
+    j["sponsorship"] = sponsor.resolve(tag, company.get("sponsors_h1b"))
+    j["sponsorship_evidence"] = evidence
+    j["contract"], j["contract_evidence"] = filters.is_contract(j["title"], text)
 
 
 def main():
@@ -86,26 +72,49 @@ def main():
     args = ap.parse_args()
     cfg = load_json("config.json", {})
     max_days = args.days if args.days is not None else cfg["max_days_ago"]
-    companies = [c for c in load_json("companies.json", []) if c.get("verified")]
+    companies = {c["name"]: c for c in load_json("companies.json", []) if c.get("verified")}
     seen = set(load_json("seen.json", []))
+    removed = {r: set() for r in RULES}
 
     print(f"polling {len(companies)} companies x {len(cfg['search_terms'])} terms, max_days_ago={max_days}")
-    found, errors = poll(max_days, cfg, companies)
+    found, errors = search_all(cfg, companies.values(), max_days, removed)
+    new = [(k, j) for k, j in found.items() if k not in seen]
+    print(f"\n{len(found)} matching postings, {len(new)} new; fetching details for the new ones", flush=True)
+
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    new = [dict(j, first_seen=now) for k, j in found.items() if k not in seen]
+    kept = []
+    for key, j in new:
+        try:
+            enrich(j, companies[j["company"]], cfg)
+        except Exception as e:
+            j["enrich_error"] = str(e)[:150]
+            errors[f"{j['company']} {j['req_id']}"] = f"detail: {str(e)[:120]}"
+        if j.get("non_us"):
+            removed["non_us"].add(key)
+            continue
+        if j.get("years_gate"):
+            removed["years_gate"].add(key)
+        if j.get("sponsorship") == "no":
+            removed["sponsorship_no"].add(key)
+        elif j.get("sponsorship") == "perm_ad":
+            removed["perm_ad"].add(key)
+        j["first_seen"] = now
+        kept.append(j)
 
     with open("jobs.jsonl", "a", encoding="utf-8") as f:
-        for j in new:
+        for j in kept:
             f.write(json.dumps(j) + "\n")
-    seen |= {f"{j['company']}|{j['req_id']}" for j in new}
+    seen |= {k for k, _ in new}
     Path("seen.json").write_text(json.dumps(sorted(seen), indent=0), encoding="utf-8")
     Path("last_run.json").write_text(json.dumps({
         "ran_at": now, "max_days_ago": max_days, "companies_polled": len(companies),
-        "new_postings": len(new), "errors": errors}, indent=2), encoding="utf-8")
+        "new_postings": len(kept), "removed": {r: len(s) for r, s in removed.items()},
+        "errors": errors}, indent=2), encoding="utf-8")
 
-    print(f"\n{len(found)} matching postings, {len(new)} new\n")
-    for j in sorted(new, key=lambda j: (j["company"], j["title"])):
-        print(f"{j['company']:<12} {j['title'][:55]:<55} {j['location'][:28]:<28} {j['posted_on']}")
+    print(f"\n{len(kept)} new postings kept; removed: " + ", ".join(f"{r}={len(s)}" for r, s in removed.items()))
+    for j in sorted(kept, key=lambda j: (j["company"], j["title"])):
+        flags = " ".join(f for f, on in (("YEARS", j.get("years_gate")), ("CONTRACT", j.get("contract"))) if on)
+        print(f"{j['company']:<12} {j['title'][:50]:<50} {j['location'][:22]:<22} {j.get('sponsorship', '?'):<9} {flags}")
 
 
 if __name__ == "__main__":
