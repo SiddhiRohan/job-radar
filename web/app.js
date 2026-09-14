@@ -57,7 +57,7 @@ function rowEl(r) {
         el("span", { class: "meta" }, r.location), el("span", { class: "meta" }, r.posted_on)),
       el("div", { class: "sub" }, scorePair(r), el("span", {}, variant(r)), tag(r),
         el("a", { href: r.url, target: "_blank", rel: "noopener" }, "Open posting"),
-        el("div", { class: "acts" }, el("button", { type: "button", onclick: () => { location.hash = "tailor"; startTailor({ company: r.company, req_id: r.req_id }); } }, "Tailor"), applyBtn)),
+        el("div", { class: "acts" }, applyBtn)),
       r.why ? el("p", { class: "why" }, r.why) : null));
 }
 function sectionEl(name, cls, rows, collapsed) {
@@ -116,6 +116,19 @@ const plain = node => { // contenteditable back to ** text
   node.childNodes.forEach(c => { if (c.nodeType === 3) out += c.textContent; else if (c.tagName === "B") out += `**${c.textContent}**`; else if (c.tagName === "BR") out += "\n"; else out += plain(c); });
   return out;
 };
+function reply(text) {
+  // bold via ** and [label](http...) links; everything else stays literal text
+  const frag = document.createDocumentFragment();
+  const re = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g;
+  let last = 0, m;
+  while ((m = re.exec(text))) {
+    frag.append(diffSpans(text.slice(last, m.index), text.slice(last, m.index)));
+    frag.append(el("a", { href: m[2], target: "_blank", rel: "noopener" }, m[1]));
+    last = m.index + m[0].length;
+  }
+  frag.append(diffSpans(text.slice(last), text.slice(last)));
+  return frag;
+}
 function editCell(base, text, onchange) {
   const cell = el("div", { class: "edit", contenteditable: "true", spellcheck: "false" });
   cell.append(diffSpans(base, text));
@@ -255,7 +268,7 @@ async function loadHistory() {
   const log = $("#chatlog");
   try {
     const turns = await api(`/api/chat/history?session=${C.session}`);
-    log.replaceChildren(...(turns.length ? turns.map(t => el("p", { class: t.who }, t.who === "bot" ? diffSpans(t.text, t.text) : t.text)) : [el("p", { class: "empty" }, EMPTY)]));
+    log.replaceChildren(...(turns.length ? turns.map(t => el("p", { class: t.who }, t.who === "bot" ? reply(t.text) : t.text)) : [el("p", { class: "empty" }, EMPTY)]));
     log.scrollTop = log.scrollHeight;
   } catch (e) { /* offline; the empty state stays */ }
 }
@@ -284,7 +297,7 @@ async function sendChat(text) {
   const wait = el("p", { class: "meta" }, "Working"); log.append(wait); log.scrollTop = log.scrollHeight;
   try {
     const r = await waitJob((await api("/api/chat", { session: C.session, text, context: context() })).job_id);
-    wait.remove(); log.append(el("p", { class: "bot" }, diffSpans(r.reply || "(done)", r.reply || "(done)")));
+    wait.remove(); log.append(el("p", { class: "bot" }, reply(r.reply || "(done)")));
     for (const a of r.actions) act(a);
   } catch (e) { wait.textContent = e.message; wait.className = "error"; }
   log.scrollTop = log.scrollHeight;

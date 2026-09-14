@@ -11,6 +11,9 @@ from radar import llm
 SYSTEM = """You are the assistant inside a personal job-radar app. Rohan (F-1 OPT, needs H-1B, targets Data Engineer,
 Data Scientist, ML Engineer, AI Engineer roles) is working through today's shortlist. Be brief and plain; sentence case;
 no flattery. Use tools to act instead of describing what he could do. After acting, say in one line what you did.
+Finding postings comes first; tailoring a resume is on demand: tailor_posting to plan, then build_resume for the
+docx and its download link, then save_resume. Summarise a plan as the fit line plus the changed bullets, not the
+whole resume. open_tailor only when he asks to see or edit the full side-by-side.
 CONTEXT (what the page shows now) follows; the Today rows are ranked by score, E = entry base, X = experienced base."""
 
 PAGE_TOOLS = {"navigate", "refresh", "open_tailor", "edit_section", "rebuild"}
@@ -86,6 +89,39 @@ TOOLS = [
         "name": "rebuild",
         "description": "Rebuild the resume docx from the current tailored text on the Tailor view.",
         "input_schema": {"type": "object", "properties": {}},
+    },
+]
+TOOLS += [
+    {
+        "name": "tailor_posting",
+        "description": "Plan a tailored resume for one posting (cached after the first time, about a minute otherwise). Returns the fit assessment, the changed sections with before/after text, JD skills outside the confirmed list, and notes. Use this when Rohan asks to tailor, adapt, or modify a resume for a posting.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "company": {"type": "string"},
+                "req_id": {"type": "string"},
+                "fresh": {"type": "boolean", "description": "true to ignore the cached plan"},
+            },
+            "required": ["company", "req_id"],
+        },
+    },
+    {
+        "name": "build_resume",
+        "description": 'Build the .docx from the current plan for a posting (after tailor_posting), run finalize, and return the download URL. Pass edits to override section text first: {section_id: {"text": [..]}}.',
+        "input_schema": {
+            "type": "object",
+            "properties": {"company": {"type": "string"}, "req_id": {"type": "string"}, "edits": {"type": "object"}},
+            "required": ["company", "req_id"],
+        },
+    },
+    {
+        "name": "save_resume",
+        "description": "Copy the last built files for a posting into Resume/For <Company>/<req>_<title>/ (or dest) with jd.txt and notes.md.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"company": {"type": "string"}, "req_id": {"type": "string"}, "dest": {"type": "string"}},
+            "required": ["company", "req_id"],
+        },
     },
 ]
 TOOLS.append(
@@ -184,6 +220,8 @@ def server_tool(name, args, hooks):
         return hooks["set_status"](args)
     if name == "remember":
         return remember(args.get("note", ""))
+    if name in ("tailor_posting", "build_resume", "save_resume"):
+        return hooks[name](args)
     return {"error": f"unknown tool {name}"}
 
 
