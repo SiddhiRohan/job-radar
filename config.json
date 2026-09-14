@@ -1,11 +1,9 @@
 {
   "search_terms": [
-    "data scientist",
     "data engineer",
+    "data scientist",
     "machine learning",
-    "New College Grad 2026",
-    "AI engineer",
-    "applied scientist"
+    "AI engineer"
   ],
   "max_days_ago": 1,
   "us_only": true,
@@ -61,7 +59,7 @@
   "score_cap": 40,
   "max_pages_by_tier": {
     "1": 3,
-    "2": 1,
+    "2": 2,
     "3": 1
   },
   "tier3_weekdays": [
