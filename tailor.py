@@ -43,7 +43,8 @@ def parse(doc):
 
 def set_text(p, marked):
     """Replace a paragraph's text, keeping its style and the first run's font; **segments** become bold."""
-    template = copy.deepcopy(p.runs[0]._r) if p.runs else None
+    # copy formatting from the dominant run (most text), not the first: headers often start with a tiny spacer run
+    template = copy.deepcopy(max(p.runs, key=lambda r: len(r.text.strip()))._r) if p.runs else None
     for r in list(p.runs):
         r._r.getparent().remove(r._r)
     for k, seg in enumerate(re.split(r"\*\*", marked)):
@@ -73,12 +74,12 @@ def new_terms(text, base_lower):
     return sorted(w for w in words if w.lower() not in base_lower)
 
 
-def apply_plan(doc, info, plan):
+def apply_plan(doc, info, plan, extra_allowed=""):
     """Apply the plan; return [(where, before, after)] for the terminal diff and notes.md.
     Guards: bullet rewrites that add terms absent from the base are reverted and turned into questions;
     skills not on the base are pruned; the coursework label and leading tabs are preserved."""
     ps, changes = doc.paragraphs, []
-    base_lower = "\n".join(p.text for p in ps).lower()
+    base_lower = "\n".join(p.text for p in ps).lower() + "\n" + extra_allowed.lower()  # base + skills_confirmed.md
 
     def change(where, idx, new):
         old = marked_text(ps[idx])

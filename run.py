@@ -25,6 +25,7 @@ def main():
         sys.exit("poll failed; not scoring or digesting")
     step("score.py", [])
     step("digest.py", [])
+    step("prepare.py", [])  # plans the Apply rows so Tailor opens instantly; failures do not block
 
 
 if __name__ == "__main__":

@@ -53,6 +53,21 @@ def section(title, items):
     )
 
 
+def says_no(j):  # the regex tag or the model's own read of the posting text
+    return j.get("sponsorship") in ("no", "perm_ad", "unlikely") or (j.get("verdict") or {}).get("sponsorship") == "no"
+
+
+def sections(new):
+    """Split one run's postings into apply / maybe / contract / lower / skipped. Shared with the web UI."""
+    skipped = [j for j in new if says_no(j)]
+    contract = [j for j in new if j.get("contract") and j not in skipped]
+    pool = [j for j in new if j not in skipped and j not in contract and not j.get("years_gate")]
+    apply_ = [j for j in pool if j.get("sponsorship") in ("yes", "likely") and best(j) >= 4]
+    maybe = [j for j in pool if j.get("sponsorship") == "unknown" and best(j) >= 4]
+    lower = [j for j in new if j not in skipped and j not in contract and j not in apply_ and j not in maybe]
+    return {"apply": apply_, "maybe": maybe, "contract": contract, "lower": lower, "skipped": skipped}
+
+
 def build(run, jobs):
     today = datetime.now().strftime("%Y-%m-%d")
     new = [j for j in jobs if j.get("first_seen") == run.get("ran_at")]
@@ -65,20 +80,11 @@ def build(run, jobs):
         "Removed by rule: " + ", ".join(f"{k} {v}" for k, v in removed.items()),
         "",
     ]
-
-    def says_no(j):  # the regex tag or the model's own read of the posting text
-        return (
-            j.get("sponsorship") in ("no", "perm_ad", "unlikely") or (j.get("verdict") or {}).get("sponsorship") == "no"
-        )
-
-    skipped = [j for j in new if says_no(j)]
-    contract = [j for j in new if j.get("contract") and j not in skipped]
-    pool = [j for j in new if j not in skipped and j not in contract and not j.get("years_gate")]
-    apply_ = [j for j in pool if j.get("sponsorship") in ("yes", "likely") and best(j) >= 4]
-    maybe = [j for j in pool if j.get("sponsorship") == "unknown" and best(j) >= 4]
+    s = sections(new)
+    skipped, contract, apply_, maybe = s["skipped"], s["contract"], s["apply"], s["maybe"]
     md += section("Apply", apply_) + section("Maybe", maybe) + section("Contract / backup", contract)
 
-    lower = [j for j in pool if j not in apply_ and j not in maybe]
+    lower = [j for j in s["lower"] if not j.get("years_gate")]
     counts = {s: sum(best(j) == s for j in lower) for s in (3, 2, 1)}
     unscored = sum(best(j) == 0 for j in lower)
     gated = sum(bool(j.get("years_gate")) for j in new if j not in skipped)
@@ -94,7 +100,7 @@ def build(run, jobs):
         v = j.get("verdict") or {}
         tag = j["sponsorship"] if j["sponsorship"] in ("no", "perm_ad", "unlikely") else f"model:{v.get('sponsorship')}"
         ev = j.get("sponsorship_evidence") or v.get("sponsorship_evidence") or "company default sponsors_h1b=false"
-        md.append(f"- {tag} | **{j['company']}** | {j['title']} | \"{ev[:160]}\" | [link]({j['url']})")
+        md.append(f'- {tag} | **{j["company"]}** | {j["title"]} | "{ev[:160]}" | [link]({j["url"]})')
     md.append("")
 
     errors = dict(run.get("errors") or {})

@@ -88,7 +88,18 @@ def service_clean(path):
 
 def finalize_docx(path, report):
     doc = Document(path)
-    prose = [p for p in doc.paragraphs if p.text.strip() and "|" not in p.text and len(p.text.split()) > 6]
+
+    def is_prose(p):  # skip headers (tabs, dates, pipes) and anything carrying a hyperlink, which a rewrite would drop
+        return (
+            p.text.strip()
+            and "|" not in p.text
+            and "\t" not in p.text
+            and len(p.text.split()) > 6
+            and not tailor.DATE.search(p.text)
+            and not p._p.xpath(".//w:hyperlink")
+        )
+
+    prose = [p for p in doc.paragraphs if is_prose(p)]
     before = [tailor.marked_text(p) for p in prose]
     after = humanize(before)
     changed = 0
