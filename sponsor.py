@@ -4,7 +4,8 @@ import re
 # Checked in this order: a "no" phrase beats everything, then PERM-ad patterns, then "yes".
 NO_PATTERNS = [
     r"no sponsorship", r"\bnot sponsor", r"\bno visa", r"unable to sponsor", r"cannot sponsor",
-    r"not (?:able|willing|eligible) to sponsor",
+    r"not (?:able|willing|eligible) to sponsor", r"visa sponsorship is not available", r"sponsorship is not offered",
+    r"no visa sponsorship", r"sponsorship (?:is )?(?:not|un)available",
     r"(?:does|do|will) not (?:offer|provide|support) (?:visa |immigration |employment |work )?(?:visa )?sponsorship",
     r"(?:must|should) not (?:now or in the future )?require (?:visa |immigration |employment |work )?sponsorship",
     r"without (?:the need for |requiring )?(?:visa |employer |employment |current or future )?sponsorship",
