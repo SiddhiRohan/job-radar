@@ -8,7 +8,7 @@ from pathlib import Path
 
 import requests
 
-import resumes
+from tailoring import resumes
 
 sys.stdout.reconfigure(encoding="utf-8")
 

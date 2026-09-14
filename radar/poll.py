@@ -6,9 +6,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-import filters
-import sponsor
-import wd
+from radar import filters, sponsor, wd
 
 sys.stdout.reconfigure(encoding="utf-8")
 MAX_DESC = 15000

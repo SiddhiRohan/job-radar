@@ -12,11 +12,8 @@ from pathlib import Path
 
 from docx import Document
 
-import letters
-import plan as planner
-import resumes
-import skills
-import tailor
+from tailoring import letters, resumes, skills, tailor
+from tailoring import plan as planner
 
 sys.stdout.reconfigure(encoding="utf-8")
 OVERLAPS = [
@@ -87,7 +84,7 @@ def main():
     ap.add_argument("--yes", action="store_true")
     ap.add_argument("--no-prompt", action="store_true", help="never ask JD-skill y/n; write them to notes.md instead")
     a = ap.parse_args()
-    rules = Path("RESUME_RULES.md").read_text(encoding="utf-8")
+    rules = Path("docs/RESUME_RULES.md").read_text(encoding="utf-8")
     profile = Path("profile.md").read_text(encoding="utf-8")
     j = find_job(a.company, a.req_id)
     skip, lines = assess(j)

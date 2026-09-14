@@ -15,7 +15,8 @@ that run wrote (`jobs.jsonl`, `last_run.json`) and never re-polls on its own.
 
 ## Files
 
-- `run.py`, `poll.py`, `score.py`, `digest.py`: the daily pipeline.
-- `apply.py`, `plan.py`, `tailor.py`, `letters.py`, `finalize.py`: tailoring from the command line.
+- `run.py`, `radar/`: the daily pipeline (poll, score, digest, prepare).
+- `tailoring/`: resume tailoring; `python -m tailoring.apply <company> <req_id>` from the command line.
+- `companies/`: the tooling and data behind `companies.json`.
 - `server.py`, `web/`: the UI; it imports the modules above and adds no logic of its own.
-- `STATUS.md`, `DECISIONS.md`, `UI_NOTES.md`, `COMPANIES_REPORT.md`: what was done and why.
+- `docs/`: STATUS, DECISIONS, UI_NOTES, COMPANIES_REPORT, RESUME_MAP, RESUME_RULES, CHANGELOG.

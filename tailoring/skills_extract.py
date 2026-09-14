@@ -5,7 +5,7 @@ from pathlib import Path
 
 from docx import Document
 
-import tailor
+from tailoring import tailor
 
 # fmt: off
 STOP = {"University", "Maryland", "College", "Park", "Washington", "India", "Bengaluru", "Hyderabad", "United", "States",

@@ -7,9 +7,9 @@ SEC_PER_PAGE = 1.6  # measured: 1122 pages in 30 min on the 2026-09-13 run (1.5 
 
 
 def main():
-    cands = json.load(open("candidates.json", encoding="utf-8"))
+    cands = json.load(open("companies/candidates.json", encoding="utf-8"))
     companies = json.load(open("companies.json", encoding="utf-8"))
-    not_wd = json.load(open("not_on_workday.json", encoding="utf-8"))
+    not_wd = json.load(open("companies/not_on_workday.json", encoding="utf-8"))
     cfg = json.load(open("config.json", encoding="utf-8"))
     pages = {int(k): v for k, v in cfg.get("max_pages_by_tier", {}).items()}
     terms = len(cfg["search_terms"])
@@ -67,7 +67,7 @@ def main():
             for c in rows
         ]
         md.append("")
-    open("COMPANIES_REPORT.md", "w", encoding="utf-8").write("\n".join(md))
+    open("docs/COMPANIES_REPORT.md", "w", encoding="utf-8").write("\n".join(md))
     print(f"daily ~{daily:.0f} min, tier-3 days ~{daily + tier3:.0f} min; {len(companies)} companies")
 
 

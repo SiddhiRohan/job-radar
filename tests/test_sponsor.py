@@ -2,7 +2,7 @@
 
 import pytest
 
-import sponsor
+from radar import sponsor
 
 SHOULD_MATCH_NO = [
     "Visa Sponsorship is not available for this position.",  # Caterpillar, missed on 2026-09-13

@@ -2,7 +2,7 @@
 
 import pytest
 
-import wd
+from radar import wd
 
 CASES = [
     (
