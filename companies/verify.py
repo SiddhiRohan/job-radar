@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 import requests
 
-import wd
+from radar import wd
 
 sys.stdout.reconfigure(encoding="utf-8")
 

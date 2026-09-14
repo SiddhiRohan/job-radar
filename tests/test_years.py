@@ -2,7 +2,7 @@
 
 import pytest
 
-import filters
+from radar import filters
 
 CASES = [
     ("3+ years of experience in data engineering", 3),

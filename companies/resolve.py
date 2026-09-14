@@ -5,10 +5,10 @@ import sys
 import time
 from datetime import datetime, timezone
 
-import wd
+from radar import wd
 
 sys.stdout.reconfigure(encoding="utf-8")
-P = "candidates.json"
+P = "companies/candidates.json"
 
 
 def main():

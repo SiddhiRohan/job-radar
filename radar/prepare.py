@@ -10,11 +10,10 @@ from pathlib import Path
 
 from docx import Document
 
-import apply as applier
-import digest
-import plan as planner
-import skills
-import tailor
+from radar import digest
+from tailoring import apply as applier
+from tailoring import plan as planner
+from tailoring import skills, tailor
 
 sys.stdout.reconfigure(encoding="utf-8")
 PLANS = Path(".cache/ui/plans")
@@ -50,7 +49,7 @@ def make_tailor(j):
     profile = (
         Path("profile.md").read_text(encoding="utf-8")
         + "\n\nRULES:\n"
-        + Path("RESUME_RULES.md").read_text(encoding="utf-8")
+        + Path("docs/RESUME_RULES.md").read_text(encoding="utf-8")
     )
     base, base_label = applier.pick_base(j)
     doc = Document(base)

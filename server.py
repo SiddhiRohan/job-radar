@@ -16,18 +16,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-import apply as applier
-import chat
-import digest
-import finalize
-import letters
-import poll
-import prepare
-import resumes
-import score
-import skills
-import tailor
-import wd
+from radar import chat, digest, poll, prepare, score, wd
+from tailoring import apply as applier
+from tailoring import finalize, letters, resumes, skills, tailor
 
 app = FastAPI()
 JOBS, JOB_LOCK = {}, threading.Lock()

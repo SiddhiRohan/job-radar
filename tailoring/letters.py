@@ -3,7 +3,7 @@
 from docx import Document
 from docx.shared import Pt
 
-import llm
+from radar import llm
 
 COVER_RULES = """Write a one-page cover letter for this posting. Role and company specific. Add to the resume rather than
 repeating it: pick two or three things from the resume that matter for THIS job and say why, in plain human voice.

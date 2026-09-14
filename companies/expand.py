@@ -62,7 +62,7 @@ def tier(name, sponsors):
 
 def main():
     companies = {c["name"]: c for c in json.load(open("companies.json", encoding="utf-8"))}
-    cands = json.load(open("candidates.json", encoding="utf-8"))
+    cands = json.load(open("companies/candidates.json", encoding="utf-8"))
     for name, e in cands.items():
         if e.get("status") != "verified":
             continue
@@ -93,7 +93,7 @@ def main():
     for n, e in cands.items():
         if e.get("status") == "failed":
             not_wd[n]["ats"] = f"Workday tenant found but failed verification twice: {e.get('error', '')[:80]}"
-    json.dump(not_wd, open("not_on_workday.json", "w", encoding="utf-8"), indent=1)
+    json.dump(not_wd, open("companies/not_on_workday.json", "w", encoding="utf-8"), indent=1)
     print(
         "companies:",
         len(out),

@@ -9,8 +9,8 @@ from pathlib import Path
 import requests
 from docx import Document
 
-import llm
-import tailor
+from radar import llm
+from tailoring import tailor
 
 sys.stdout.reconfigure(encoding="utf-8")
 SERVICE = os.environ.get("WATERMARKS_SERVICE_URL", "http://127.0.0.1:8765")

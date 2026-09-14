@@ -7,7 +7,7 @@ import sys
 
 def step(name, args):
     print(f"\n===== {name} =====", flush=True)
-    r = subprocess.run([sys.executable, name] + args)
+    r = subprocess.run([sys.executable, "-m", name] + args)
     if r.returncode:
         print(f"!! {name} exited with {r.returncode}", flush=True)
     return r.returncode
@@ -21,11 +21,11 @@ def main():
     poll_args = (["--days", str(args.days)] if args.days is not None else []) + (
         ["--all-tiers"] if args.all_tiers else []
     )
-    if step("poll.py", poll_args):
+    if step("radar.poll", poll_args):
         sys.exit("poll failed; not scoring or digesting")
-    step("score.py", [])
-    step("digest.py", [])
-    step("prepare.py", [])  # plans the Apply rows so Tailor opens instantly; failures do not block
+    step("radar.score", [])
+    step("radar.digest", [])
+    step("radar.prepare", [])  # plans the Apply rows so Tailor opens instantly; failures do not block
 
 
 if __name__ == "__main__":

@@ -2,9 +2,8 @@
 
 import re
 
-import llm
-import skills
-import tailor
+from radar import llm
+from tailoring import skills, tailor
 
 PLAN_SCHEMA = {
     "type": "object",

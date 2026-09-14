@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import llm
+from radar import llm
 
 SYSTEM = """You are the assistant inside a personal job-radar app. Rohan (F-1 OPT, needs H-1B, targets Data Engineer,
 Data Scientist, ML Engineer, AI Engineer roles) is working through today's shortlist. Be brief and plain; sentence case;
