@@ -23,6 +23,20 @@ def base_url(tenant, shard):
     return f"https://{tenant}.{shard}.myworkdayjobs.com"
 
 
+JOB_URL = re.compile(r"https://([\w-]+)\.(wd\d+)\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([^/]+)(/job/.+?)(?:/apply.*)?/?$")
+
+
+def parse_job_url(url):
+    """(tenant, shard, site, external_path, req_id) from a Workday job URL, or None if it is not one."""
+    m = JOB_URL.match(url.strip())
+    if not m:
+        return None
+    tenant, shard, site, ext = m.groups()
+    req = re.search(r"_([A-Za-z]*[\w-]*\d[\w-]*)$", ext)
+    req_id = re.sub(r"-\d+$", "", req.group(1)) if req else ext.rsplit("/", 1)[-1]  # drop Workday's -1 revision suffix
+    return tenant, shard, site, ext, req_id
+
+
 def _cache_path(url, body):
     key = hashlib.sha256((url + json.dumps(body, sort_keys=True)).encode()).hexdigest()
     return CACHE_DIR / f"{key}.json"
