@@ -147,6 +147,7 @@ def fetch_detail(tenant, shard, detail_path):
     req_loc = info.get("jobRequisitionLocation") or {}
     return {
         "description": html_to_text(info["jobDescription"]),
+        "title": info.get("title"),
         "location": info.get("location"),
         "additional_locations": info.get("additionalLocations") or [],
         "country": (info.get("country") or {}).get("descriptor"),

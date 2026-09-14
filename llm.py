@@ -23,6 +23,21 @@ def load_api_key():
     return key or sys.exit("ANTHROPIC_API_KEY is not set (put it in .env as ANTHROPIC_API_KEY=sk-ant-...)")
 
 
+def converse(system, messages, tools, max_tokens=2048):
+    """One Messages API turn with tools; returns the raw response dict (content blocks, stop_reason)."""
+    headers = {"x-api-key": load_api_key(), "anthropic-version": "2023-06-01", "content-type": "application/json"}
+    body = {"model": MODELS[0], "max_tokens": max_tokens, "system": system, "messages": messages, "tools": tools}
+    for attempt in range(3):
+        r = requests.post(API_URL, headers=headers, json=body, timeout=180)
+        if r.status_code in (429, 529) or r.status_code >= 500:
+            time.sleep(5 * (attempt + 1))
+            continue
+        break
+    if r.status_code != 200:
+        raise RuntimeError(f"API {r.status_code}: {r.text[:300]}")
+    return r.json()
+
+
 def complete(system, user, schema=None, max_tokens=4096):
     """Return (parsed JSON if schema else text, model). Retries 429/5xx; falls back through MODELS on 404."""
     headers = {"x-api-key": load_api_key(), "anthropic-version": "2023-06-01", "content-type": "application/json"}
