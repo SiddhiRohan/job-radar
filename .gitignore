@@ -10,3 +10,5 @@ digests/
 /Resume - *.docx
 /Resume - *.pdf
 last_run.json
+skills_confirmed.md
+*.log

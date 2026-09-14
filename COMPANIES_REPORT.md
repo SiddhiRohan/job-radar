@@ -23,9 +23,9 @@
 
 ## Estimated run time
 
-- Per search: pages x 2.0 s; pages per tier: {1: 3, 2: 1, 3: 1}; 6 search terms per company
-- Daily (tier 1 + 2, 93 companies): about 37 min for the search phase, plus roughly 2 s per new posting for detail fetches and 8 s per scored posting
-- Tier 3 days (Mon/Thu, +20 companies): about 41 min
+- Per search: pages x 1.6 s; pages per tier: {1: 3, 2: 2, 3: 1}; 4 search terms per company
+- Daily (tier 1 + 2, 93 companies): about 25 min for the search phase, plus roughly 2 s per new posting for detail fetches and 8 s per scored posting
+- Tier 3 days (Mon/Thu, +20 companies): about 28 min
 - Cache hits (same day reruns) cost nothing.
 
 ## Tier 1 (47)
