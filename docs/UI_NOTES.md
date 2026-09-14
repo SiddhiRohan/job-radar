@@ -116,3 +116,11 @@ background; the Today button "Run the radar" does the same), run_status, mark_ap
 edit_section (lands as a highlighted change in the editor), rebuild. Server-side tools run in `chat.py`; page tools
 come back as actions the browser executes after the reply. Threads are per browser session, in memory, trimmed to
 40 turns. Each message is one or more Sonnet calls.
+
+## Sourcer first (2026-09-14)
+
+Decision: finding postings is the product; tailoring is on demand. The pre-planning step is off by default
+(`prepare_cap: 0`), Today rows no longer carry a Tailor button, and the chat has three server-side tools,
+`tailor_posting`, `build_resume`, `save_resume`, so "tailor the Adobe one, build it, save it" works entirely in
+the drawer with a download link in the reply. The Tailor view stays for the full side-by-side (reachable from chat
+via `open_tailor` or by pasting a URL). Multi-user is a later change; everything is single-user today.

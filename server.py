@@ -60,7 +60,13 @@ def background(fn, *args):
         try:
             JOBS[job_id] = {"status": "done", "result": fn(*args)}
         except Exception as e:  # surfaced to the page as text; never swallowed
-            JOBS[job_id] = {"status": "error", "error": f"{type(e).__name__}: {str(e)[:300]}"}
+            import traceback
+
+            where = traceback.extract_tb(e.__traceback__)[-1]
+            JOBS[job_id] = {
+                "status": "error",
+                "error": f"{type(e).__name__}: {str(e)[:300]} ({where.filename.split(chr(92))[-1]}:{where.lineno})",
+            }
 
     threading.Thread(target=run, daemon=True).start()
     return {"job_id": job_id}
@@ -323,9 +329,83 @@ def save_folder(body: dict):
     return {"folder": str(dest)}
 
 
+BUILDS = {}  # key -> last build dir, so chat can save what it built
+
+
+def plan_for(args):
+    """Chat tool: plan (cached) and return a compact summary the assistant can relay."""
+    j = applier.find_job(args["company"], args["req_id"])
+    cache = prepare.plan_cache_path(j)
+    if cache.exists() and not args.get("fresh"):
+        st = json.loads(cache.read_text(encoding="utf-8"))
+    else:
+        st = prepare.make_tailor(j)
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_text(json.dumps(st), encoding="utf-8")
+    changes = []
+    for sec in st["sections"]:
+        for n, (b, t) in enumerate(
+            zip([sec["base"][i] for i in sec.get("order", range(len(sec["base"])))], sec["text"])
+        ):
+            if b.strip() != t.strip():
+                changes.append({"section": sec["id"], "index": n, "before": b[:300], "after": t[:300]})
+    return {
+        "assessment": st["assessment"],
+        "skip": st["skip"],
+        "base": st["base_label"],
+        "headline": st["headline"],
+        "jd_skills_not_confirmed": st["jd_skills"],
+        "changes": changes[:25],
+        "changed_count": len(changes),
+        "notes": (
+            st["general_notes"] + [n for s in st["sections"] for v in (s.get("notes") or {}).values() for n in v]
+        )[:12],
+    }
+
+
+def build_for(args):
+    j = applier.find_job(args["company"], args["req_id"])
+    cache = prepare.plan_cache_path(j)
+    if not cache.exists():
+        return {"error": "no plan yet; call tailor_posting first"}
+    st = json.loads(cache.read_text(encoding="utf-8"))
+    out = rebuild(st, args.get("edits") or {}, None)
+    BUILDS[f"{j['company']}|{j['req_id']}"] = out["dir"]
+    bid = Path(out["dir"]).name
+    return {
+        "files": out["files"],
+        "download": [f"http://localhost:8000/api/tailor/files/{bid}/{f}" for f in out["files"]],
+        "finalize": [r for r in out["report"] if r.startswith("Resume")][:1],
+    }
+
+
+def save_for(args):
+    j = applier.find_job(args["company"], args["req_id"])
+    d = BUILDS.get(f"{j['company']}|{j['req_id']}")
+    if not d:
+        return {"error": "nothing built yet; call build_resume first"}
+    st = json.loads(prepare.plan_cache_path(j).read_text(encoding="utf-8"))
+    return save_folder(
+        {
+            "dir": d,
+            "job": st["job"],
+            "dest": args.get("dest"),
+            "assessment": st["assessment"],
+            "notes": st["general_notes"],
+        }
+    )
+
+
 @app.post("/api/chat")
 def chat_message(body: dict):
-    hooks = {"mark_applied": mark_applied, "set_status": set_status, "applied_rows": applied_rows}
+    hooks = {
+        "mark_applied": mark_applied,
+        "set_status": set_status,
+        "applied_rows": applied_rows,
+        "tailor_posting": plan_for,
+        "build_resume": build_for,
+        "save_resume": save_for,
+    }
     return background(chat.message, body.get("session", "default"), body["text"], body.get("context", {}), hooks)
 
 

@@ -118,7 +118,10 @@ def make_tailor(j):
 
 def main():
     cfg = json.load(open("config.json", encoding="utf-8"))
-    cap = cfg.get("prepare_cap", 20)
+    cap = cfg.get("prepare_cap", 0)
+    if cap <= 0:
+        print("prepare: off (prepare_cap is 0); plans are made on demand from chat or the Tailor view")
+        return
     run = json.loads(Path("last_run.json").read_text(encoding="utf-8")) if Path("last_run.json").exists() else {}
     new = [j for j in digest.load_jsonl("jobs.jsonl") if j.get("first_seen") == run.get("ran_at")]
     todo = [j for j in digest.sections(new)["apply"] if not plan_cache_path(j).exists()][:cap]
