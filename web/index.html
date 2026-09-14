@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job radar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <nav class="nav" aria-label="Views">
+    <a href="#today" data-view="today">Today</a>
+    <a href="#tailor" data-view="tailor">Tailor</a>
+    <a href="#applied" data-view="applied">Applied</a>
+  </nav>
+  <div id="datectl" class="datectl" hidden>
+    <button type="button" id="prev" aria-label="Earlier day">&lsaquo;</button>
+    <select id="date" aria-label="Digest date"></select>
+    <button type="button" id="next" aria-label="Later day">&rsaquo;</button>
+    <button type="button" id="runbtn">Run the radar</button>
+  </div>
+  <button type="button" id="chatbtn" class="quiet" aria-expanded="false">Chat</button>
+</header>
+
+<button type="button" id="chatpill" class="pill" hidden>Chat</button>
+<aside id="chat" class="chat" hidden aria-label="Assistant">
+  <div class="chat-head">
+    <select id="threads" aria-label="Chat threads"></select>
+    <span><button type="button" id="chatnew" class="quiet">New chat</button><button type="button" id="chatdel" class="quiet" aria-label="Delete this thread">Delete</button><button type="button" id="chatmin" aria-label="Minimize chat">&minus;</button></span>
+  </div>
+  <div id="chatlog" class="chatlog"><p class="empty">Ask for anything on this page: "load three more days", "mark the Netflix row applied", "open Workday in Tailor and shorten the summary".</p></div>
+  <form id="chatform" class="chatform"><input id="chatin" aria-label="Message" placeholder="Message" autocomplete="off"><button type="submit" class="primary">Send</button></form>
+</aside>
+
+<main>
+  <section id="today" class="view">
+    <p id="stats" class="stats"></p>
+    <div id="today-body"></div>
+  </section>
+
+  <section id="tailor" class="view" hidden>
+    <form id="urlform" class="urlform">
+      <input id="url" type="url" placeholder="Paste a Workday job URL" aria-label="Workday job URL" required>
+      <button type="submit" class="primary">Load posting</button>
+    </form>
+    <div id="tailor-body"><p class="empty">Pick a posting on Today, or paste a Workday job URL above.</p></div>
+  </section>
+
+  <section id="applied" class="view" hidden>
+    <div id="applied-body"></div>
+  </section>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
