@@ -1,4 +1,5 @@
 """Locate resume bases and role variants under Resume/, and extract .docx text with the stdlib."""
+
 import html
 import re
 import zipfile
@@ -17,8 +18,7 @@ def docx_text(path):
     xml = zipfile.ZipFile(path).read("word/document.xml").decode("utf-8")
     xml = re.sub(r"<w:tab/>", " ", xml)
     paras = re.findall(r"<w:p[ >].*?</w:p>", xml, flags=re.S)
-    return "\n".join(html.unescape("".join(re.findall(r"<w:t(?:\s[^>]*)?>(.*?)</w:t>", p, flags=re.S)))
-                     for p in paras)
+    return "\n".join(html.unescape("".join(re.findall(r"<w:t(?:\s[^>]*)?>(.*?)</w:t>", p, flags=re.S))) for p in paras)
 
 
 def bases():

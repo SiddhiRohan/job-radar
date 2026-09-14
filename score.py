@@ -1,4 +1,5 @@
 """Score new postings against both resume bases with Claude; write verdicts back into jobs.jsonl."""
+
 import json
 import os
 import sys
@@ -25,22 +26,38 @@ platform_tools_missing: only tools from the profile's NOT-have list that the pos
 sponsorship: from the posting text only (no/yes/perm_ad/unknown); sponsorship_evidence quotes the phrase or is null.
 cover_letter_required: true only if the posting asks for one. why: two sentences max."""
 
-SCHEMA = {"type": "object", "additionalProperties": False, "properties": {
-    "score_entry": {"type": "integer", "enum": [1, 2, 3, 4, 5]},
-    "score_experienced": {"type": "integer", "enum": [1, 2, 3, 4, 5]},
-    "recommended_resume": {"type": "string", "enum": ["entry", "experienced"]},
-    "recommended_variant": {"type": "string"},
-    "years_required": {"type": ["integer", "null"]},
-    "hard_requirements_missing": {"type": "array", "items": {"type": "string"}},
-    "platform_tools_missing": {"type": "array", "items": {"type": "string"}},
-    "sponsorship": {"type": "string", "enum": ["yes", "likely", "unknown", "unlikely", "no", "perm_ad"]},
-    "sponsorship_evidence": {"type": ["string", "null"]},
-    "cover_letter_required": {"type": "boolean"},
-    "why": {"type": "string"},
-    "apply": {"type": "boolean"}},
-    "required": ["score_entry", "score_experienced", "recommended_resume", "recommended_variant", "years_required",
-                 "hard_requirements_missing", "platform_tools_missing", "sponsorship", "sponsorship_evidence",
-                 "cover_letter_required", "why", "apply"]}
+SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "score_entry": {"type": "integer", "enum": [1, 2, 3, 4, 5]},
+        "score_experienced": {"type": "integer", "enum": [1, 2, 3, 4, 5]},
+        "recommended_resume": {"type": "string", "enum": ["entry", "experienced"]},
+        "recommended_variant": {"type": "string"},
+        "years_required": {"type": ["integer", "null"]},
+        "hard_requirements_missing": {"type": "array", "items": {"type": "string"}},
+        "platform_tools_missing": {"type": "array", "items": {"type": "string"}},
+        "sponsorship": {"type": "string", "enum": ["yes", "likely", "unknown", "unlikely", "no", "perm_ad"]},
+        "sponsorship_evidence": {"type": ["string", "null"]},
+        "cover_letter_required": {"type": "boolean"},
+        "why": {"type": "string"},
+        "apply": {"type": "boolean"},
+    },
+    "required": [
+        "score_entry",
+        "score_experienced",
+        "recommended_resume",
+        "recommended_variant",
+        "years_required",
+        "hard_requirements_missing",
+        "platform_tools_missing",
+        "sponsorship",
+        "sponsorship_evidence",
+        "cover_letter_required",
+        "why",
+        "apply",
+    ],
+}
 
 
 def load_api_key():
@@ -57,24 +74,37 @@ def load_api_key():
 def system_blocks():
     """Stable prefix (rules, profile, both resumes) with a cache breakpoint so 100+ calls reuse it."""
     profile = Path("profile.md").read_text(encoding="utf-8")
-    roles = ", ".join(f"{r} ({', '.join(v for v, ok in s.items() if ok) or 'EMPTY'})"
-                      for r, s in resumes.role_status().items())
+    roles = ", ".join(
+        f"{r} ({', '.join(v for v, ok in s.items() if ok) or 'EMPTY'})" for r, s in resumes.role_status().items()
+    )
     b = resumes.bases()
-    return [{"type": "text", "text": f"{RULES}\n\nCANDIDATE PROFILE:\n{profile}\nROLE FOLDERS AVAILABLE: {roles}"},
-            {"type": "text", "text": "ENTRY-LEVEL BASE RESUME (framed as about 2 years):\n" + b["entry"]},
-            {"type": "text", "text": "EXPERIENCED BASE RESUME (about 4 years):\n" + b["experienced"],
-             "cache_control": {"type": "ephemeral"}}]
+    return [
+        {"type": "text", "text": f"{RULES}\n\nCANDIDATE PROFILE:\n{profile}\nROLE FOLDERS AVAILABLE: {roles}"},
+        {"type": "text", "text": "ENTRY-LEVEL BASE RESUME (framed as about 2 years):\n" + b["entry"]},
+        {
+            "type": "text",
+            "text": "EXPERIENCED BASE RESUME (about 4 years):\n" + b["experienced"],
+            "cache_control": {"type": "ephemeral"},
+        },
+    ]
 
 
 def ask_claude(api_key, system, job):
     """Return (verdict dict, model used). Falls back through MODELS on not_found."""
-    user = (f"JOB POSTING: {job['title']} at {job['company']} ({job['location']})\n"
-            f"Regex sponsorship read: {job.get('sponsorship')} ({job.get('sponsorship_evidence') or 'no phrase found'})\n\n"
-            f"{job.get('description', '')[:MAX_DESC_CHARS]}\n\nReturn the JSON verdict.")
+    user = (
+        f"JOB POSTING: {job['title']} at {job['company']} ({job['location']})\n"
+        f"Regex sponsorship read: {job.get('sponsorship')} ({job.get('sponsorship_evidence') or 'no phrase found'})\n\n"
+        f"{job.get('description', '')[:MAX_DESC_CHARS]}\n\nReturn the JSON verdict."
+    )
     headers = {"x-api-key": api_key, "anthropic-version": "2023-06-01", "content-type": "application/json"}
     for model in MODELS:
-        body = {"model": model, "max_tokens": 1024, "system": system, "messages": [{"role": "user", "content": user}],
-                "output_config": {"format": {"type": "json_schema", "schema": SCHEMA}}}
+        body = {
+            "model": model,
+            "max_tokens": 1024,
+            "system": system,
+            "messages": [{"role": "user", "content": user}],
+            "output_config": {"format": {"type": "json_schema", "schema": SCHEMA}},
+        }
         for attempt in range(3):
             r = requests.post(API_URL, headers=headers, json=body, timeout=120)
             if r.status_code in (429, 529) or r.status_code >= 500:
@@ -101,10 +131,21 @@ def rule_verdict(j):
         why = f"skipped: sponsorship {j['sponsorship']}"
     else:
         return None
-    return {"score_entry": 1, "score_experienced": 1, "recommended_resume": None, "recommended_variant": None,
-            "years_required": j.get("years_required"), "hard_requirements_missing": [], "platform_tools_missing": [],
-            "sponsorship": j.get("sponsorship"), "sponsorship_evidence": j.get("sponsorship_evidence"),
-            "cover_letter_required": False, "why": why, "apply": False, "rule": True}
+    return {
+        "score_entry": 1,
+        "score_experienced": 1,
+        "recommended_resume": None,
+        "recommended_variant": None,
+        "years_required": j.get("years_required"),
+        "hard_requirements_missing": [],
+        "platform_tools_missing": [],
+        "sponsorship": j.get("sponsorship"),
+        "sponsorship_evidence": j.get("sponsorship_evidence"),
+        "cover_letter_required": False,
+        "why": why,
+        "apply": False,
+        "rule": True,
+    }
 
 
 def unscored(j):
@@ -117,10 +158,16 @@ def main():
     cfg = json.load(open("config.json", encoding="utf-8"))
     cap = cfg.get("score_cap", 40)
     p = Path("jobs.jsonl")
-    jobs = [json.loads(l) for l in p.read_text(encoding="utf-8").splitlines() if l.strip()] if p.exists() else []
-    todo = sorted((j for j in jobs if unscored(j)),
-                  key=lambda j: (cfg["search_terms"].index(j["search_term"]) if j.get("search_term") in cfg["search_terms"]
-                                 else 99, j["posted_days_ago"]))
+    jobs = (
+        [json.loads(line) for line in p.read_text(encoding="utf-8").splitlines() if line.strip()] if p.exists() else []
+    )
+    todo = sorted(
+        (j for j in jobs if unscored(j)),
+        key=lambda j: (
+            cfg["search_terms"].index(j["search_term"]) if j.get("search_term") in cfg["search_terms"] else 99,
+            j["posted_days_ago"],
+        ),
+    )
     print(f"{len(todo)} unscored postings; API cap {cap}")
     system, calls = system_blocks(), 0
     for j in todo:
@@ -135,7 +182,10 @@ def main():
                 verdict = {"error": str(e)[:300]}
         j["verdict"] = verdict
         s = f"E{verdict.get('score_entry', '-')}/X{verdict.get('score_experienced', '-')}"
-        print(f"  [{s}] {j['company']:<12} {j['title'][:55]:<55} {(verdict.get('why') or verdict.get('error', ''))[:70]}", flush=True)
+        print(
+            f"  [{s}] {j['company']:<12} {j['title'][:55]:<55} {(verdict.get('why') or verdict.get('error', ''))[:70]}",
+            flush=True,
+        )
     with open("jobs.jsonl", "w", encoding="utf-8") as f:
         for j in jobs:
             f.write(json.dumps(j) + "\n")

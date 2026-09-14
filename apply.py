@@ -2,6 +2,7 @@
 
 Reads RESUME_RULES.md conventions: assess fit first, start from the recommended base/variant, lock facts,
 show before/after for approval, then build Resume/For <Company>/<req_id>_<short-title>/."""
+
 import argparse
 import json
 import re
@@ -18,9 +19,11 @@ import skills
 import tailor
 
 sys.stdout.reconfigure(encoding="utf-8")
-OVERLAPS = ["Kridha ran concurrently with StackNexus (part-time consulting alongside the full-time role).",
-            "The two AREC roles overlapped (research assistantship continued while the data engineering scope grew).",
-            "The two Adventaus roles overlapped (promoted from Data Engineer to Data Scientist on the same client)."]
+OVERLAPS = [
+    "Kridha ran concurrently with StackNexus (part-time consulting alongside the full-time role).",
+    "The two AREC roles overlapped (research assistantship continued while the data engineering scope grew).",
+    "The two Adventaus roles overlapped (promoted from Data Engineer to Data Scientist on the same client).",
+]
 HEADLINE = re.compile(r"^(?:\*\*)?(Data Engineer|Data Scientist|ML Engineer|Machine Learning Engineer|AI Engineer)")
 
 
@@ -47,7 +50,9 @@ def assess(j):
         lines.append("WARN: platform tools required that Rohan lacks: " + ", ".join(v["platform_tools_missing"]))
     if v.get("hard_requirements_missing"):
         lines.append("missing: " + "; ".join(v["hard_requirements_missing"]))
-    lines.append(f"scores entry {v.get('score_entry')} / experienced {v.get('score_experienced')}; model apply={v.get('apply')}")
+    lines.append(
+        f"scores entry {v.get('score_entry')} / experienced {v.get('score_experienced')}; model apply={v.get('apply')}"
+    )
     return skip, lines
 
 
@@ -74,9 +79,12 @@ def pick_base(j):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("company"); ap.add_argument("req_id")
-    ap.add_argument("--cover", action="store_true"); ap.add_argument("--outreach", action="store_true")
-    ap.add_argument("--force", action="store_true"); ap.add_argument("--yes", action="store_true")
+    ap.add_argument("company")
+    ap.add_argument("req_id")
+    ap.add_argument("--cover", action="store_true")
+    ap.add_argument("--outreach", action="store_true")
+    ap.add_argument("--force", action="store_true")
+    ap.add_argument("--yes", action="store_true")
     ap.add_argument("--no-prompt", action="store_true", help="never ask JD-skill y/n; write them to notes.md instead")
     a = ap.parse_args()
     rules = Path("RESUME_RULES.md").read_text(encoding="utf-8")
@@ -102,8 +110,11 @@ def main():
         plan = planner.make_plan(doc, info, jd, j, profile + "\n\nRULES:\n" + rules)
     skill_notes = [f"JD asks for {s}: confirmed, added to skills_confirmed.md" for s in accepted]
     skill_notes += [f"JD asks for {s}: not used, left out (gap to acknowledge if asked)" for s in declined]
-    skill_notes += [f"JD asks for {s}. Have you used it? [y/n] (unattended run: answer by adding it to "
-                    f"skills_confirmed.md and rerunning)" for s in deferred]
+    skill_notes += [
+        f"JD asks for {s}. Have you used it? [y/n] (unattended run: answer by adding it to "
+        f"skills_confirmed.md and rerunning)"
+        for s in deferred
+    ]
     planner.fix_summary(plan, doc, info, profile)
     if not HEADLINE.match(plan["summary"]):
         plan["summary"] = f"**{plan['headline']}** " + plan["summary"]
@@ -117,8 +128,15 @@ def main():
     out = folder / f"Resume - Siddhi Rohan ({plan['headline']}).docx"
     doc.save(out)
     notes = [f"# {j['title']} at {j['company']} ({j['req_id']})", "", j["url"], "", "## Fit assessment", ""]
-    notes += [f"- {l}" for l in lines] + ["", f"- base used: {base_label}", f"- headline: {plan['headline']}",
-                                          f"- {plan['fit_notes']}", "", "## Changes (before / after)", ""]
+    notes += [f"- {x}" for x in lines] + [
+        "",
+        f"- base used: {base_label}",
+        f"- headline: {plan['headline']}",
+        f"- {plan['fit_notes']}",
+        "",
+        "## Changes (before / after)",
+        "",
+    ]
     for where, before, after in changes:
         notes += [f"### {where}", "", f"BEFORE: {before}", "", f"AFTER: {after}", ""]
     notes += ["## Hard to defend", ""] + ([f"- {x}" for x in plan["hard_to_defend"]] or ["- none"])
@@ -133,9 +151,12 @@ def main():
         notes += ["", "## Cover letter", "", text]
     if a.outreach:
         o = letters.outreach(j, jd, profile, resumes.docx_text(out))
-        (folder / "outreach.md").write_text(f"# Outreach\n\n## LinkedIn note ({len(o['linkedin_note'])} chars)\n\n"
-                                            f"{o['linkedin_note']}\n\n## Message ({len(o['message'].split())} words)\n\n"
-                                            f"{o['message']}\n", encoding="utf-8")
+        (folder / "outreach.md").write_text(
+            f"# Outreach\n\n## LinkedIn note ({len(o['linkedin_note'])} chars)\n\n"
+            f"{o['linkedin_note']}\n\n## Message ({len(o['message'].split())} words)\n\n"
+            f"{o['message']}\n",
+            encoding="utf-8",
+        )
     (folder / "notes.md").write_text("\n".join(notes) + "\n", encoding="utf-8")
     print(f"\nbuilt {out}\nnotes: {folder / 'notes.md'}\nnext: python finalize.py \"{folder}\"")
 

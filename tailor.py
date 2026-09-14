@@ -1,8 +1,7 @@
 """Parse a base resume .docx into blocks, get a tailoring plan from Claude, apply it without touching formatting."""
+
 import copy
 import re
-
-from docx import Document
 
 HEADINGS = ("PROFESSIONAL SUMMARY", "WORK EXPERIENCE", "RESEARCH PUBLICATIONS", "SKILLS", "EDUCATION", "PROJECTS")
 DATE = re.compile(r"(19|20)\d\d\s*$|Present\s*$")
@@ -80,6 +79,7 @@ def apply_plan(doc, info, plan):
     skills not on the base are pruned; the coursework label and leading tabs are preserved."""
     ps, changes = doc.paragraphs, []
     base_lower = "\n".join(p.text for p in ps).lower()
+
     def change(where, idx, new):
         old = marked_text(ps[idx])
         lead = re.match(r"\s*", old.replace("**", "")).group(0)
@@ -87,9 +87,12 @@ def apply_plan(doc, info, plan):
         if new and new.strip() != old.strip():
             set_text(ps[idx], new)
             changes.append((where, old, new))
+
     unsupported = new_terms(plan["summary"], base_lower)
     if unsupported:
-        plan["questions_for_rohan"].append("Summary uses terms outside the base resume and skills_confirmed.md: " + ", ".join(unsupported))
+        plan["questions_for_rohan"].append(
+            "Summary uses terms outside the base resume and skills_confirmed.md: " + ", ".join(unsupported)
+        )
     change("summary", info["summary"], plan["summary"])
     for pj in plan["jobs"]:
         job = info["jobs"][pj["job"]]
@@ -98,8 +101,10 @@ def apply_plan(doc, info, plan):
                 continue
             added = new_terms(rw["text"], base_lower)
             if added:
-                plan["questions_for_rohan"].append(f"Reverted job {pj['job']} bullet {rw['bullet']} rewrite: it added "
-                                                   f"{', '.join(added)}. Is that accurate? Proposed: {rw['text']}")
+                plan["questions_for_rohan"].append(
+                    f"Reverted job {pj['job']} bullet {rw['bullet']} rewrite: it added "
+                    f"{', '.join(added)}. Is that accurate? Proposed: {rw['text']}"
+                )
                 continue
             change(f"job {pj['job']} bullet {rw['bullet']}", job["bullets"][rw["bullet"]], rw["text"])
         order = [i for i in pj["order"] if 0 <= i < len(job["bullets"])]
@@ -109,12 +114,18 @@ def apply_plan(doc, info, plan):
     skills = [s.strip() for s in plan["skills"].split(",")]
     pruned = [s for s in skills if s and s.lower() not in base_lower]
     if pruned:
-        plan["questions_for_rohan"].append("Dropped skills not on the base resume or in skills_confirmed.md: " + ", ".join(pruned))
+        plan["questions_for_rohan"].append(
+            "Dropped skills not on the base resume or in skills_confirmed.md: " + ", ".join(pruned)
+        )
     change("skills", info["skills"], ", ".join(s for s in skills if s and s not in pruned))
     if info["coursework"] is not None and plan["coursework"]:
         old = marked_text(ps[info["coursework"]])
         if "capstone" in old.lower() and "capstone" not in plan["coursework"].lower():
             plan["questions_for_rohan"].append("Coursework rewrite dropped the capstone line; kept the original.")
         else:
-            change("coursework", info["coursework"], "**Coursework: **" + re.sub(r"^\**Coursework:\**\s*", "", plan["coursework"]))
+            change(
+                "coursework",
+                info["coursework"],
+                "**Coursework: **" + re.sub(r"^\**Coursework:\**\s*", "", plan["coursework"]),
+            )
     return changes

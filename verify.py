@@ -1,4 +1,5 @@
 """Verify companies.json entries against Workday; fix site slugs via tenant-root redirect."""
+
 import json
 import re
 import sys
@@ -62,8 +63,7 @@ def main():
         print(f"{rows[-1][0]:<16} {rows[-1][1]:<5} {rows[-1][2]}", flush=True)
 
     json.dump(companies, open("companies.json", "w", encoding="utf-8"), indent=2)
-    print("\nwrote companies.json:",
-          sum(c.get("verified") for c in companies), "verified of", len(companies))
+    print("\nwrote companies.json:", sum(c.get("verified") for c in companies), "verified of", len(companies))
 
 
 if __name__ == "__main__":

@@ -1,22 +1,25 @@
 """Title, location, years-of-experience, and contract filters. All matching is case-insensitive."""
+
 import re
 
+# fmt: off
 NON_US = [
     "canada", "mexico", "brazil", "argentina", "colombia", "chile", "peru", "united kingdom", "uk", "england",
     "london", "ireland", "dublin", "germany", "france", "paris", "spain", "italy", "netherlands", "amsterdam",
     "poland", "warsaw", "czech", "prague", "romania", "bucharest", "sweden", "stockholm", "denmark", "finland",
-    "norway", "switzerland", "zurich", "austria", "vienna", "belgium", "brussels", "portugal", "lisbon",
-    "hungary", "budapest", "israel", "tel aviv", "india", "bangalore", "bengaluru", "hyderabad", "pune",
-    "chennai", "mumbai", "gurgaon", "gurugram", "noida", "delhi", "kolkata", "ahmedabad", "china", "shanghai",
-    "beijing", "shenzhen", "taiwan", "taipei", "hsinchu", "japan", "tokyo", "korea", "seoul", "singapore",
-    "malaysia", "kuala lumpur", "penang", "philippines", "manila", "vietnam", "hanoi", "ho chi minh",
-    "thailand", "bangkok", "indonesia", "jakarta", "australia", "sydney", "melbourne", "new zealand",
-    "hong kong", "dubai", "uae", "saudi", "riyadh", "egypt", "cairo", "south africa", "johannesburg",
-    "nigeria", "lagos", "kenya", "nairobi", "turkey", "istanbul", "costa rica", "heredia", "guatemala",
-    "puerto rico", "bermuda", "toronto", "vancouver", "montreal", "ottawa", "calgary", "munich", "berlin",
-    "madrid", "barcelona", "milan", "rome", "krakow", "sao paulo", "bogota", "buenos aires", "mexico city",
-    "monterrey", "guadalajara", "luxembourg", "copenhagen", "oslo", "helsinki", "athens", "edinburgh",
+    "norway", "switzerland", "zurich", "austria", "vienna", "belgium", "brussels", "portugal", "lisbon", "hungary",
+    "budapest", "israel", "tel aviv", "india", "bangalore", "bengaluru", "hyderabad", "pune", "chennai", "mumbai",
+    "gurgaon", "gurugram", "noida", "delhi", "kolkata", "ahmedabad", "china", "shanghai", "beijing", "shenzhen",
+    "taiwan", "taipei", "hsinchu", "japan", "tokyo", "korea", "seoul", "singapore", "malaysia", "kuala lumpur",
+    "penang", "philippines", "manila", "vietnam", "hanoi", "ho chi minh", "thailand", "bangkok", "indonesia",
+    "jakarta", "australia", "sydney", "melbourne", "new zealand", "hong kong", "dubai", "uae", "saudi", "riyadh",
+    "egypt", "cairo", "south africa", "johannesburg", "nigeria", "lagos", "kenya", "nairobi", "turkey", "istanbul",
+    "costa rica", "heredia", "guatemala", "puerto rico", "bermuda", "toronto", "vancouver", "montreal", "ottawa",
+    "calgary", "munich", "berlin", "madrid", "barcelona", "milan", "rome", "krakow", "sao paulo", "bogota",
+    "buenos aires", "mexico city", "monterrey", "guadalajara", "luxembourg", "copenhagen", "oslo", "helsinki",
+    "athens", "edinburgh",
 ]
+# fmt: on
 
 
 def _word(phrase):
@@ -72,9 +75,12 @@ def years_required(text):
 
 CONTRACT_TITLE = re.compile(r"(?<!\w)(contract|contractor|temporary|temp|w-?2|c2c|1099)(?!\w)", re.I)
 CONTRACT_TEXT = [
-    r"(?<!\w)(?:w-?2|c2c|corp[- ]to[- ]corp|1099)(?!\w)", r"contract[- ]to[- ]hire",
-    r"\d+[- ]?(?:month|week|year) contract", r"contract (?:role|position|assignment|opportunity|basis)",
-    r"contractor (?:role|position)", r"temporary (?:position|role|assignment|employment)",
+    r"(?<!\w)(?:w-?2|c2c|corp[- ]to[- ]corp|1099)(?!\w)",
+    r"contract[- ]to[- ]hire",
+    r"\d+[- ]?(?:month|week|year) contract",
+    r"contract (?:role|position|assignment|opportunity|basis)",
+    r"contractor (?:role|position)",
+    r"temporary (?:position|role|assignment|employment)",
 ]
 
 
@@ -86,6 +92,6 @@ def is_contract(title, text):
     for p in CONTRACT_TEXT:
         m = re.search(p, text, re.I)
         if m:
-            s = text[max(0, m.start() - 50): m.end() + 50].replace("\n", " ")
+            s = text[max(0, m.start() - 50) : m.end() + 50].replace("\n", " ")
             return True, re.sub(r"\s+", " ", s).strip()
     return False, None

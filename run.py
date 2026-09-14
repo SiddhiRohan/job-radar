@@ -1,4 +1,5 @@
 """python run.py [--days N]: poll -> score -> digest. Score failures don't block the digest."""
+
 import argparse
 import subprocess
 import sys
@@ -17,7 +18,9 @@ def main():
     ap.add_argument("--days", type=int, help="widen the posted-within window (default from config.json)")
     ap.add_argument("--all-tiers", action="store_true", help="poll tier 3 companies too")
     args = ap.parse_args()
-    poll_args = (["--days", str(args.days)] if args.days is not None else []) + (["--all-tiers"] if args.all_tiers else [])
+    poll_args = (["--days", str(args.days)] if args.days is not None else []) + (
+        ["--all-tiers"] if args.all_tiers else []
+    )
     if step("poll.py", poll_args):
         sys.exit("poll failed; not scoring or digesting")
     step("score.py", [])

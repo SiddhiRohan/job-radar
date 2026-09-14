@@ -1,4 +1,5 @@
 """Poll verified Workday sites, apply title/location rules, enrich new postings, track them in jobs.jsonl."""
+
 import argparse
 import json
 import sys
@@ -55,9 +56,14 @@ def enrich(j, company, cfg):
     """Fetch the detail record; derive US check, years gate, sponsorship, and contract flags."""
     d = wd.fetch_detail(company["tenant"], company["shard"], j["detail_path"])
     text = d["description"]
-    j.update(description=text[:MAX_DESC], detail_location=d["location"], country=d["country"],
-             additional_locations=d["additional_locations"], country_code=d["country_code"],
-             time_type=d["time_type"])
+    j.update(
+        description=text[:MAX_DESC],
+        detail_location=d["location"],
+        country=d["country"],
+        additional_locations=d["additional_locations"],
+        country_code=d["country_code"],
+        time_type=d["time_type"],
+    )
     j["non_us"] = bool(cfg["us_only"] and filters.detail_non_us(d))
     j["years_required"] = filters.years_required(text)
     j["years_gate"] = j["years_required"] is not None and j["years_required"] >= 6
@@ -76,8 +82,11 @@ def main():
     max_days = args.days if args.days is not None else cfg["max_days_ago"]
     # Tier 1 and 2 daily; tier 3 on the weekdays listed in config (default Monday and Thursday).
     tier3_today = args.all_tiers or datetime.now().weekday() in cfg.get("tier3_weekdays", [0, 3])
-    companies = {c["name"]: c for c in load_json("companies.json", [])
-                 if c.get("verified") and (c.get("tier", 1) <= 2 or tier3_today)}
+    companies = {
+        c["name"]: c
+        for c in load_json("companies.json", [])
+        if c.get("verified") and (c.get("tier", 1) <= 2 or tier3_today)
+    }
     seen = set(load_json("seen.json", []))
     removed = {r: set() for r in RULES}
 
@@ -111,15 +120,27 @@ def main():
             f.write(json.dumps(j) + "\n")
     seen |= {k for k, _ in new}
     Path("seen.json").write_text(json.dumps(sorted(seen), indent=0), encoding="utf-8")
-    Path("last_run.json").write_text(json.dumps({
-        "ran_at": now, "max_days_ago": max_days, "companies_polled": len(companies),
-        "new_postings": len(kept), "removed": {r: len(s) for r, s in removed.items()},
-        "errors": errors}, indent=2), encoding="utf-8")
+    Path("last_run.json").write_text(
+        json.dumps(
+            {
+                "ran_at": now,
+                "max_days_ago": max_days,
+                "companies_polled": len(companies),
+                "new_postings": len(kept),
+                "removed": {r: len(s) for r, s in removed.items()},
+                "errors": errors,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
 
     print(f"\n{len(kept)} new postings kept; removed: " + ", ".join(f"{r}={len(s)}" for r, s in removed.items()))
     for j in sorted(kept, key=lambda j: (j["company"], j["title"])):
         flags = " ".join(f for f, on in (("YEARS", j.get("years_gate")), ("CONTRACT", j.get("contract"))) if on)
-        print(f"{j['company']:<12} {j['title'][:50]:<50} {j['location'][:22]:<22} {j.get('sponsorship', '?'):<9} {flags}")
+        print(
+            f"{j['company']:<12} {j['title'][:50]:<50} {j['location'][:22]:<22} {j.get('sponsorship', '?'):<9} {flags}"
+        )
 
 
 if __name__ == "__main__":

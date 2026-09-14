@@ -1,4 +1,5 @@
 """skills_confirmed.md: the vocabulary tailoring may draw on, plus the JD-skill yes/no prompts."""
+
 import sys
 from pathlib import Path
 
@@ -8,7 +9,7 @@ PATH = Path("skills_confirmed.md")
 def load():
     if not PATH.exists():
         return []
-    return [l[2:].strip() for l in PATH.read_text(encoding="utf-8").splitlines() if l.startswith("- ")]
+    return [line[2:].strip() for line in PATH.read_text(encoding="utf-8").splitlines() if line.startswith("- ")]
 
 
 def text():

@@ -1,4 +1,5 @@
 """finalize.py <folder>: humanize prose, strip invisible Unicode and provenance metadata from every outgoing file."""
+
 import difflib
 import os
 import re
@@ -19,8 +20,12 @@ HUMANIZE = """Rewrite each paragraph so it reads like a careful person wrote it:
 formulaic transitions and filler with concrete phrasing, plain varied wording. Keep every fact, number, name, tool,
 and identifier exactly as given. Add nothing, remove nothing. Keep **bold** markers where they are. No em dashes.
 Return a JSON array of strings, same length and order as the input."""
-SCHEMA = {"type": "object", "additionalProperties": False, "properties": {"paragraphs": {"type": "array", "items": {"type": "string"}}},
-          "required": ["paragraphs"]}
+SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {"paragraphs": {"type": "array", "items": {"type": "string"}}},
+    "required": ["paragraphs"],
+}
 
 
 def clean(s):
@@ -28,29 +33,39 @@ def clean(s):
 
 
 def facts_kept(old, new):
-    return re.findall(r"\d[\d,.%+]*", old) == re.findall(r"\d[\d,.%+]*", new) and 0.6 <= len(new) / max(len(old), 1) <= 1.5
+    return (
+        re.findall(r"\d[\d,.%+]*", old) == re.findall(r"\d[\d,.%+]*", new) and 0.6 <= len(new) / max(len(old), 1) <= 1.5
+    )
 
 
 def humanize(paragraphs):
     """Return rewritten list; any paragraph that changes a number or length too much keeps its original."""
     if not paragraphs:
         return []
-    out, _ = llm.complete(HUMANIZE, "\n".join(f"[{i}] {p}" for i, p in enumerate(paragraphs)) + "\n\nReturn JSON.", SCHEMA)
+    out, _ = llm.complete(
+        HUMANIZE, "\n".join(f"[{i}] {p}" for i, p in enumerate(paragraphs)) + "\n\nReturn JSON.", SCHEMA
+    )
     new = out["paragraphs"]
-    return [n if len(new) == len(paragraphs) and facts_kept(o, n) else o for o, n in zip(paragraphs, new + paragraphs[len(new):])]
+    return [
+        n if len(new) == len(paragraphs) and facts_kept(o, n) else o
+        for o, n in zip(paragraphs, new + paragraphs[len(new) :])
+    ]
 
 
 def strip_docx_props(doc):
     cp, removed = doc.core_properties, []
     for f in ("author", "last_modified_by", "title", "subject", "keywords", "comments", "category", "content_status"):
         if getattr(cp, f):
-            removed.append(f); setattr(cp, f, "")
+            removed.append(f)
+            setattr(cp, f, "")
     cp.revision = 1
     for part in doc.part.package.parts:
         if str(part.partname) == "/docProps/app.xml":
-            part._blob = (b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.'
-                          b'openxmlformats.org/officeDocument/2006/extended-properties"><Application></Application>'
-                          b'<Company></Company></Properties>')
+            part._blob = (
+                b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.'
+                b'openxmlformats.org/officeDocument/2006/extended-properties"><Application></Application>'
+                b"<Company></Company></Properties>"
+            )
             removed.append("app.xml(Application, Company)")
     return removed
 
@@ -64,7 +79,8 @@ def service_clean(path):
             insp = requests.post(f"{SERVICE}/inspect", files={"file": f}, timeout=60).json()
         with open(path, "rb") as f:
             r = requests.post(f"{SERVICE}/clean", files={"file": f}, timeout=120)
-        r.raise_for_status(); Path(path).write_bytes(r.content)
+        r.raise_for_status()
+        Path(path).write_bytes(r.content)
         return f"service: {insp}"
     except requests.RequestException:
         return None
@@ -86,11 +102,15 @@ def finalize_docx(path, report):
         for r in p.runs:
             c = clean(r.text)
             if c != r.text:
-                stripped += 1; r.text = c
+                stripped += 1
+                r.text = c
     props = strip_docx_props(doc)
     doc.save(path)
-    report.append(f"{path.name}: humanized {changed}/{len(prose)} paragraphs; runs with invisible chars stripped: {stripped}; "
-                  f"properties cleared: {', '.join(props) or 'none already set'}; " + (service_clean(path) or "service: not running"))
+    report.append(
+        f"{path.name}: humanized {changed}/{len(prose)} paragraphs; runs with invisible chars stripped: {stripped}; "
+        f"properties cleared: {', '.join(props) or 'none already set'}; "
+        + (service_clean(path) or "service: not running")
+    )
 
 
 def finalize_text(path, report, humanize_prose):
@@ -101,9 +121,12 @@ def finalize_text(path, report, humanize_prose):
         new = humanize(paras)
         for b, a in zip(paras, new):
             if a != b:
-                c = c.replace(b, a); report.append("\n".join(difflib.unified_diff([b], [a], lineterm="", n=0))[:2000])
+                c = c.replace(b, a)
+                report.append("\n".join(difflib.unified_diff([b], [a], lineterm="", n=0))[:2000])
     path.write_text(c, encoding="utf-8")
-    report.append(f"{path.name}: invisible chars removed: {len(INVISIBLE.findall(text)) + len(ODD_SPACE.findall(text))}")
+    report.append(
+        f"{path.name}: invisible chars removed: {len(INVISIBLE.findall(text)) + len(ODD_SPACE.findall(text))}"
+    )
 
 
 def main():
@@ -117,8 +140,10 @@ def main():
         if p.name != "outreach.md":
             finalize_text(p, report, humanize_prose=False)
     if not _service_reachable():
-        report.append(f"remove-ai-marks service not running at {SERVICE}; used local fallback. Start it and set "
-                      "WATERMARKS_SERVICE_URL to use /inspect and /clean. No PDFs were produced, so exiftool/qpdf were not needed.")
+        report.append(
+            f"remove-ai-marks service not running at {SERVICE}; used local fallback. Start it and set "
+            "WATERMARKS_SERVICE_URL to use /inspect and /clean. No PDFs were produced, so exiftool/qpdf were not needed."
+        )
     text = "\n".join(report) + "\n"
     print(text)
     with open(folder / "notes.md", "a", encoding="utf-8") as f:

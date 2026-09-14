@@ -1,4 +1,5 @@
 """Workday careers JSON client: search, description fetch, caching, polite retries."""
+
 import hashlib
 import html
 import json
@@ -15,7 +16,7 @@ HEADERS = {
     "Content-Type": "application/json",
     "Accept": "application/json",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                  "(KHTML, like Gecko) Chrome/128.0 Safari/537.36",
+    "(KHTML, like Gecko) Chrome/128.0 Safari/537.36",
 }
 
 
@@ -23,7 +24,9 @@ def base_url(tenant, shard):
     return f"https://{tenant}.{shard}.myworkdayjobs.com"
 
 
-JOB_URL = re.compile(r"https://([\w-]+)\.(wd\d+)\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([^/]+)(/job/.+?)(?:/apply.*)?/?$")
+JOB_URL = re.compile(
+    r"https://([\w-]+)\.(wd\d+)\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([^/]+)(/job/.+?)(?:/apply.*)?/?$"
+)
 
 
 def parse_job_url(url):

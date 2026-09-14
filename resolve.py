@@ -1,4 +1,5 @@
 """Verify resolved candidates in candidates.json against Workday (empty search, read total). Two attempts, 1.5 s gap."""
+
 import json
 import sys
 import time
@@ -19,7 +20,11 @@ def main():
         for attempt in range(2):
             try:
                 e["open_roles"] = wd.count(e["tenant"], e["shard"], e["site"])
-                e["status"], e["verified_at"], err = "verified", datetime.now(timezone.utc).isoformat(timespec="seconds"), None
+                e["status"], e["verified_at"], err = (
+                    "verified",
+                    datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                    None,
+                )
                 break
             except Exception as ex:
                 err = str(ex)[:120]
@@ -32,6 +37,7 @@ def main():
         json.dump(latest, open(P, "w", encoding="utf-8"), indent=1)
         c = latest
     from collections import Counter
+
     print(Counter(e.get("status") for e in c.values()))
 
 

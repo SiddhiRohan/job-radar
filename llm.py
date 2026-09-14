@@ -1,4 +1,5 @@
 """Thin Messages API helper shared by score.py, apply.py, letters.py, finalize.py."""
+
 import json
 import os
 import sys
@@ -26,8 +27,12 @@ def complete(system, user, schema=None, max_tokens=4096):
     """Return (parsed JSON if schema else text, model). Retries 429/5xx; falls back through MODELS on 404."""
     headers = {"x-api-key": load_api_key(), "anthropic-version": "2023-06-01", "content-type": "application/json"}
     for model in MODELS:
-        body = {"model": model, "max_tokens": max_tokens, "system": system,
-                "messages": [{"role": "user", "content": user}]}
+        body = {
+            "model": model,
+            "max_tokens": max_tokens,
+            "system": system,
+            "messages": [{"role": "user", "content": user}],
+        }
         if schema:
             body["output_config"] = {"format": {"type": "json_schema", "schema": schema}}
         for attempt in range(3):

@@ -1,4 +1,5 @@
 """Build digests/YYYY-MM-DD.md from this run's new postings: Apply, Maybe, Contract, counts, Skipped, Errors."""
+
 import json
 import sys
 from datetime import datetime
@@ -9,7 +10,9 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 def load_jsonl(path):
     p = Path(path)
-    return [json.loads(l) for l in p.read_text(encoding="utf-8").splitlines() if l.strip()] if p.exists() else []
+    return (
+        [json.loads(line) for line in p.read_text(encoding="utf-8").splitlines() if line.strip()] if p.exists() else []
+    )
 
 
 def best(j):
@@ -23,8 +26,10 @@ def line(j):
     pair = f"E{v.get('score_entry', '-')}/X{v.get('score_experienced', '-')}"
     rec = f"{v.get('recommended_resume') or '?'} · {v.get('recommended_variant') or '?'}"
     cover = " · [COVER LETTER]" if v.get("cover_letter_required") else ""
-    out = [f"- **{j['company']}** | {j['title']} | {j.get('detail_location') or j['location']} | {j['posted_on']} | "
-           f"{pair} | {rec}{cover} | [link]({j['url']})"]
+    out = [
+        f"- **{j['company']}** | {j['title']} | {j.get('detail_location') or j['location']} | {j['posted_on']} | "
+        f"{pair} | {rec}{cover} | [link]({j['url']})"
+    ]
     if v.get("why"):
         out.append(f"    {v['why']}")
     extras = []
@@ -41,20 +46,31 @@ def line(j):
 def section(title, items):
     if not items:
         return [f"## {title} (0)", ""]
-    return [f"## {title} ({len(items)})", ""] + [line(j) for j in sorted(items, key=lambda j: (-best(j), j["company"], j["title"]))] + [""]
+    return (
+        [f"## {title} ({len(items)})", ""]
+        + [line(j) for j in sorted(items, key=lambda j: (-best(j), j["company"], j["title"]))]
+        + [""]
+    )
 
 
 def build(run, jobs):
     today = datetime.now().strftime("%Y-%m-%d")
     new = [j for j in jobs if j.get("first_seen") == run.get("ran_at")]
     removed = run.get("removed") or {}
-    md = [f"# Job radar digest {today}", "",
-          f"Companies polled: {run.get('companies_polled', 0)} | Window: last {run.get('max_days_ago', '?')} day(s) | "
-          f"New postings kept: {len(new)}",
-          "Removed by rule: " + ", ".join(f"{k} {v}" for k, v in removed.items()), ""]
+    md = [
+        f"# Job radar digest {today}",
+        "",
+        f"Companies polled: {run.get('companies_polled', 0)} | Window: last {run.get('max_days_ago', '?')} day(s) | "
+        f"New postings kept: {len(new)}",
+        "Removed by rule: " + ", ".join(f"{k} {v}" for k, v in removed.items()),
+        "",
+    ]
 
     def says_no(j):  # the regex tag or the model's own read of the posting text
-        return j.get("sponsorship") in ("no", "perm_ad", "unlikely") or (j.get("verdict") or {}).get("sponsorship") == "no"
+        return (
+            j.get("sponsorship") in ("no", "perm_ad", "unlikely") or (j.get("verdict") or {}).get("sponsorship") == "no"
+        )
+
     skipped = [j for j in new if says_no(j)]
     contract = [j for j in new if j.get("contract") and j not in skipped]
     pool = [j for j in new if j not in skipped and j not in contract and not j.get("years_gate")]
@@ -66,8 +82,12 @@ def build(run, jobs):
     counts = {s: sum(best(j) == s for j in lower) for s in (3, 2, 1)}
     unscored = sum(best(j) == 0 for j in lower)
     gated = sum(bool(j.get("years_gate")) for j in new if j not in skipped)
-    md += ["## Lower scores (collapsed)", "",
-           f"- score 3: {counts[3]} | score 2: {counts[2]} | score 1: {counts[1]} (years gate {gated}) | unscored: {unscored}", ""]
+    md += [
+        "## Lower scores (collapsed)",
+        "",
+        f"- score 3: {counts[3]} | score 2: {counts[2]} | score 1: {counts[1]} (years gate {gated}) | unscored: {unscored}",
+        "",
+    ]
 
     md += [f"## Skipped: sponsorship no / clearance / PERM ad ({len(skipped)})", ""]
     for j in sorted(skipped, key=lambda j: (j["sponsorship"], j["company"], j["title"])):
@@ -78,8 +98,13 @@ def build(run, jobs):
     md.append("")
 
     errors = dict(run.get("errors") or {})
-    errors.update({f"{j['company']} {j['req_id']}": f"score: {j['verdict']['error'][:100]}"
-                   for j in new if "error" in (j.get("verdict") or {})})
+    errors.update(
+        {
+            f"{j['company']} {j['req_id']}": f"score: {j['verdict']['error'][:100]}"
+            for j in new
+            if "error" in (j.get("verdict") or {})
+        }
+    )
     md += ["## Errors", ""] + ([f"- {k}: {v}" for k, v in errors.items()] or ["- none"])
     return today, "\n".join(md) + "\n"
 
