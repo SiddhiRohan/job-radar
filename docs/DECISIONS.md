@@ -45,3 +45,20 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     Chime's `CSM` site and VMware (absorbed by Broadcom) failed twice and were dropped.
 12. **No pushes this round.** The remote stays configured (it is private) but nothing is pushed, per the round-2
    rules.
+
+## 2026-09-14 and 2026-09-15
+
+13. **Do not stack PRs.** PR #11 was based on the folders branch (#10). Rohan merged #10 first, then #11 merged into
+    the already-merged branch and never reached main; the commit had to be re-opened as #12. From now on every PR
+    is based on main; if a change depends on another PR, wait for it to merge.
+14. **Prepare is off by default.** Planning every Apply row after the morning run cost about a minute per row for
+    something used occasionally. Tailoring is on demand from chat or the Tailor view; `prepare_cap` can be raised
+    to turn it back on.
+15. **ruff-format versus the 150-line rule.** The formatter expands large literals one item per line, which pushed
+    filters.py, expand.py, and skills_extract.py far past 150 lines without adding code. Those literals are wrapped
+    in `# fmt: off` / `# fmt: on`. server.py and chat.py are over 150 lines after formatting; splitting them is a
+    reasonable follow-up, not urgent.
+16. **CI ran plain pytest.** Locally `python -m pytest` adds the working directory to `sys.path`; the runner did
+    not, so every test failed to import. `pytest.ini` sets `pythonpath = .`; run tests the same way CI does.
+17. **Branch protection.** Unavailable on the free private plan (API 403, rulesets not enforced). The workflow is a
+    convention held in CLAUDE.md until the plan changes or the repo goes public.

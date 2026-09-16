@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.2 (2026-09-15)
+
+**Web UI.** `server.py` (FastAPI) plus vanilla `web/`: Today (ranked shortlist with the score at the left edge,
+Apply / Maybe / Contract / Everything else, Mark applied, Run the radar), Tailor (side-by-side editor with
+changed-word highlighting, moved markers, inline notes, rebuild, save to folder with a native Browse dialog, cover
+letter), Applied (`applications.md` as a table with inline status). Plans cached per posting.
+
+**Chat assistant.** A drawer with a tool-using assistant that can switch views, refresh, run the radar, mark
+applied, set status, open a posting in Tailor, edit tailored text, plan / build / save a resume on demand, and save
+durable notes to `memory.md`. Threads persist on disk; minimize to a pill; thread list with New chat and Delete.
+
+**Sourcer first.** Pre-planning off by default; Today rows carry no Tailor button; tailoring is on demand via chat.
+
+**Fixes.** Sponsorship: seven more no-sponsorship phrases and the model's own "no" verdict both send a posting to
+Skipped (Caterpillar case). Rewrites copy the dominant run's formatting and finalize skips headers and hyperlinks
+(3pt project header). Workday URL parser strips the `-1` revision suffix.
+
+**Repo.** Modules grouped into `radar/`, `tailoring/`, `companies/`, `docs/`. CLAUDE.md working rules, PR template,
+pre-commit (ruff, gitleaks, whitespace), 38 offline tests, GitHub Actions CI, issues #1 to #7 as backlog.
+
+
 ## v0.1 (2026-09-13)
 
 Rounds 1 and 2 of the job radar, pipeline only (no UI yet).
