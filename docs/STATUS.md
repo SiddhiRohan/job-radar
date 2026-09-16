@@ -1,4 +1,25 @@
-# STATUS, round 2 (2026-09-13, run unattended)
+# STATUS
+
+## Current state (2026-09-15)
+
+Live and in daily use. The 7:30 AM Task Scheduler entry "JobRadar" runs poll, score, digest (prepare is off by
+default); the UI runs with `python server.py`; everything is merged to `main` on the private repo.
+
+- Runs so far: 2026-09-13 (catch-up, 113 companies, 242 kept), 2026-09-14 (113 companies, 23 kept, 1 Apply),
+  2026-09-15 (93 companies on a non-tier-3 day, 112 kept, 5 Apply, 476 removed by rule).
+- Applications recorded through the UI: 23 as of 2026-09-15 11:23, across HPE, Netflix, NVIDIA, Adobe, Ally, Applied
+  Materials, Bank of America, Cardinal Health, Disney, Freddie Mac, Visa, Home Depot, Humana, KLA, Lowe's, Mastercard,
+  McKesson, Thomson Reuters, Walmart, Workday.
+- Direction: the sourcer is the product; resume tailoring is on demand through the chat drawer (plan, build, save),
+  with the Tailor view kept for the side-by-side. Multi-user is parked until Rohan asks.
+- Workflow: branch and PR for every change, CI (ruff, pytest) on PRs and main, pre-commit locally. Branch protection
+  is not available on the free private plan; the rule is in CLAUDE.md. Do not stack PRs (see DECISIONS.md).
+- Backlog: GitHub issues #1 to #7.
+
+The sections below are the round-2 report as written on 2026-09-13 and are kept for history; "not installed" and
+"nothing pushed" lines are superseded by the state above.
+
+## Round 2 report (2026-09-13, run unattended)
 
 ## Completed
 

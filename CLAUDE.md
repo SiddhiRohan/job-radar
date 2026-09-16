@@ -8,6 +8,8 @@ under about 150 lines, one request to Workday at a time with a 1.5 s gap, JSON e
 
 - Never commit to `main` directly. Branch from `main` (`feature/<name>`, `fix/<name>`, `chore/<name>`), open a
   PR, let CI pass, and squash-merge. Rohan merges.
+- Never stack PRs. Every PR is based on `main`; if a change needs another PR first, wait for that merge. A PR merged
+  into an already-merged branch never reaches `main` (this happened with #11).
 - One change per commit. Commit message: `area: what changed`, imperative, under 60 characters. The body says
   why, not what. Examples: `sponsor: treat "no visa sponsorship" as no`, `ui: minimize chat to a pill`.
 - No attribution trailers of any kind (no Co-Authored-By, no tool names) in commits or PR text.

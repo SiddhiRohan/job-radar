@@ -34,7 +34,7 @@ TOOLS = [
     },
     {
         "name": "run_radar",
-        "description": "Poll the companies for new postings, score them, rebuild the digest, and pre-plan Apply rows. Takes 25-45 minutes; runs in the background. Use days>1 to widen the window when the shortlist is exhausted.",
+        "description": "Poll the companies for new postings, score them, and rebuild the digest. Takes 25-45 minutes; runs in the background. Use days>1 to widen the window when the shortlist is exhausted.",
         "input_schema": {
             "type": "object",
             "properties": {"days": {"type": "integer", "minimum": 1, "maximum": 7}, "all_tiers": {"type": "boolean"}},
@@ -191,7 +191,7 @@ def run_radar(days, all_tiers=False):
         "started": True,
         "days": days,
         "all_tiers": all_tiers,
-        "note": "poll, score, digest, prepare; refresh Today when done",
+        "note": "poll, score, digest; refresh Today when done",
     }
 
 
