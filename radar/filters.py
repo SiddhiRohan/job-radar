@@ -47,16 +47,33 @@ def detail_non_us(detail):
     return all(looks_non_us(x) for x in detail.get("additional_locations") or [])
 
 
-def title_matches_term(title, term):
-    """Some tenants (Salesforce) do keyword-OR search; require a term word in the title."""
-    t = title.lower()
-    return any((len(w) <= 3 and _word(w).search(t)) or (len(w) > 3 and w in t) for w in term.lower().split())
+ENTRY = re.compile(
+    r"\b(junior|jr|entry[- ]level|new (college )?grad\w*|early careers?|graduate|associate|launchpad|(engineer|scientist|developer) (i|1))\b",
+    re.I,
+)
+NEVER_OVERRIDE = re.compile(r"\b(director|vice president|vp|avp|manager|principal|intern|internship|co-?op)\b", re.I)
+
+
+def is_entry_title(title):
+    return bool(ENTRY.search(title)) and not NEVER_OVERRIDE.search(title)
+
+
+def title_matches_term(title, term=None, cfg=None):
+    """The title must name a target role (config title_patterns). Entry-worded titles may also match the wider
+    entry_title_patterns. Matching one loose word of the search term let in 'Machine Operator' and lab scientists."""
+    cfg = cfg or {}
+    pats = list(cfg.get("title_patterns") or [])
+    if is_entry_title(title):
+        pats += cfg.get("entry_title_patterns") or []
+    if not pats:  # no patterns configured: fall back to the full search phrase
+        return bool(term) and term.lower() in title.lower()
+    return any(re.search(p, title, re.I) for p in pats)
 
 
 def title_exclusion(title, cfg):
     """Return 'seniority', 'domain', or None. include_override beats both lists."""
     t = title.lower()
-    if any(w.lower() in t for w in cfg.get("include_override", [])):
+    if any(w.lower() in t for w in cfg.get("include_override", [])) and not NEVER_OVERRIDE.search(t):
         return None
     for key, reason in (("exclude_seniority", "seniority"), ("exclude_domain", "domain")):
         if any(_word(w).search(t) for w in cfg.get(key, [])):

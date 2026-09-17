@@ -8,6 +8,7 @@ from pathlib import Path
 
 import requests
 
+from radar import filters, store
 from tailoring import resumes
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -157,14 +158,14 @@ def main():
     print("ANTHROPIC_API_KEY set:", bool(api_key))
     cfg = json.load(open("config.json", encoding="utf-8"))
     cap = cfg.get("score_cap", 40)
-    p = Path("jobs.jsonl")
-    jobs = (
-        [json.loads(line) for line in p.read_text(encoding="utf-8").splitlines() if line.strip()] if p.exists() else []
-    )
+    jobs = store.load()
+    # Entry-level and low-years postings first, so the cap never starves them; then newest.
     todo = sorted(
         (j for j in jobs if unscored(j)),
         key=lambda j: (
-            cfg["search_terms"].index(j["search_term"]) if j.get("search_term") in cfg["search_terms"] else 99,
+            0
+            if filters.is_entry_title(j["title"]) or (j.get("years_required") is not None and j["years_required"] <= 2)
+            else 1,
             j["posted_days_ago"],
         ),
     )

@@ -80,3 +80,25 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     outreach error paragraph. An empty `.error` element would make the existing offline timer retry after a
     successful manual recovery, rendering Tailor again and discarding fresh edits. Removing it preserves the
     existing retry machinery and stale-response guard while preventing that interaction.
+
+## 2026-09-17: entry-level sourcing
+
+18. **Titles must name a target role.** The old rule accepted any single word of the search term, so "machine"
+    let in Machine Operator and "scientist" let in lab scientists: 541 of 589 kept rows were one-word matches and
+    they swamped the 40-row scoring cap. `title_patterns` in config.json now lists the role families. Replayed on
+    413 stored postings it keeps 128 and retains 15 of the 18 past Apply verdicts. The three lost are generic
+    "Software Engineer" and "Specialist, Engineering" titles; general software engineer was 4 Apply out of 65
+    scored, so it stays out unless the title carries entry wording (`entry_title_patterns`).
+19. **Entry terms get one page and a 14-day window.** Workday returns "early career", "new college grad", and
+    "entry level" by relevance, and those roles stay open for weeks (GM's ML Systems Engineer, Early Career was 8
+    days old and never seen with the 1-day window). seen.json prevents repeats. Tier 1 and 2 only; about 280 more
+    requests, roughly 8 minutes per run.
+20. **Entry-level rows are scored first.** The queue was ordered by search term, so with a backlog the cap was
+    spent before entry rows were reached. Order is now entry wording or two years and under, then newest.
+21. **include_override never rescues director, VP, manager, principal, or intern titles.** "associate" as an
+    override had kept Associate Director and Associate Vice President, and "early career" kept an internship.
+22. **Overlapping runs are allowed; duplicates are not.** Rohan prefers a second run to proceed rather than be
+    refused. `radar/store.py` re-reads the file under a short write lock, appends only keys not on disk, and the
+    scorer merges instead of overwriting, so two runs at once store each posting once and lose nothing. On
+    2026-09-17 the scheduled run and a UI run both appended the same 176 rows; they were removed (977 to 801,
+    backup in .cache/jobs.before-dedupe.jsonl).

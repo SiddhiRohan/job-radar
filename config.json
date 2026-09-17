@@ -8,6 +8,41 @@
   "max_days_ago": 1,
   "us_only": true,
   "title_must_match_term": true,
+  "title_patterns": [
+    "data engineer",
+    "data scien",
+    "machine learning",
+    "deep learning",
+    "\\bml\\b",
+    "\\bmle\\b",
+    "\\bai\\b",
+    "artificial intelligence",
+    "\\bgen ?ai\\b",
+    "generative",
+    "\\bllm",
+    "\\bnlp\\b",
+    "analytics engineer",
+    "applied scientist",
+    "decision scien",
+    "data platform",
+    "data infrastructure",
+    "big data",
+    "\\betl\\b",
+    "mlops",
+    "data analy",
+    "analytics",
+    "forward deployed"
+  ],
+  "entry_title_patterns": [
+    "software (engineer|developer)",
+    "data"
+  ],
+  "entry_terms": [
+    "early career",
+    "new college grad",
+    "entry level"
+  ],
+  "entry_max_days_ago": 14,
   "exclude_seniority": [
     "sr",
     "sr.",

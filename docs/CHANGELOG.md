@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+**Entry-level sourcing.** Titles must match a role pattern instead of one loose word of the search term; entry
+search terms ("early career", "new college grad", "entry level") with a 14-day window on tier 1 and 2; entry-level
+rows scored first; override words no longer rescue director or intern titles. Overlapping runs store each posting
+once (`radar/store.py`).
+
 ## v0.2 (2026-09-15)
 
 **Web UI.** `server.py` (FastAPI) plus vanilla `web/`: Today (ranked shortlist with the score at the left edge,
