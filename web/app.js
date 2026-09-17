@@ -231,10 +231,7 @@ async function loadApplied() {
 }
 
 /* ---------- run the radar ---------- */
-async function runRadar(days, allTiers) {
-  const r = await api("/api/run", { days, all_tiers: allTiers });
-  if (!r.started) return toast(r.reason);
-  toast(`Running the radar for ${days} day(s); Today refreshes when it finishes`);
+function watchRun() {
   const btn = $("#runbtn"); btn.disabled = true;
   const poll = async () => {
     const s = await api("/api/run");
@@ -244,6 +241,14 @@ async function runRadar(days, allTiers) {
   };
   poll();
 }
+async function runRadar(days, allTiers) {
+  const r = await api("/api/run", { days, all_tiers: allTiers });
+  if (!r.started) { toast(r.reason); return watchRun(); }
+  toast(`Running the radar for ${days} day(s); Today refreshes when it finishes`);
+  watchRun();
+}
+/* a run outlives the page: pick it up again after a refresh */
+api("/api/run").then((s) => { if (s.running) watchRun(); }).catch(() => {});
 $("#runbtn").addEventListener("click", () => { const d = parseInt(prompt("How many days back? (1 = today's window)", "1") || "0", 10); if (d > 0) runRadar(d, false); });
 
 /* ---------- chat ---------- */
