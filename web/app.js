@@ -87,7 +87,7 @@ $("#prev").addEventListener("click", () => { const i = T.dates.indexOf(T.date); 
 $("#next").addEventListener("click", () => { const i = T.dates.indexOf(T.date); if (i > 0) { T.date = T.dates[i - 1]; loadToday(); } });
 
 /* ---------- Tailor ---------- */
-const S = { state: null, build: null, cover: null };
+const S = { state: null, build: null, cover: null, revision: 0 };
 const words = s => s.split(/(\s+)/);
 function diffSpans(base, text) {
   // word-level LCS; words not in the common subsequence are wrapped as changed. ** bold markers become <b>.
@@ -136,6 +136,7 @@ function editCell(base, text, onchange) {
   return cell;
 }
 function renderTailor(st) {
+  const revision = ++S.revision;
   S.state = st; S.build = null; S.cover = null;
   const body = $("#tailor-body"); const j = st.job;
   const v = el("div", { class: "verdict" },
@@ -163,6 +164,41 @@ function renderTailor(st) {
   const gen = st.general_notes.length ? el("div", { class: "sec" }, el("h3", {}, "Open questions"), ...st.general_notes.map(x => el("p", { class: "note" }, x))) : null;
   const files = el("div", { class: "files" });
   const coverBox = el("div", { class: "cover" });
+  const outreachBox = el("div", { class: "outreach" });
+  let outreachEditors = null;
+  const outreachBtn = el("button", { type: "button", onclick: async () => {
+    if (outreachBtn.disabled || revision !== S.revision) return;
+    outreachBtn.disabled = true;
+    // Read the visible editors even if the focused cell has not blurred yet.
+    const cells = [...body.querySelectorAll(".sec .edit")];
+    let index = 0;
+    const sections = st.sections.map(sec => ({ ...sec, text: sec.text.map(() => plain(cells[index++]).trim()) }));
+    try {
+      const result = await waitJob((await api("/api/tailor/outreach", { company: j.company, req_id: j.req_id, sections })).job_id);
+      if (revision !== S.revision) return;
+      const field = (key, label, isNote) => {
+        const id = `outreach-${key}`;
+        const count = el("p", { id: `${id}-count`, class: "meta", "aria-live": "polite" });
+        const editor = el("textarea", { id, "aria-label": label, "aria-describedby": count.id }, result[key]);
+        const update = () => {
+          const n = isNote ? Array.from(editor.value).length : (editor.value.match(/\S+/g) || []).length;
+          const valid = isNote ? n < 300 : n >= 100 && n <= 120;
+          count.textContent = isNote ? `${n} characters · must be under 300` : `${n} words · 100–120 inclusive`;
+          editor.setAttribute("aria-invalid", String(!valid));
+        };
+        editor.addEventListener("input", update); update();
+        return { editor, nodes: [el("label", { for: id }, label), editor, count] };
+      };
+      const note = field("linkedin_note", "LinkedIn note", true);
+      const message = field("message", "Outreach message", false);
+      outreachEditors = { linkedin_note: note.editor, message: message.editor };
+      outreachBox.replaceChildren(el("h3", {}, "Outreach"), ...note.nodes, ...message.nodes);
+    } catch (e) {
+      if (revision === S.revision) {
+        toast(e.message);
+      }
+    } finally { outreachBtn.disabled = false; }
+  } }, "Write outreach");
   const rebuild = el("button", { type: "button", class: "primary", onclick: async () => {
     rebuild.disabled = true; rebuild.textContent = "Rebuilding";
     try {
@@ -184,7 +220,8 @@ function renderTailor(st) {
     if (!S.build) return toast("Rebuild first, then save");
     const notes = [...st.general_notes, ...st.sections.flatMap(s => Object.values(s.notes || {}).flat())];
     try {
-      const r = await api("/api/tailor/save", { dir: S.build.dir, job: j, dest: dest.value.trim() || null, assessment: st.assessment, notes });
+      const outreach = outreachEditors ? Object.fromEntries(Object.entries(outreachEditors).map(([key, editor]) => [key, editor.value])) : undefined;
+      const r = await api("/api/tailor/save", { dir: S.build.dir, job: j, dest: dest.value.trim() || null, assessment: st.assessment, notes, outreach });
       toast(`Saved to ${r.folder}`);
     } catch (e) { toast(e.message); }
   } }, "Save to folder");
@@ -196,12 +233,14 @@ function renderTailor(st) {
     } catch (e) { toast(e.message); } finally { coverBtn.disabled = false; }
   } }, j.cover ? "Write cover letter (required)" : "Write cover letter");
   body.replaceChildren(el("p", { class: "head" }, el("span", { class: "company" }, j.company), " ", el("span", { class: "title" }, j.title), " ", el("span", { class: "meta" }, j.req_id), " ",
-    el("a", { href: j.url, target: "_blank", rel: "noopener" }, "Open posting")), v, jd, ...secs, gen, coverBox,
-    el("div", { class: "actions" }, rebuild, save, dest, browse, applied, coverBtn,
+    el("a", { href: j.url, target: "_blank", rel: "noopener" }, "Open posting")), v, jd, ...secs, gen, coverBox, outreachBox,
+    el("div", { class: "actions" }, rebuild, save, dest, browse, applied, coverBtn, outreachBtn,
       el("button", { type: "button", class: "quiet", onclick: () => startTailor({ company: j.company, req_id: j.req_id, fresh: true }) }, "Re-plan")), files);
   body.classList.add("fresh"); setTimeout(() => body.classList.remove("fresh"), 600);
 }
 async function startTailor(req) {
+  const revision = ++S.revision;
+  S.state = null; S.build = null; S.cover = null;
   const body = $("#tailor-body");
   const what = req.url ? "Fetching the posting, scoring it if it is new, then planning the tailoring" : `Planning the tailoring for ${req.company}, ${req.req_id}`;
   const line = el("p", { class: "progress" }, what, ". Usually 30 to 60 seconds; a posting opened before comes back at once.");
@@ -210,9 +249,10 @@ async function startTailor(req) {
   body.replaceChildren(line, clock, el("p", {}, el("a", { href: "#today" }, "Back to Today")));
   try {
     const st = await waitJob((await api("/api/tailor", req)).job_id);
+    if (revision !== S.revision) return;
     renderTailor(st);
     if (st.cached) toast("Loaded the saved plan; use Re-plan for a fresh one");
-  } catch (e) { fail(body, e, () => startTailor(req)); } finally { clearInterval(tick); }
+  } catch (e) { if (revision === S.revision) fail(body, e, () => startTailor(req)); } finally { clearInterval(tick); }
 }
 $("#urlform").addEventListener("submit", e => { e.preventDefault(); startTailor({ url: $("#url").value.trim() }); });
 

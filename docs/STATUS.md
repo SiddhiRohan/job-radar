@@ -1,6 +1,18 @@
 # STATUS
 
-## Current state (2026-09-15)
+## Outreach in Tailor (2026-09-17): issue #7
+
+Write outreach uses the current visible resume sections and the existing background generator.
+Both drafts are editable with accessible live counts
+(note under 300 characters; message 100–120 whitespace-delimited words). Save to folder writes the latest
+drafts and counts into outreach.md without another rebuild. Retry and stale-response guards are included.
+
+Outreach failures use the existing toast, guarded against stale responses, and re-enable Write outreach
+for retry. Tailor has no inline outreach error paragraph: after a successful manual Retry replaces an
+offline failure, the original five-second timer no longer finds an outreach `.error` element and therefore
+does not retry again or discard subsequent resume edits. The existing offline retry machinery is unchanged.
+
+## State recorded on 2026-09-15
 
 Live and in daily use. The 7:30 AM Task Scheduler entry "JobRadar" runs poll, score, digest (prepare is off by
 default); the UI runs with `python server.py`; everything is merged to `main` on the private repo.
