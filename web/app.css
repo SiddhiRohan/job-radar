@@ -70,6 +70,10 @@ details summary { cursor: pointer; list-style: none; } details summary::-webkit-
 .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 24px 0 8px; padding-top: 14px; border-top: 1px solid var(--rule); }
 .files { margin: 8px 0; display: flex; gap: 16px; flex-wrap: wrap; }
 .cover textarea { width: 100%; min-height: 260px; }
+.outreach label { display: block; margin-top: 12px; font-weight: 500; }
+.outreach textarea { display: block; width: 100%; min-height: 120px; }
+.outreach textarea[aria-invalid="true"] { border-color: #8B2E2E; }
+.outreach .meta { margin: 4px 0 12px; color: var(--ash); }
 
 table { border-collapse: collapse; width: 100%; margin-top: 12px; }
 th { text-align: left; font-weight: 600; color: var(--ash); padding: 6px 10px 6px 0; border-bottom: 1px solid var(--rule); }

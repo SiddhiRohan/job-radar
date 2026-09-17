@@ -62,3 +62,21 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     not, so every test failed to import. `pytest.ini` sets `pythonpath = .`; run tests the same way CI does.
 17. **Branch protection.** Unavailable on the free private plan (API 403, rulesets not enforced). The workflow is a
     convention held in CLAUDE.md until the plan changes or the repo goes public.
+
+## 2026-09-17: outreach in Tailor
+
+18. **Reuse the outreach generator.** Call `letters.outreach` unchanged through a background route with
+    `profile.md` and visible resume sections. Read editors directly so focused edits are included before blur.
+19. **Keep outreach state local to each Tailor render.** Revision guards reject stale responses after opening
+    or replanning another state; disabling the button during generation prevents overlapping requests.
+20. **Show accessible counts without blocking edits.** Count Unicode code points for the note and
+    whitespace-delimited words for the message. Associated live feedback and `aria-invalid` expose the limits;
+    deliberate edits remain intact and can be saved even outside those limits.
+21. **Save current outreach drafts separately from rebuilding.** Read textarea values at save time so edits
+    reach `outreach.md` without another rebuild. Optional outreach preserves existing resume and notes saves.
+22. **Keep route tests offline.** Synthetic inputs and mocked generators avoid network calls and optional
+    HTTP client dependencies.
+23. **Use guarded toast feedback for outreach failures.** Re-enable the button for retry and omit the inline
+    outreach error paragraph. An empty `.error` element would make the existing offline timer retry after a
+    successful manual recovery, rendering Tailor again and discarding fresh edits. Removing it preserves the
+    existing retry machinery and stale-response guard while preventing that interaction.

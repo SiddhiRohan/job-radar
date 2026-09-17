@@ -303,6 +303,16 @@ def start_cover(body: dict):
     return background(work)
 
 
+@app.post("/api/tailor/outreach")
+def start_outreach(body: dict):
+    def work():
+        j = applier.find_job(body["company"], body["req_id"])
+        text = "\n".join(t for s in body["sections"] for t in s["text"])
+        return letters.outreach(j, j.get("description", ""), Path("profile.md").read_text(encoding="utf-8"), text)
+
+    return background(work)
+
+
 @app.get("/api/tailor/files/{build_id}/{name}")
 def download(build_id: str, name: str):
     p = UI_DIR / build_id / name
@@ -326,6 +336,14 @@ def save_folder(body: dict):
     notes += [f"- {x}" for x in body.get("assessment", [])] + ["", "## Notes and questions", ""]
     notes += [f"- {n}" for n in body.get("notes", [])] or ["- none"]
     (dest / "notes.md").write_text("\n".join(notes) + "\n", encoding="utf-8")
+    if body.get("outreach") is not None:
+        outreach = body["outreach"]
+        note, message = outreach["linkedin_note"], outreach["message"]
+        (dest / "outreach.md").write_text(
+            f"## LinkedIn note ({len(note)} characters; under 300)\n\n{note}\n\n"
+            f"## Outreach message ({len(message.split())} words; 100–120 inclusive)\n\n{message}\n",
+            encoding="utf-8",
+        )
     return {"folder": str(dest)}
 
 
