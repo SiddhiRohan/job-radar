@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from radar import filters, sponsor, wd
+from radar import filters, sponsor, store, wd
 
 sys.stdout.reconfigure(encoding="utf-8")
 MAX_DESC = 15000
@@ -22,8 +22,12 @@ def search_all(cfg, companies, max_days, removed):
     """Search every company x term; return (found dict keyed company|req_id, errors) after title/location rules."""
     found, errors = {}, {}
     for c in companies:
-        for term in cfg["search_terms"] + list(c.get("extra_terms") or []):
-            pages = cfg.get("max_pages_by_tier", {}).get(str(c.get("tier", 1)), 10)
+        entry_terms = cfg.get("entry_terms", []) if c.get("tier", 1) <= 2 else []
+        for term in cfg["search_terms"] + list(c.get("extra_terms") or []) + entry_terms:
+            # Entry searches come back by relevance and the roles stay open for weeks: one page, wider window.
+            entry = term in entry_terms
+            pages = 1 if entry else cfg.get("max_pages_by_tier", {}).get(str(c.get("tier", 1)), 10)
+            window = max(max_days, cfg.get("entry_max_days_ago", max_days)) if entry else max_days
             try:
                 jobs = wd.search(c["tenant"], c["shard"], c["site"], term, max_pages=pages, company=c["name"])
             except Exception as e:  # keep polling the other companies
@@ -33,10 +37,10 @@ def search_all(cfg, companies, max_days, removed):
             fresh = 0
             for j in jobs:
                 key = f"{c['name']}|{j['req_id']}"
-                if j["posted_days_ago"] > max_days or key in found:
+                if j["posted_days_ago"] > window or key in found:
                     continue
                 fresh += 1
-                if cfg.get("title_must_match_term", True) and not filters.title_matches_term(j["title"], term):
+                if cfg.get("title_must_match_term", True) and not filters.title_matches_term(j["title"], term, cfg):
                     continue
                 reason = filters.title_exclusion(j["title"], cfg)
                 if reason:
@@ -88,7 +92,8 @@ def main():
     seen = set(load_json("seen.json", []))
     removed = {r: set() for r in RULES}
 
-    print(f"polling {len(companies)} companies x {len(cfg['search_terms'])} terms, max_days_ago={max_days}")
+    n_terms = len(cfg["search_terms"]) + len(cfg.get("entry_terms", []))
+    print(f"polling {len(companies)} companies x {n_terms} terms, max_days_ago={max_days}")
     found, errors = search_all(cfg, companies.values(), max_days, removed)
     new = [(k, j) for k, j in found.items() if k not in seen]
     print(f"\n{len(found)} matching postings, {len(new)} new; fetching details for the new ones", flush=True)
@@ -113,11 +118,11 @@ def main():
         j["first_seen"] = now
         kept.append(j)
 
-    with open("jobs.jsonl", "a", encoding="utf-8") as f:
-        for j in kept:
-            f.write(json.dumps(j) + "\n")
-    seen |= {k for k, _ in new}
-    Path("seen.json").write_text(json.dumps(sorted(seen), indent=0), encoding="utf-8")
+    # Another run may have stored the same postings while this one was polling; keep one row per posting.
+    written = store.append_new(kept, seen_keys=[k for k, _ in new])
+    if len(written) < len(kept):
+        print(f"{len(kept) - len(written)} postings were already stored by another run; skipped", flush=True)
+    kept = written
     Path("last_run.json").write_text(
         json.dumps(
             {

@@ -5,14 +5,18 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+from radar import store
+
 sys.stdout.reconfigure(encoding="utf-8")
 
 
 def load_jsonl(path):
+    """One row per posting even if an older file holds duplicates from overlapping runs."""
     p = Path(path)
-    return (
+    rows = (
         [json.loads(line) for line in p.read_text(encoding="utf-8").splitlines() if line.strip()] if p.exists() else []
     )
+    return store.dedupe(rows)
 
 
 def best(j):
