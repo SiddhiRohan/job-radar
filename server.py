@@ -96,7 +96,7 @@ def today(date: str = ""):
         removed = run.get("removed") or {}
         top = max(removed, key=removed.get) if removed else None
         stats = (
-            f"Polled {run.get('companies_polled')} companies, kept {run.get('new_postings')}, removed "
+            f"Polled {run.get('companies_polled')} companies, kept {len(new)}, removed "
             f"{sum(removed.values())} by rule" + (f" ({removed[top]} {top.replace('_', ' ')})." if top else ".")
         )
     s = digest.sections(new)
