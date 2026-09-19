@@ -27,7 +27,7 @@ input, select, textarea { font: inherit; color: inherit; background: #fff; borde
 
 h2 { font-size: 15px; font-weight: 600; margin: 26px 0 4px; padding-top: 10px; border-top: 1px solid var(--rule); }
 h2 .n { color: var(--ash); font-weight: 400; margin-left: 8px; }
-h2.apply { color: var(--apply); } h2.maybe { color: var(--maybe); } h2.lower, h2.contract { color: var(--ash); }
+h2.apply { color: var(--apply); } h2.entry { color: var(--teal); } h2.maybe { color: var(--maybe); } h2.lower, h2.contract { color: var(--ash); }
 details summary { cursor: pointer; list-style: none; } details summary::-webkit-details-marker { display: none; }
 
 .row { display: grid; grid-template-columns: 64px 1fr; column-gap: 12px; padding: 12px 0; border-top: 1px solid var(--rule); }

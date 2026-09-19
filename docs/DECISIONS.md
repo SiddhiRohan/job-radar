@@ -102,3 +102,18 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     scorer merges instead of overwriting, so two runs at once store each posting once and lose nothing. On
     2026-09-17 the scheduled run and a UI run both appended the same 176 rows; they were removed (977 to 801,
     backup in .cache/jobs.before-dedupe.jsonl).
+
+## 2026-09-19
+
+29. **Entry-level roles get their own section.** The entry terms added on 2026-09-17 do source junior roles (12 on
+    2026-09-18, 8 on 2026-09-19), but the scorer rarely gives them a 4: it marks them down for being a narrow or
+    generic fit, which is fair for a senior role and wrong for a new-grad one. With an Apply bar of 4 they all
+    landed in the collapsed tail, so Rohan saw none of them. `sections()` now returns an `entry` bucket for
+    entry-titled postings scoring 3 or better, shown under Apply in the digest and the UI. The Apply bar is
+    unchanged; score 2 and below stay in the tail, where the 2027 start dates and hardware roles belong.
+30. **The digest selects a day's postings by date, not by the run timestamp.** A second run on the same day writes
+    a new `ran_at`, which matched no stored `first_seen`, so digests/2026-09-19.md reported "New postings kept: 0"
+    while 49 postings were in fact stored by the 7:30 run. The web UI was always right because it filters by date.
+    `prepare.py` had the same comparison.
+31. **AGENTS.md is ignored.** A copy of CLAUDE.md keeps reappearing at the repo root, written by something outside
+    this project. It was nearly committed once. Ignoring it keeps `git status` readable; delete it freely.

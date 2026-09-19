@@ -78,7 +78,8 @@ async function loadToday() {
     if (!d.date) { body.replaceChildren(el("p", { class: "empty" }, "No digest yet. Run the radar (python run.py) and reload.")); return; }
     const s = d.sections;
     if (!Object.values(s).some(v => v.length)) { body.replaceChildren(el("p", { class: "empty" }, "No digest for this date. Run the radar or pick another day.")); return; }
-    body.replaceChildren(...sectionEl("Apply", "apply", s.apply), ...sectionEl("Maybe", "maybe", s.maybe),
+    body.replaceChildren(...sectionEl("Apply", "apply", s.apply),
+      ...sectionEl("Entry level", "entry", s.entry || []), ...sectionEl("Maybe", "maybe", s.maybe),
       ...sectionEl("Contract or backup", "contract", s.contract), ...sectionEl("Everything else", "lower", s.lower, true));
   } catch (e) { fail(body, e, loadToday); }
 }

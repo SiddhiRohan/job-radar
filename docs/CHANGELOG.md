@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Entry level section.** Junior and new-grad postings scoring 3 or better appear under Apply in the digest and the
+UI instead of the collapsed tail. The digest now selects a day's postings by date, so a second run on the same day
+no longer reports an empty day.
+
 **Entry-level sourcing.** Titles must match a role pattern instead of one loose word of the search term; entry
 search terms ("early career", "new college grad", "entry level") with a 14-day window on tier 1 and 2; entry-level
 rows scored first; override words no longer rescue director or intern titles. Overlapping runs store each posting
