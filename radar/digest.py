@@ -5,7 +5,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from radar import store
+from radar import filters, store
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -62,19 +62,26 @@ def says_no(j):  # the regex tag or the model's own read of the posting text
 
 
 def sections(new):
-    """Split one run's postings into apply / maybe / contract / lower / skipped. Shared with the web UI."""
+    """Split one run's postings into apply / entry / maybe / contract / lower / skipped. Shared with the web UI."""
     skipped = [j for j in new if says_no(j)]
     contract = [j for j in new if j.get("contract") and j not in skipped]
     pool = [j for j in new if j not in skipped and j not in contract and not j.get("years_gate")]
     apply_ = [j for j in pool if j.get("sponsorship") in ("yes", "likely") and best(j) >= 4]
     maybe = [j for j in pool if j.get("sponsorship") == "unknown" and best(j) >= 4]
-    lower = [j for j in new if j not in skipped and j not in contract and j not in apply_ and j not in maybe]
-    return {"apply": apply_, "maybe": maybe, "contract": contract, "lower": lower, "skipped": skipped}
+    # Junior and new-grad roles rarely score 4: the model marks them down for being a narrow or generic fit.
+    # They are still the right roles to apply to, so they get their own section instead of the collapsed tail.
+    entry = [
+        j for j in pool if j not in apply_ and j not in maybe and best(j) >= 3 and filters.is_entry_title(j["title"])
+    ]
+    seen = skipped + contract + apply_ + maybe + entry
+    lower = [j for j in new if j not in seen]
+    return {"apply": apply_, "entry": entry, "maybe": maybe, "contract": contract, "lower": lower, "skipped": skipped}
 
 
 def build(run, jobs):
-    today = datetime.now().strftime("%Y-%m-%d")
-    new = [j for j in jobs if j.get("first_seen") == run.get("ran_at")]
+    # By date, not by the exact run timestamp: a second run on the same day would otherwise report an empty digest.
+    today = (run.get("ran_at") or "")[:10] or datetime.now().strftime("%Y-%m-%d")
+    new = [j for j in jobs if j.get("first_seen", "")[:10] == today]
     removed = run.get("removed") or {}
     md = [
         f"# Job radar digest {today}",
@@ -86,7 +93,12 @@ def build(run, jobs):
     ]
     s = sections(new)
     skipped, contract, apply_, maybe = s["skipped"], s["contract"], s["apply"], s["maybe"]
-    md += section("Apply", apply_) + section("Maybe", maybe) + section("Contract / backup", contract)
+    md += (
+        section("Apply", apply_)
+        + section("Entry level", s["entry"])
+        + section("Maybe", maybe)
+        + section("Contract / backup", contract)
+    )
 
     lower = [j for j in s["lower"] if not j.get("years_gate")]
     counts = {s: sum(best(j) == s for j in lower) for s in (3, 2, 1)}
