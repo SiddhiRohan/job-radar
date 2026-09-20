@@ -1,5 +1,26 @@
 # STATUS
 
+## Current state (2026-09-20)
+
+Live and in daily use. The 7:30 AM Task Scheduler entry "JobRadar" runs poll, score and digest; prepare is off, so
+tailoring happens on demand. The UI runs with `python server.py`. Everything is merged to `main` on the private repo.
+
+- Sourcing covers 113 verified Workday tenants, tiers 1 and 2 daily and tier 3 on Mondays and Thursdays. Four role
+  search terms plus three entry-level terms, with a 14-day window on the entry terms.
+- Recent runs: 2026-09-17 kept 176, 2026-09-18 kept 91, 2026-09-19 kept 49, 2026-09-20 kept 0 (a Sunday; 83 removed
+  by rule, nothing fresh posted).
+- Applications recorded through the UI: 38 as of 2026-09-20.
+- Today's shortlist has an Entry level section between Apply and Maybe, for junior postings scoring 3 or better.
+  Junior roles rarely score 4, so before this they sat in the collapsed tail and were never seen.
+- Direction: the sourcer is the product; resume tailoring is on demand through the chat drawer, with the Tailor view
+  kept for the side-by-side and outreach. Multi-user is parked until Rohan asks.
+- Workflow: branch and PR for every change, CI (ruff, pytest) on PRs and main, pre-commit locally, 70 offline tests.
+  Branch protection is unavailable on the free private plan; the rule lives in CLAUDE.md. Never stack PRs.
+- Known gaps: hosting is still the laptop (the Actions plan in this session's notes is not built); several sourced
+  new-grad roles are 2027 start dates, which do not suit a May 2026 graduate; backlog is GitHub issues #1 to #7.
+
+The sections below are kept as history. Dates in them are the dates they were written.
+
 ## Outreach in Tailor (2026-09-17): issue #7
 
 Write outreach uses the current visible resume sections and the existing background generator.

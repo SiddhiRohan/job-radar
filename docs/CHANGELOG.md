@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## v0.3 (2026-09-20)
+
+**Outreach in Tailor.** Write outreach builds a note and a message from the visible resume sections, both editable
+with live counts, saved into outreach.md alongside the resume.
 
 **Entry level section.** Junior and new-grad postings scoring 3 or better appear under Apply in the digest and the
 UI instead of the collapsed tail. The digest now selects a day's postings by date, so a second run on the same day
