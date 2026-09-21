@@ -5,7 +5,7 @@
 Live and in daily use. The 7:30 AM Task Scheduler entry "JobRadar" runs poll, score and digest; prepare is off, so
 tailoring happens on demand. The UI runs with `python server.py`. Everything is merged to `main` on the private repo.
 
-- Sourcing covers 113 verified Workday tenants, tiers 1 and 2 daily and tier 3 on Mondays and Thursdays. Four role
+- Sourcing covers 162 verified Workday tenants (49 added 2026-09-20), tiers 1 and 2 daily and tier 3 on Mondays and Thursdays. Four role
   search terms plus three entry-level terms, with a 14-day window on the entry terms.
 - Recent runs: 2026-09-17 kept 176, 2026-09-18 kept 91, 2026-09-19 kept 49, 2026-09-20 kept 0 (a Sunday; 83 removed
   by rule, nothing fresh posted).

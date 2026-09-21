@@ -1034,10 +1034,10 @@
  "Eli Lilly": {
   "tenant": "lilly",
   "shard": "wd5",
-  "site": "LLY",
+  "site": "CMP",
   "status": "failed",
-  "source": "web search",
-  "error": "422 Client Error: Unprocessable Entity for url: https://lilly.wd5.myworkdayjobs.com/wday/cxs/lilly/LLY/jobs"
+  "source": "URL seen in web search 2026-09-20",
+  "error": "422 Client Error: Unprocessable Entity for url: https://lilly.wd5.myworkdayjobs.com/wday/cxs/lilly/CMP/jobs"
  },
  "ZS Associates": {
   "status": "not_on_workday",
@@ -1441,5 +1441,475 @@
   "source": "web search",
   "open_roles": 464,
   "verified_at": "2026-09-13T22:47:59+00:00"
+ },
+ "Samsung": {
+  "tenant": "sec",
+  "shard": "wd3",
+  "site": "Samsung_Careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 692,
+  "verified_at": "2026-09-21T03:33:35+00:00"
+ },
+ "Manulife John Hancock": {
+  "tenant": "manulife",
+  "shard": "wd3",
+  "site": "MFCJH_Jobs",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 675,
+  "verified_at": "2026-09-21T03:33:38+00:00"
+ },
+ "Procter & Gamble": {
+  "tenant": "pg",
+  "shard": "wd5",
+  "site": "1000",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 788,
+  "verified_at": "2026-09-21T03:33:42+00:00"
+ },
+ "F5": {
+  "tenant": "ffive",
+  "shard": "wd5",
+  "site": "f5jobs",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 208,
+  "verified_at": "2026-09-21T03:33:44+00:00"
+ },
+ "NXP": {
+  "tenant": "nxp",
+  "shard": "wd3",
+  "site": "careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 797,
+  "verified_at": "2026-09-21T03:33:47+00:00"
+ },
+ "BD": {
+  "tenant": "bdx",
+  "shard": "wd1",
+  "site": "EXTERNAL_CAREER_SITE_USA",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 631,
+  "verified_at": "2026-09-21T03:33:50+00:00"
+ },
+ "Mimecast": {
+  "tenant": "mimecast",
+  "shard": "wd5",
+  "site": "Mimecast-Careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 80,
+  "verified_at": "2026-09-21T03:33:52+00:00"
+ },
+ "Pluralsight": {
+  "tenant": "pluralsight",
+  "shard": "wd1",
+  "site": "Careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 15,
+  "verified_at": "2026-09-21T03:33:55+00:00"
+ },
+ "Itron": {
+  "tenant": "itron",
+  "shard": "wd5",
+  "site": "Itron",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 59,
+  "verified_at": "2026-09-21T03:33:57+00:00"
+ },
+ "Brown & Brown": {
+  "tenant": "bbinsurance",
+  "shard": "wd1",
+  "site": "careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 286,
+  "verified_at": "2026-09-21T03:34:00+00:00"
+ },
+ "Credit Acceptance": {
+  "tenant": "creditacceptance",
+  "shard": "wd5",
+  "site": "credit_acceptance",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 44,
+  "verified_at": "2026-09-21T03:34:02+00:00"
+ },
+ "Zillow": {
+  "tenant": "zillow",
+  "shard": "wd5",
+  "site": "Zillow_Group_External",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 107,
+  "verified_at": "2026-09-21T03:34:05+00:00"
+ },
+ "Guidewire": {
+  "tenant": "guidewire",
+  "shard": "wd5",
+  "site": "external",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 124,
+  "verified_at": "2026-09-21T03:34:08+00:00"
+ },
+ "PRA Group": {
+  "tenant": "pra",
+  "shard": "wd1",
+  "site": "PRA_Careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 16,
+  "verified_at": "2026-09-21T03:34:10+00:00"
+ },
+ "CareSource": {
+  "tenant": "caresource",
+  "shard": "wd1",
+  "site": "caresource",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 122,
+  "verified_at": "2026-09-21T03:34:12+00:00"
+ },
+ "Strategic Education": {
+  "tenant": "strayer",
+  "shard": "wd1",
+  "site": "SEI",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 26,
+  "verified_at": "2026-09-21T03:34:14+00:00"
+ },
+ "CSI": {
+  "tenant": "csiweb",
+  "shard": "wd1",
+  "site": "CSI_Careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 23,
+  "verified_at": "2026-09-21T03:34:17+00:00"
+ },
+ "Zendesk": {
+  "tenant": "zendesk",
+  "shard": "wd1",
+  "site": "zendesk",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 110,
+  "verified_at": "2026-09-21T03:34:19+00:00"
+ },
+ "NASA JPL": {
+  "tenant": "citjpl",
+  "shard": "wd5",
+  "site": "Jobs",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 72,
+  "verified_at": "2026-09-21T03:34:21+00:00"
+ },
+ "Chubb": {
+  "tenant": "ace",
+  "shard": "wd5",
+  "site": "careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 473,
+  "verified_at": "2026-09-21T03:34:24+00:00"
+ },
+ "Highmark Health": {
+  "tenant": "highmarkhealth",
+  "shard": "wd1",
+  "site": "highmark",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 1908,
+  "verified_at": "2026-09-21T03:34:27+00:00"
+ },
+ "Q2": {
+  "tenant": "q2ebanking",
+  "shard": "wd5",
+  "site": "Q2",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 47,
+  "verified_at": "2026-09-21T03:34:29+00:00"
+ },
+ "Baker Tilly": {
+  "tenant": "bakertilly",
+  "shard": "wd5",
+  "site": "BTCareers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 465,
+  "verified_at": "2026-09-21T03:34:32+00:00"
+ },
+ "FICO": {
+  "tenant": "fico",
+  "shard": "wd1",
+  "site": "External",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 84,
+  "verified_at": "2026-09-21T03:34:34+00:00"
+ },
+ "J.D. Power": {
+  "tenant": "jdpa",
+  "shard": "wd501",
+  "site": "jdpower",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 28,
+  "verified_at": "2026-09-21T03:34:36+00:00"
+ },
+ "Synechron": {
+  "tenant": "synechron",
+  "shard": "wd1",
+  "site": "SynechronCareers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 191,
+  "verified_at": "2026-09-21T03:34:38+00:00"
+ },
+ "DXC Technology": {
+  "tenant": "dxctechnology",
+  "shard": "wd1",
+  "site": "DXCJobs",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 986,
+  "verified_at": "2026-09-21T03:34:41+00:00"
+ },
+ "Nationwide": {
+  "tenant": "nationwide",
+  "shard": "wd1",
+  "site": "Nationwide_Career",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 182,
+  "verified_at": "2026-09-21T03:34:43+00:00"
+ },
+ "Cencora": {
+  "tenant": "myhrabc",
+  "shard": "wd5",
+  "site": "global",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 975,
+  "verified_at": "2026-09-21T03:34:46+00:00"
+ },
+ "HHMI": {
+  "tenant": "hhmi",
+  "shard": "wd1",
+  "site": "External",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 47,
+  "verified_at": "2026-09-21T03:34:48+00:00"
+ },
+ "Evolent": {
+  "tenant": "evolent",
+  "shard": "wd1",
+  "site": "External",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 25,
+  "verified_at": "2026-09-21T03:34:51+00:00"
+ },
+ "TD Bank": {
+  "tenant": "td",
+  "shard": "wd3",
+  "site": "TD_Bank_Careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 1796,
+  "verified_at": "2026-09-21T03:34:54+00:00"
+ },
+ "New York Times": {
+  "tenant": "nytimes",
+  "shard": "wd5",
+  "site": "DataInsights",
+  "status": "skipped",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 0,
+  "verified_at": "2026-09-21T03:34:57+00:00",
+  "note": "site seen is a single sub-board with 0 roles"
+ },
+ "Deluxe": {
+  "tenant": "deluxe",
+  "shard": "wd5",
+  "site": "USA_CAN",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 66,
+  "verified_at": "2026-09-21T03:34:59+00:00"
+ },
+ "Guardian Life": {
+  "tenant": "guardianlife",
+  "shard": "wd5",
+  "site": "Guardian-Life-Careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 157,
+  "verified_at": "2026-09-21T03:35:01+00:00"
+ },
+ "AIG": {
+  "tenant": "aig",
+  "shard": "wd1",
+  "site": "aig",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 507,
+  "verified_at": "2026-09-21T03:35:04+00:00"
+ },
+ "Hagerty": {
+  "tenant": "hagerty",
+  "shard": "wd5",
+  "site": "hagerty",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 20,
+  "verified_at": "2026-09-21T03:35:07+00:00"
+ },
+ "TransUnion": {
+  "tenant": "transunion",
+  "shard": "wd5",
+  "site": "TransUnion",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 235,
+  "verified_at": "2026-09-21T03:35:09+00:00"
+ },
+ "Neurocrine": {
+  "tenant": "neurocrine",
+  "shard": "wd5",
+  "site": "Neurocrinecareers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 151,
+  "verified_at": "2026-09-21T03:35:11+00:00"
+ },
+ "Zelis": {
+  "tenant": "zelis",
+  "shard": "wd1",
+  "site": "ZelisCareers",
+  "status": "failed",
+  "source": "URL seen in web search 2026-09-20",
+  "error": "422 Client Error: Unprocessable Entity for url: https://zelis.wd1.myworkdayjobs.com/wday/cxs/zelis/ZelisCareers/jobs"
+ },
+ "Sanofi": {
+  "tenant": "sanofi",
+  "shard": "wd3",
+  "site": "SanofiCareers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 834,
+  "verified_at": "2026-09-21T03:35:21+00:00"
+ },
+ "Healthfirst": {
+  "tenant": "healthfirst",
+  "shard": "wd1",
+  "site": "healthfirst",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 96,
+  "verified_at": "2026-09-21T03:35:23+00:00"
+ },
+ "Yahoo": {
+  "tenant": "ouryahoo",
+  "shard": "wd5",
+  "site": "careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 109,
+  "verified_at": "2026-09-21T03:35:26+00:00"
+ },
+ "LiveRamp": {
+  "tenant": "liveramp",
+  "shard": "wd5",
+  "site": "LiveRampCareers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 45,
+  "verified_at": "2026-09-21T03:35:28+00:00"
+ },
+ "A+E Networks": {
+  "tenant": "aenetworks",
+  "shard": "wd1",
+  "site": "AE-Careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 14,
+  "verified_at": "2026-09-21T03:35:31+00:00"
+ },
+ "DTN": {
+  "tenant": "dtn",
+  "shard": "wd1",
+  "site": "DTN_Careers",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 24,
+  "verified_at": "2026-09-21T03:35:33+00:00"
+ },
+ "Altera": {
+  "tenant": "altera",
+  "shard": "wd1",
+  "site": "Altera",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 218,
+  "verified_at": "2026-09-21T03:35:35+00:00"
+ },
+ "Campbell's": {
+  "tenant": "campbellsoup",
+  "shard": "wd5",
+  "site": "ExternalCareers_GlobalSite",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 316,
+  "verified_at": "2026-09-21T03:35:37+00:00"
+ },
+ "Navient": {
+  "tenant": "navient",
+  "shard": "wd1",
+  "site": "Navient_Jobs",
+  "status": "skipped",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 2,
+  "verified_at": "2026-09-21T03:35:41+00:00",
+  "note": "2 open roles; not worth a daily poll"
+ },
+ "Risepoint": {
+  "tenant": "risepoint",
+  "shard": "wd503",
+  "site": "risepoint",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 23,
+  "verified_at": "2026-09-21T03:35:43+00:00"
+ },
+ "ProMach": {
+  "tenant": "promachbuilt",
+  "shard": "wd108",
+  "site": "promach",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 251,
+  "verified_at": "2026-09-21T03:35:46+00:00"
+ },
+ "Esko (Veralto)": {
+  "tenant": "veralto",
+  "shard": "wd1",
+  "site": "EskoJobs",
+  "status": "verified",
+  "source": "URL seen in web search 2026-09-20",
+  "open_roles": 35,
+  "verified_at": "2026-09-21T03:35:39+00:00",
+  "note": "site EskoJobs covers the Esko subsidiary only"
  }
 }

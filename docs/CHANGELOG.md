@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+**49 more companies.** `companies.json` grows from 113 to 162 verified Workday tenants, among them Samsung, TD Bank,
+Zillow, Procter & Gamble, NXP, AIG, Chubb, TransUnion, Sanofi, Yahoo, Zendesk, F5, FICO and Nationwide. Every tenant
+came from a posting URL seen in search results and passed a live check. "head" joins the seniority exclusions.
+
 ## v0.3 (2026-09-20)
 
 **Outreach in Tailor.** Write outreach builds a note and a message from the visible resume sections, both editable

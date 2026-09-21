@@ -62,7 +62,8 @@
     "intern",
     "internship",
     "phd",
-    "fellow"
+    "fellow",
+    "head"
   ],
   "exclude_domain": [
     "verification",

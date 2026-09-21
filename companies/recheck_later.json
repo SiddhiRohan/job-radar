@@ -16,8 +16,8 @@
  },
  "SAIC": {
   "ats_seen": "own site jobs.saic.com",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+  "searches_done": 2,
+  "todo": "searched site:myworkdayjobs.com on 2026-09-20, no tenant seen; treat as not on Workday"
  },
  "Peraton": {
   "ats_seen": "own site careers.peraton.com",
@@ -121,8 +121,8 @@
  },
  "Navy Federal": {
   "ats_seen": "Oracle HCM jobs.navyfederal.org",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+  "searches_done": 2,
+  "todo": "searched site:myworkdayjobs.com on 2026-09-20, no tenant seen; treat as not on Workday"
  },
  "Progressive": {
   "ats_seen": "own site careers.progressive.com",
@@ -131,13 +131,13 @@
  },
  "Liberty Mutual": {
   "ats_seen": "own site jobs.libertymutualgroup.com",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+  "searches_done": 2,
+  "todo": "searched site:myworkdayjobs.com on 2026-09-20, no tenant seen; treat as not on Workday"
  },
  "MetLife": {
   "ats_seen": "own site metlifecareers.com",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+  "searches_done": 2,
+  "todo": "searched site:myworkdayjobs.com on 2026-09-20, no tenant seen; treat as not on Workday"
  },
  "Charles Schwab": {
   "ats_seen": "own site schwabjobs.com",
@@ -146,8 +146,8 @@
  },
  "Walgreens": {
   "ats_seen": "own site jobs.walgreens.com",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+  "searches_done": 2,
+  "todo": "searched site:myworkdayjobs.com on 2026-09-20, no tenant seen; treat as not on Workday"
  },
  "Costco": {
   "ats_seen": "own site careers.costco.com",
@@ -201,8 +201,8 @@
  },
  "Chewy": {
   "ats_seen": "own site careers.chewy.com",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+  "searches_done": 2,
+  "todo": "searched site:myworkdayjobs.com on 2026-09-20, no tenant seen; treat as not on Workday"
  },
  "Wayfair": {
   "ats_seen": "own site aboutwayfair.com/careers",

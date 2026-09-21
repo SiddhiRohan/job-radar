@@ -41,6 +41,7 @@ def test_dropped(title):
     "title",
     [
         "Associate Director - AI development",
+        "Head, LOB Analytics and Insights (US)",
         "Associate Vice President, Interoperability Engineering",
         "2027 Technology Summer Internship - Early Careers (Software Engineering)",
     ],
