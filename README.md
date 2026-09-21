@@ -1,6 +1,6 @@
 # Job radar
 
-A personal job sourcer for Workday career sites. Every morning it polls about 110 companies, keeps the
+A personal job sourcer for Workday career sites. Every morning it polls about 160 companies, keeps the
 Data Engineer, Data Scientist, ML Engineer and AI Engineer postings that fit an entry-to-mid profile,
 scores each one against two resume bases, and writes a shortlist. A small web UI shows the shortlist,
 tracks applications, and carries a chat assistant that can run the radar, mark rows applied, and

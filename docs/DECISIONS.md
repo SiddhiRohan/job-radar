@@ -117,3 +117,18 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     `prepare.py` had the same comparison.
 31. **AGENTS.md is ignored.** A copy of CLAUDE.md keeps reappearing at the repo root, written by something outside
     this project. It was nearly committed once. Ignoring it keeps `git status` readable; delete it freely.
+
+## 2026-09-20: company expansion
+
+32. **Harvest tenants from role searches instead of chasing names.** Six parked names (SAIC, Navy Federal, Liberty
+    Mutual, MetLife, Walgreens, Chewy) returned no Workday tenant, but every `site:myworkdayjobs.com` role search
+    surfaced real posting URLs for employers not yet covered. Eighteen searches gave 53 tenants; 51 passed the live
+    check, 49 were added. Slugs are copied from URLs seen, never guessed. Eli Lilly and Zelis answer 422 on the site
+    slug seen and are recorded as failed rather than guessed at. New York Times (a single sub-board with 0 roles) and
+    Navient (2 roles) were skipped. The Veralto URL covers only its Esko subsidiary and is named that way.
+33. **Sponsorship defaults for the new entries are marked unchecked.** The search budget went to finding tenants, so
+    25 large employers are set to sponsors_h1b true with the source "general knowledge, not checked against FY2025
+    lists" and sit in tier 2; the other 24 are null in tier 3 (Mondays and Thursdays, one page) and land in Maybe
+    rather than Apply. Posting text still overrides either default. NASA JPL is left null on purpose: many of its
+    roles carry US-person restrictions. Checking these 49 against an H-1B list is a good next task.
+34. **"head" is a seniority exclusion.** The dry run kept "Head, LOB Analytics and Insights" at TD Bank.
