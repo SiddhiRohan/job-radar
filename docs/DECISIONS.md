@@ -142,3 +142,10 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     no filings and are false. Counts differ between the three sites because they split legal entities differently,
     so the file records the range. NASA JPL files petitions but many of its postings carry US-person wording; the
     posting text handles that.
+
+36. **Capital One is a sponsor, tier 1.** It sat in the no-sponsorship list with the defense contractors because
+    many of its postings say "Capital One will not sponsor a new applicant". That sentence is per posting, not
+    company policy: it is a top H-1B filer, and the postings without the sentence were read by the scorer as
+    sponsoring. The false default tagged those "unlikely", which kept a Senior AI Engineer scoring 4 and two others
+    out of Apply. The posting-level check already drops the ones that say no, so the company default is now true.
+    Six stored rows were retagged.

@@ -25,11 +25,11 @@ H1B_TOP = {"EY", "Amazon", "Deloitte", "Goldman Sachs", "Microsoft", "Walmart", 
 # Defense and ITAR-heavy employers: postings routinely require clearance or citizenship.
 # fmt: off
 NO_SPONSOR = {"Booz Allen", "Leidos", "CACI", "GDIT", "Northrop Grumman", "Raytheon", "Boeing", "GE", "Lockheed Martin",
-              "SAIC", "Peraton", "Capital One"}
+              "SAIC", "Peraton"}
 # fmt: on
 # Tier 1: core business is data, AI, fintech, or healthcare tech, and sponsors.
 # fmt: off
-TIER1 = {"NVIDIA", "Salesforce", "Adobe", "Intel", "Mastercard", "Visa", "PayPal", "Nasdaq", "S&P Global", "FactSet",
+TIER1 = {"Capital One", "NVIDIA", "Salesforce", "Adobe", "Intel", "Mastercard", "Visa", "PayPal", "Nasdaq", "S&P Global", "FactSet",
          "Workday", "Autodesk", "CrowdStrike", "Zoom", "Fidelity", "Vanguard", "BlackRock", "State Street", "Synchrony",
          "Ally", "Humana", "CVS Health", "Elevance", "Cigna", "IQVIA", "Proofpoint", "Snap", "Thomson Reuters", "LexisNexis",
          "T. Rowe Price", "Netflix", "Expedia", "Booking", "Chime", "Broadcom", "Micron", "KLA", "Marvell", "Cisco",
