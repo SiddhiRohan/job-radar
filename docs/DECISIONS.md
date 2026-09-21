@@ -132,3 +132,13 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     rather than Apply. Posting text still overrides either default. NASA JPL is left null on purpose: many of its
     roles carry US-person restrictions. Checking these 49 against an H-1B list is a good next task.
 34. **"head" is a seniority exclusion.** The dry run kept "Head, LOB Analytics and Insights" at TD Bank.
+
+35. **The 49 new tenants are now checked against H-1B filings.** Each was looked up on MyVisaJobs, H1BGrader and
+    Ellis (DOL LCA data, fiscal year 2025); evidence is in `companies/h1b_check.json` and `expand.py` reads it in
+    place of the unchecked list from decision 33. Rule: 10 or more LCAs is true, 1 to 9 or unclear is null, none is
+    false. Result: 31 true, 16 null, 2 false. Five guesses were wrong and moved to tier 3 (BD, Cencora, FICO,
+    Mimecast, Procter & Gamble); eleven unknowns turned out to be real filers and moved to tier 2, including HHMI
+    with 160 LCAs and PRA Group, which files for data engineer and data scientist titles. Hagerty and ProMach show
+    no filings and are false. Counts differ between the three sites because they split legal entities differently,
+    so the file records the range. NASA JPL files petitions but many of its postings carry US-person wording; the
+    posting text handles that.

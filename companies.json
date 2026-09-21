@@ -608,7 +608,7 @@
     "verified_at": "2026-09-21T03:35:04+00:00",
     "open_roles": 507,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 66 LCAs across AIG PC Global Services (47) and AIG Employee Services (19)",
     "tier": 2
   },
   {
@@ -680,7 +680,7 @@
     "verified_at": "2026-09-21T03:35:35+00:00",
     "open_roles": 218,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 67 LCAs",
     "tier": 2
   },
   {
@@ -720,15 +720,15 @@
     "tier": 2
   },
   {
-    "name": "BD",
-    "tenant": "bdx",
-    "shard": "wd1",
-    "site": "EXTERNAL_CAREER_SITE_USA",
+    "name": "Baker Tilly",
+    "tenant": "bakertilly",
+    "shard": "wd5",
+    "site": "BTCareers",
     "verified": true,
-    "verified_at": "2026-09-21T03:33:50+00:00",
-    "open_roles": 631,
+    "verified_at": "2026-09-21T03:34:32+00:00",
+    "open_roles": 465,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 33 LCAs per Ellis, 7 per MyVisaJobs",
     "tier": 2
   },
   {
@@ -768,6 +768,18 @@
     "tier": 2
   },
   {
+    "name": "CareSource",
+    "tenant": "caresource",
+    "shard": "wd1",
+    "site": "caresource",
+    "verified": true,
+    "verified_at": "2026-09-21T03:34:12+00:00",
+    "open_roles": 122,
+    "sponsors_h1b": true,
+    "sponsorship_source": "FY2025 LCA lookup: 30 LCAs",
+    "tier": 2
+  },
+  {
     "name": "Caterpillar",
     "tenant": "cat",
     "shard": "wd5",
@@ -780,18 +792,6 @@
     "tier": 2
   },
   {
-    "name": "Cencora",
-    "tenant": "myhrabc",
-    "shard": "wd5",
-    "site": "global",
-    "verified": true,
-    "verified_at": "2026-09-21T03:34:46+00:00",
-    "open_roles": 975,
-    "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
-    "tier": 2
-  },
-  {
     "name": "Chubb",
     "tenant": "ace",
     "shard": "wd5",
@@ -800,7 +800,7 @@
     "verified_at": "2026-09-21T03:34:24+00:00",
     "open_roles": 473,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 116 LCAs",
     "tier": 2
   },
   {
@@ -813,6 +813,18 @@
     "open_roles": 676,
     "sponsors_h1b": true,
     "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
+    "name": "Credit Acceptance",
+    "tenant": "creditacceptance",
+    "shard": "wd5",
+    "site": "credit_acceptance",
+    "verified": true,
+    "verified_at": "2026-09-21T03:34:02+00:00",
+    "open_roles": 44,
+    "sponsors_h1b": true,
+    "sponsorship_source": "FY2025 LCA lookup: 46 H-1B petitions approved",
     "tier": 2
   },
   {
@@ -836,7 +848,7 @@
     "verified_at": "2026-09-21T03:34:41+00:00",
     "open_roles": 986,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 51 to 90 LCAs depending on source",
     "tier": 2
   },
   {
@@ -864,6 +876,18 @@
     "tier": 2
   },
   {
+    "name": "Evolent",
+    "tenant": "evolent",
+    "shard": "wd1",
+    "site": "External",
+    "verified": true,
+    "verified_at": "2026-09-21T03:34:51+00:00",
+    "open_roles": 25,
+    "sponsors_h1b": true,
+    "sponsorship_source": "FY2025 LCA lookup: 75 LCAs and LCs over FY2022 to 2024; FY2025 count not retrieved",
+    "tier": 2
+  },
+  {
     "name": "F5",
     "tenant": "ffive",
     "shard": "wd5",
@@ -872,19 +896,7 @@
     "verified_at": "2026-09-21T03:33:44+00:00",
     "open_roles": 208,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
-    "tier": 2
-  },
-  {
-    "name": "FICO",
-    "tenant": "fico",
-    "shard": "wd1",
-    "site": "External",
-    "verified": true,
-    "verified_at": "2026-09-21T03:34:34+00:00",
-    "open_roles": 84,
-    "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 156 LCAs",
     "tier": 2
   },
   {
@@ -944,7 +956,7 @@
     "verified_at": "2026-09-21T03:35:01+00:00",
     "open_roles": 157,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 15 to 63 LCAs depending on source",
     "tier": 2
   },
   {
@@ -968,7 +980,19 @@
     "verified_at": "2026-09-21T03:34:08+00:00",
     "open_roles": 124,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 80 LCAs",
+    "tier": 2
+  },
+  {
+    "name": "HHMI",
+    "tenant": "hhmi",
+    "shard": "wd1",
+    "site": "External",
+    "verified": true,
+    "verified_at": "2026-09-21T03:34:48+00:00",
+    "open_roles": 47,
+    "sponsors_h1b": true,
+    "sponsorship_source": "FY2025 LCA lookup: 160 LCAs",
     "tier": 2
   },
   {
@@ -996,6 +1020,18 @@
     "tier": 2
   },
   {
+    "name": "Healthfirst",
+    "tenant": "healthfirst",
+    "shard": "wd1",
+    "site": "healthfirst",
+    "verified": true,
+    "verified_at": "2026-09-21T03:35:23+00:00",
+    "open_roles": 96,
+    "sponsors_h1b": true,
+    "sponsorship_source": "FY2025 LCA lookup: 28 to 35 LCAs as HF Management Services",
+    "tier": 2
+  },
+  {
     "name": "Highmark Health",
     "tenant": "highmarkhealth",
     "shard": "wd1",
@@ -1004,7 +1040,7 @@
     "verified_at": "2026-09-21T03:34:27+00:00",
     "open_roles": 1908,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 27 LCAs in the first three quarters",
     "tier": 2
   },
   {
@@ -1052,7 +1088,7 @@
     "verified_at": "2026-09-21T03:35:28+00:00",
     "open_roles": 45,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 35 LCAs",
     "tier": 2
   },
   {
@@ -1076,7 +1112,7 @@
     "verified_at": "2026-09-21T03:33:38+00:00",
     "open_roles": 675,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 43 LCAs as John Hancock Life Insurance",
     "tier": 2
   },
   {
@@ -1104,15 +1140,15 @@
     "tier": 2
   },
   {
-    "name": "Mimecast",
-    "tenant": "mimecast",
+    "name": "NASA JPL",
+    "tenant": "citjpl",
     "shard": "wd5",
-    "site": "Mimecast-Careers",
+    "site": "Jobs",
     "verified": true,
-    "verified_at": "2026-09-21T03:33:52+00:00",
-    "open_roles": 80,
+    "verified_at": "2026-09-21T03:34:21+00:00",
+    "open_roles": 72,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 58 H-1B petitions as Caltech/JPL; many roles still carry US-person restrictions in the posting",
     "tier": 2
   },
   {
@@ -1124,7 +1160,7 @@
     "verified_at": "2026-09-21T03:33:47+00:00",
     "open_roles": 797,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 311 LCAs and LCs",
     "tier": 2
   },
   {
@@ -1136,7 +1172,19 @@
     "verified_at": "2026-09-21T03:34:43+00:00",
     "open_roles": 182,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 54 LCAs",
+    "tier": 2
+  },
+  {
+    "name": "Neurocrine",
+    "tenant": "neurocrine",
+    "shard": "wd5",
+    "site": "Neurocrinecareers",
+    "verified": true,
+    "verified_at": "2026-09-21T03:35:11+00:00",
+    "open_roles": 151,
+    "sponsors_h1b": true,
+    "sponsorship_source": "FY2025 LCA lookup: 16 LCAs",
     "tier": 2
   },
   {
@@ -1164,6 +1212,18 @@
     "tier": 2
   },
   {
+    "name": "PRA Group",
+    "tenant": "pra",
+    "shard": "wd1",
+    "site": "PRA_Careers",
+    "verified": true,
+    "verified_at": "2026-09-21T03:34:10+00:00",
+    "open_roles": 16,
+    "sponsors_h1b": true,
+    "sponsorship_source": "FY2025 LCA lookup: 14 LCAs in the first three quarters; data engineer and data scientist titles",
+    "tier": 2
+  },
+  {
     "name": "Pfizer",
     "tenant": "pfizer",
     "shard": "wd1",
@@ -1173,18 +1233,6 @@
     "open_roles": 574,
     "sponsors_h1b": true,
     "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
-    "tier": 2
-  },
-  {
-    "name": "Procter & Gamble",
-    "tenant": "pg",
-    "shard": "wd5",
-    "site": "1000",
-    "verified": true,
-    "verified_at": "2026-09-21T03:33:42+00:00",
-    "open_roles": 788,
-    "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
     "tier": 2
   },
   {
@@ -1209,6 +1257,18 @@
     "open_roles": 473,
     "sponsors_h1b": true,
     "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
+    "name": "Q2",
+    "tenant": "q2ebanking",
+    "shard": "wd5",
+    "site": "Q2",
+    "verified": true,
+    "verified_at": "2026-09-21T03:34:29+00:00",
+    "open_roles": 47,
+    "sponsors_h1b": true,
+    "sponsorship_source": "FY2025 LCA lookup: 18 LCAs",
     "tier": 2
   },
   {
@@ -1244,7 +1304,7 @@
     "verified_at": "2026-09-21T03:33:35+00:00",
     "open_roles": 692,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: hundreds across Samsung Semiconductor, Research America and SDS America",
     "tier": 2
   },
   {
@@ -1256,7 +1316,19 @@
     "verified_at": "2026-09-21T03:35:21+00:00",
     "open_roles": 834,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 101 LCAs as Sanofi US Services",
+    "tier": 2
+  },
+  {
+    "name": "Strategic Education",
+    "tenant": "strayer",
+    "shard": "wd1",
+    "site": "SEI",
+    "verified": true,
+    "verified_at": "2026-09-21T03:34:14+00:00",
+    "open_roles": 26,
+    "sponsors_h1b": true,
+    "sponsorship_source": "FY2025 LCA lookup: 27 LCAs and LCs; 15 petitions",
     "tier": 2
   },
   {
@@ -1268,7 +1340,7 @@
     "verified_at": "2026-09-21T03:34:38+00:00",
     "open_roles": 191,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 498 LCAs; H-1B dependent employer",
     "tier": 2
   },
   {
@@ -1292,7 +1364,7 @@
     "verified_at": "2026-09-21T03:34:54+00:00",
     "open_roles": 1796,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 110 LCAs and LCs; 51 petitions",
     "tier": 2
   },
   {
@@ -1340,7 +1412,7 @@
     "verified_at": "2026-09-21T03:35:09+00:00",
     "open_roles": 235,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: FY2025 filings listed for TransUnion LLC; count not retrieved",
     "tier": 2
   },
   {
@@ -1412,7 +1484,7 @@
     "verified_at": "2026-09-21T03:35:26+00:00",
     "open_roles": 109,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 329 LCAs as Yahoo Holdings",
     "tier": 2
   },
   {
@@ -1424,7 +1496,7 @@
     "verified_at": "2026-09-21T03:34:19+00:00",
     "open_roles": 110,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 36 LCAs",
     "tier": 2
   },
   {
@@ -1436,7 +1508,7 @@
     "verified_at": "2026-09-21T03:34:05+00:00",
     "open_roles": 107,
     "sponsors_h1b": true,
-    "sponsorship_source": "large known H-1B filer (general knowledge, not checked against FY2025 lists)",
+    "sponsorship_source": "FY2025 LCA lookup: 83 LCAs",
     "tier": 2
   },
   {
@@ -1448,7 +1520,19 @@
     "verified_at": "2026-09-21T03:35:31+00:00",
     "open_roles": 14,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 7 LCAs",
+    "tier": 3
+  },
+  {
+    "name": "BD",
+    "tenant": "bdx",
+    "shard": "wd1",
+    "site": "EXTERNAL_CAREER_SITE_USA",
+    "verified": true,
+    "verified_at": "2026-09-21T03:33:50+00:00",
+    "open_roles": 631,
+    "sponsors_h1b": null,
+    "sponsorship_source": "FY2025 LCA lookup: 0 found for FY2025 against 140 in FY2024; likely an entity-name mismatch, left unknown",
     "tier": 3
   },
   {
@@ -1459,18 +1543,6 @@
     "verified": true,
     "verified_at": "2026-09-13T22:47:47+00:00",
     "open_roles": 74,
-    "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
-    "tier": 3
-  },
-  {
-    "name": "Baker Tilly",
-    "tenant": "bakertilly",
-    "shard": "wd5",
-    "site": "BTCareers",
-    "verified": true,
-    "verified_at": "2026-09-21T03:34:32+00:00",
-    "open_roles": 465,
     "sponsors_h1b": null,
     "sponsorship_source": "not found in H-1B lists",
     "tier": 3
@@ -1520,7 +1592,7 @@
     "verified_at": "2026-09-21T03:34:00+00:00",
     "open_roles": 286,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 1 LCA",
     "tier": 3
   },
   {
@@ -1544,7 +1616,7 @@
     "verified_at": "2026-09-21T03:34:17+00:00",
     "open_roles": 23,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 7 LCAs",
     "tier": 3
   },
   {
@@ -1556,7 +1628,7 @@
     "verified_at": "2026-09-21T03:35:37+00:00",
     "open_roles": 316,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 5 to 13 LCAs depending on source",
     "tier": 3
   },
   {
@@ -1572,27 +1644,15 @@
     "tier": 3
   },
   {
-    "name": "CareSource",
-    "tenant": "caresource",
-    "shard": "wd1",
-    "site": "caresource",
-    "verified": true,
-    "verified_at": "2026-09-21T03:34:12+00:00",
-    "open_roles": 122,
-    "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
-    "tier": 3
-  },
-  {
-    "name": "Credit Acceptance",
-    "tenant": "creditacceptance",
+    "name": "Cencora",
+    "tenant": "myhrabc",
     "shard": "wd5",
-    "site": "credit_acceptance",
+    "site": "global",
     "verified": true,
-    "verified_at": "2026-09-21T03:34:02+00:00",
-    "open_roles": 44,
+    "verified_at": "2026-09-21T03:34:46+00:00",
+    "open_roles": 975,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 2 LCAs",
     "tier": 3
   },
   {
@@ -1616,7 +1676,7 @@
     "verified_at": "2026-09-21T03:35:33+00:00",
     "open_roles": 24,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 1 LCA",
     "tier": 3
   },
   {
@@ -1628,7 +1688,7 @@
     "verified_at": "2026-09-21T03:34:59+00:00",
     "open_roles": 66,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 125 historical; FY2025 count not retrieved",
     "tier": 3
   },
   {
@@ -1640,19 +1700,19 @@
     "verified_at": "2026-09-21T03:35:39+00:00",
     "open_roles": 35,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: no record found",
     "tier": 3
   },
   {
-    "name": "Evolent",
-    "tenant": "evolent",
+    "name": "FICO",
+    "tenant": "fico",
     "shard": "wd1",
     "site": "External",
     "verified": true,
-    "verified_at": "2026-09-21T03:34:51+00:00",
-    "open_roles": 25,
+    "verified_at": "2026-09-21T03:34:34+00:00",
+    "open_roles": 84,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 6 LCAs in FY2026; FY2025 count not retrieved",
     "tier": 3
   },
   {
@@ -1704,18 +1764,6 @@
     "tier": 3
   },
   {
-    "name": "HHMI",
-    "tenant": "hhmi",
-    "shard": "wd1",
-    "site": "External",
-    "verified": true,
-    "verified_at": "2026-09-21T03:34:48+00:00",
-    "open_roles": 47,
-    "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
-    "tier": 3
-  },
-  {
     "name": "Hagerty",
     "tenant": "hagerty",
     "shard": "wd5",
@@ -1723,20 +1771,8 @@
     "verified": true,
     "verified_at": "2026-09-21T03:35:07+00:00",
     "open_roles": 20,
-    "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
-    "tier": 3
-  },
-  {
-    "name": "Healthfirst",
-    "tenant": "healthfirst",
-    "shard": "wd1",
-    "site": "healthfirst",
-    "verified": true,
-    "verified_at": "2026-09-21T03:35:23+00:00",
-    "open_roles": 96,
-    "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsors_h1b": false,
+    "sponsorship_source": "FY2025 LCA lookup: 0 LCAs in FY2025",
     "tier": 3
   },
   {
@@ -1748,7 +1784,7 @@
     "verified_at": "2026-09-21T03:33:57+00:00",
     "open_roles": 59,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 69 historical; FY2025 count not retrieved",
     "tier": 3
   },
   {
@@ -1760,7 +1796,7 @@
     "verified_at": "2026-09-21T03:34:36+00:00",
     "open_roles": 28,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 10 LCAs and LCs; 4 petitions",
     "tier": 3
   },
   {
@@ -1776,27 +1812,15 @@
     "tier": 3
   },
   {
-    "name": "NASA JPL",
-    "tenant": "citjpl",
+    "name": "Mimecast",
+    "tenant": "mimecast",
     "shard": "wd5",
-    "site": "Jobs",
+    "site": "Mimecast-Careers",
     "verified": true,
-    "verified_at": "2026-09-21T03:34:21+00:00",
-    "open_roles": 72,
+    "verified_at": "2026-09-21T03:33:52+00:00",
+    "open_roles": 80,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
-    "tier": 3
-  },
-  {
-    "name": "Neurocrine",
-    "tenant": "neurocrine",
-    "shard": "wd5",
-    "site": "Neurocrinecareers",
-    "verified": true,
-    "verified_at": "2026-09-21T03:35:11+00:00",
-    "open_roles": 151,
-    "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 3 LCAs",
     "tier": 3
   },
   {
@@ -1824,18 +1848,6 @@
     "tier": 3
   },
   {
-    "name": "PRA Group",
-    "tenant": "pra",
-    "shard": "wd1",
-    "site": "PRA_Careers",
-    "verified": true,
-    "verified_at": "2026-09-21T03:34:10+00:00",
-    "open_roles": 16,
-    "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
-    "tier": 3
-  },
-  {
     "name": "Pax8",
     "tenant": "pax8inc",
     "shard": "wd12",
@@ -1856,7 +1868,7 @@
     "verified_at": "2026-09-21T03:33:55+00:00",
     "open_roles": 15,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: no record found",
     "tier": 3
   },
   {
@@ -1879,20 +1891,20 @@
     "verified": true,
     "verified_at": "2026-09-21T03:35:46+00:00",
     "open_roles": 251,
-    "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsors_h1b": false,
+    "sponsorship_source": "FY2025 LCA lookup: no filings FY2022 through FY2025",
     "tier": 3
   },
   {
-    "name": "Q2",
-    "tenant": "q2ebanking",
+    "name": "Procter & Gamble",
+    "tenant": "pg",
     "shard": "wd5",
-    "site": "Q2",
+    "site": "1000",
     "verified": true,
-    "verified_at": "2026-09-21T03:34:29+00:00",
-    "open_roles": 47,
+    "verified_at": "2026-09-21T03:33:42+00:00",
+    "open_roles": 788,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 7 LCAs",
     "tier": 3
   },
   {
@@ -1916,7 +1928,7 @@
     "verified_at": "2026-09-21T03:35:43+00:00",
     "open_roles": 23,
     "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
+    "sponsorship_source": "FY2025 LCA lookup: 1 to 2 LCAs",
     "tier": 3
   },
   {
@@ -1927,18 +1939,6 @@
     "verified": true,
     "verified_at": "2026-09-13T22:47:59+00:00",
     "open_roles": 464,
-    "sponsors_h1b": null,
-    "sponsorship_source": "not found in H-1B lists",
-    "tier": 3
-  },
-  {
-    "name": "Strategic Education",
-    "tenant": "strayer",
-    "shard": "wd1",
-    "site": "SEI",
-    "verified": true,
-    "verified_at": "2026-09-21T03:34:14+00:00",
-    "open_roles": 26,
     "sponsors_h1b": null,
     "sponsorship_source": "not found in H-1B lists",
     "tier": 3

@@ -42,13 +42,7 @@ MAIN_SEED = {"NVIDIA", "Salesforce", "Adobe", "Intel", "Mastercard", "Visa", "Wa
 # fmt: on
 
 
-# fmt: off
-# Added 2026-09-20 from tenants seen in web search. Large employers known to file H-1B petitions, but NOT checked
-# against the FY2025 lists (search budget went to finding tenants). Posting text still overrides this default.
-KNOWN_UNCHECKED = {"Samsung", "Manulife John Hancock", "Procter & Gamble", "F5", "NXP", "BD", "Zillow", "Guidewire",
-                   "Zendesk", "Chubb", "FICO", "Synechron", "DXC Technology", "Nationwide", "Cencora", "TD Bank", "AIG",
-                   "TransUnion", "Sanofi", "Yahoo", "LiveRamp", "Altera", "Guardian Life", "Highmark Health", "Mimecast"}
-# fmt: on
+H1B_CHECK = {k: v for k, v in json.load(open("companies/h1b_check.json", encoding="utf-8")).items() if k[0] != "_"}
 
 
 def sponsorship(name, existing):
@@ -58,8 +52,8 @@ def sponsorship(name, existing):
         return True, "seeded by hand (round 2)"
     if name in H1B_TOP:
         return True, "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)"
-    if name in KNOWN_UNCHECKED:
-        return True, "large known H-1B filer (general knowledge, not checked against FY2025 lists)"
+    if name in H1B_CHECK:
+        return H1B_CHECK[name]["sponsors_h1b"], "FY2025 LCA lookup: " + H1B_CHECK[name]["fy2025"]
     if existing is not None:
         return existing, "kept from earlier companies.json"
     return None, "not found in H-1B lists"
