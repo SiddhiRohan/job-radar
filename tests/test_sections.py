@@ -42,6 +42,32 @@ def test_entry_never_overrides_sponsorship_no():
     assert len(s["skipped"]) == 1 and not s["entry"]
 
 
+def with_model(j, read):
+    j["verdict"]["sponsorship"] = read
+    return j
+
+
+def test_posting_that_sponsors_beats_a_negative_company_default():
+    """Capital One: company default was false, but postings without the no-sponsorship sentence do sponsor."""
+    s = digest.sections([with_model(job("Senior AI Engineer", 2, 4, sponsorship="unlikely"), "yes")])
+    assert len(s["apply"]) == 1 and not s["skipped"]
+
+
+def test_negative_company_default_still_skips_without_evidence():
+    s = digest.sections([with_model(job("Data Engineer", 4, 4, sponsorship="unlikely"), "unlikely")])
+    assert len(s["skipped"]) == 1 and not s["apply"]
+
+
+def test_model_no_still_wins_over_a_positive_default():
+    s = digest.sections([with_model(job("Data Engineer", 4, 4, sponsorship="likely"), "no")])
+    assert len(s["skipped"]) == 1 and not s["apply"]
+
+
+def test_unknown_company_with_a_sponsoring_posting_reaches_apply():
+    s = digest.sections([with_model(job("Data Scientist", 4, 4, sponsorship="unknown"), "yes")])
+    assert len(s["apply"]) == 1 and not s["maybe"]
+
+
 def test_sections_cover_every_posting_once():
     rows = [
         job("Data Scientist I", 4, 4),
