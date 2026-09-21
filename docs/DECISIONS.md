@@ -149,3 +149,10 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     sponsoring. The false default tagged those "unlikely", which kept a Senior AI Engineer scoring 4 and two others
     out of Apply. The posting-level check already drops the ones that say no, so the company default is now true.
     Six stored rows were retagged.
+37. **A posting that sponsors beats a negative company default.** Capital One showed the general gap: a false
+    company default tagged every posting without explicit wording "unlikely", and "unlikely" was treated as a no.
+    Now "unlikely" skips only when the scorer did not read the posting as sponsoring, and a model read of "yes"
+    is enough for Apply under an unknown or negative default. A posting that says no still loses under any
+    default. Replayed on stored data nothing else was buried; only the four defense contractors carry "unlikely"
+    rows and the scorer agrees with all of them. The Today view also lists the Skipped rows, collapsed, so a
+    wrong skip can be seen rather than silently lost.

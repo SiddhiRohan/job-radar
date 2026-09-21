@@ -57,8 +57,21 @@ def section(title, items):
     )
 
 
-def says_no(j):  # the regex tag or the model's own read of the posting text
-    return j.get("sponsorship") in ("no", "perm_ad", "unlikely") or (j.get("verdict") or {}).get("sponsorship") == "no"
+def model_says(j):
+    return (j.get("verdict") or {}).get("sponsorship")
+
+
+def says_no(j):
+    """The posting text says no (regex tag or the model's read). A negative company default alone ("unlikely") also
+    skips, unless the model read the posting as sponsoring: some employers decide per posting (Capital One)."""
+    if j.get("sponsorship") in ("no", "perm_ad") or model_says(j) == "no":
+        return True
+    return j.get("sponsorship") == "unlikely" and model_says(j) != "yes"
+
+
+def sponsors(j):
+    """Good enough for Apply: the text or company default says yes, or the model read the posting as sponsoring."""
+    return j.get("sponsorship") in ("yes", "likely") or model_says(j) == "yes"
 
 
 def sections(new):
@@ -66,8 +79,8 @@ def sections(new):
     skipped = [j for j in new if says_no(j)]
     contract = [j for j in new if j.get("contract") and j not in skipped]
     pool = [j for j in new if j not in skipped and j not in contract and not j.get("years_gate")]
-    apply_ = [j for j in pool if j.get("sponsorship") in ("yes", "likely") and best(j) >= 4]
-    maybe = [j for j in pool if j.get("sponsorship") == "unknown" and best(j) >= 4]
+    apply_ = [j for j in pool if sponsors(j) and best(j) >= 4]
+    maybe = [j for j in pool if not sponsors(j) and best(j) >= 4]
     # Junior and new-grad roles rarely score 4: the model marks them down for being a narrow or generic fit.
     # They are still the right roles to apply to, so they get their own section instead of the collapsed tail.
     entry = [

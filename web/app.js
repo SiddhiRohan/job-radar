@@ -80,7 +80,8 @@ async function loadToday() {
     if (!Object.values(s).some(v => v.length)) { body.replaceChildren(el("p", { class: "empty" }, "No digest for this date. Run the radar or pick another day.")); return; }
     body.replaceChildren(...sectionEl("Apply", "apply", s.apply),
       ...sectionEl("Entry level", "entry", s.entry || []), ...sectionEl("Maybe", "maybe", s.maybe),
-      ...sectionEl("Contract or backup", "contract", s.contract), ...sectionEl("Everything else", "lower", s.lower, true));
+      ...sectionEl("Contract or backup", "contract", s.contract), ...sectionEl("Everything else", "lower", s.lower, true),
+      ...sectionEl("Skipped for sponsorship", "lower", s.skipped || [], true));
   } catch (e) { fail(body, e, loadToday); }
 }
 $("#date").addEventListener("change", e => { T.date = e.target.value; loadToday(); });
