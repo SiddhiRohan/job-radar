@@ -90,6 +90,18 @@
     "tier": 1
   },
   {
+    "name": "Capital One",
+    "tenant": "capitalone",
+    "shard": "wd12",
+    "site": "Capital_One",
+    "verified": true,
+    "verified_at": "2026-09-13T18:36:47+00:00",
+    "open_roles": 1939,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 1
+  },
+  {
     "name": "Cardinal Health",
     "tenant": "cardinalhealth",
     "shard": "wd1",
@@ -1629,18 +1641,6 @@
     "open_roles": 316,
     "sponsors_h1b": null,
     "sponsorship_source": "FY2025 LCA lookup: 5 to 13 LCAs depending on source",
-    "tier": 3
-  },
-  {
-    "name": "Capital One",
-    "tenant": "capitalone",
-    "shard": "wd12",
-    "site": "Capital_One",
-    "verified": true,
-    "verified_at": "2026-09-13T18:36:47+00:00",
-    "open_roles": 1939,
-    "sponsors_h1b": false,
-    "sponsorship_source": "defense contractor / postings say no sponsorship",
     "tier": 3
   },
   {

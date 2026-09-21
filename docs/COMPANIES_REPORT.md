@@ -24,11 +24,11 @@
 ## Estimated run time
 
 - Per search: pages x 1.6 s; pages per tier: {1: 3, 2: 2, 3: 1}; 4 search terms per company
-- Daily (tier 1 + 2, 124 companies): about 32 min for the search phase, plus roughly 2 s per new posting for detail fetches and 8 s per scored posting
-- Tier 3 days (Mon/Thu, +38 companies): about 36 min
+- Daily (tier 1 + 2, 125 companies): about 32 min for the search phase, plus roughly 2 s per new posting for detail fetches and 8 s per scored posting
+- Tier 3 days (Mon/Thu, +37 companies): about 36 min
 - Cache hits (same day reruns) cost nothing.
 
-## Tier 1 (47)
+## Tier 1 (48)
 
 | Company | Tenant | Site | Open roles | sponsors_h1b | Source |
 |---|---|---|---|---|---|
@@ -39,6 +39,7 @@
 | Booking | priceline.wd1 | BookingHoldings | 23 | True | top H-1B sponsor lists (careernomics FY2025 top-100, scoutify) |
 | Broadcom | broadcom.wd1 | External_Career | 369 | True | top H-1B sponsor lists (careernomics FY2025 top-100, scoutify) |
 | CVS Health | cvshealth.wd1 | CVS_Health_Careers | 18150 | True | seeded by hand (round 2) |
+| Capital One | capitalone.wd12 | Capital_One | 1939 | True | top H-1B sponsor lists (careernomics FY2025 top-100, scoutify) |
 | Cardinal Health | cardinalhealth.wd1 | EXT | 783 | True | top H-1B sponsor lists (careernomics FY2025 top-100, scoutify) |
 | Cigna | cigna.wd5 | cignacareers | 560 | True | top H-1B sponsor lists (careernomics FY2025 top-100, scoutify) |
 | Cisco | cisco.wd5 | Cisco_Careers | 1323 | True | top H-1B sponsor lists (careernomics FY2025 top-100, scoutify) |
@@ -162,7 +163,7 @@
 | Zendesk | zendesk.wd1 | zendesk | 110 | True | FY2025 LCA lookup: 36 LCAs |
 | Zillow | zillow.wd5 | Zillow_Group_External | 107 | True | FY2025 LCA lookup: 83 LCAs |
 
-## Tier 3 (38)
+## Tier 3 (37)
 
 | Company | Tenant | Site | Open roles | sponsors_h1b | Source |
 |---|---|---|---|---|---|
@@ -176,7 +177,6 @@
 | CACI | caci.wd1 | External | 1866 | False | defense contractor / postings say no sponsorship |
 | CSI | csiweb.wd1 | CSI_Careers | 23 | None | FY2025 LCA lookup: 7 LCAs |
 | Campbell's | campbellsoup.wd5 | ExternalCareers_GlobalSite | 316 | None | FY2025 LCA lookup: 5 to 13 LCAs depending on source |
-| Capital One | capitalone.wd12 | Capital_One | 1939 | False | defense contractor / postings say no sponsorship |
 | Cencora | myhrabc.wd5 | global | 975 | None | FY2025 LCA lookup: 2 LCAs |
 | DLA Piper | dlapiper.wd1 | dlapiper | 138 | None | not found in H-1B lists |
 | DTN | dtn.wd1 | DTN_Careers | 24 | None | FY2025 LCA lookup: 1 LCA |
