@@ -1,0 +1,199 @@
+{
+ "_about": "H-1B check of the 49 tenants added 2026-09-20. Looked up 2026-09-20 via MyVisaJobs, H1BGrader and Ellis search snippets (DOL LCA data, fiscal year 2025). Rule: 10 or more LCAs is true, 1 to 9 or unclear is null, none is false.",
+ "A+E Networks": {
+  "sponsors_h1b": null,
+  "fy2025": "7 LCAs"
+ },
+ "AIG": {
+  "sponsors_h1b": true,
+  "fy2025": "66 LCAs across AIG PC Global Services (47) and AIG Employee Services (19)"
+ },
+ "Altera": {
+  "sponsors_h1b": true,
+  "fy2025": "67 LCAs"
+ },
+ "BD": {
+  "sponsors_h1b": null,
+  "fy2025": "0 found for FY2025 against 140 in FY2024; likely an entity-name mismatch, left unknown"
+ },
+ "Baker Tilly": {
+  "sponsors_h1b": true,
+  "fy2025": "33 LCAs per Ellis, 7 per MyVisaJobs"
+ },
+ "Brown & Brown": {
+  "sponsors_h1b": null,
+  "fy2025": "1 LCA"
+ },
+ "CSI": {
+  "sponsors_h1b": null,
+  "fy2025": "7 LCAs"
+ },
+ "Campbell's": {
+  "sponsors_h1b": null,
+  "fy2025": "5 to 13 LCAs depending on source"
+ },
+ "CareSource": {
+  "sponsors_h1b": true,
+  "fy2025": "30 LCAs"
+ },
+ "Cencora": {
+  "sponsors_h1b": null,
+  "fy2025": "2 LCAs"
+ },
+ "Chubb": {
+  "sponsors_h1b": true,
+  "fy2025": "116 LCAs"
+ },
+ "Credit Acceptance": {
+  "sponsors_h1b": true,
+  "fy2025": "46 H-1B petitions approved"
+ },
+ "DTN": {
+  "sponsors_h1b": null,
+  "fy2025": "1 LCA"
+ },
+ "DXC Technology": {
+  "sponsors_h1b": true,
+  "fy2025": "51 to 90 LCAs depending on source"
+ },
+ "Deluxe": {
+  "sponsors_h1b": null,
+  "fy2025": "125 historical; FY2025 count not retrieved"
+ },
+ "Esko (Veralto)": {
+  "sponsors_h1b": null,
+  "fy2025": "no record found"
+ },
+ "Evolent": {
+  "sponsors_h1b": true,
+  "fy2025": "75 LCAs and LCs over FY2022 to 2024; FY2025 count not retrieved"
+ },
+ "F5": {
+  "sponsors_h1b": true,
+  "fy2025": "156 LCAs"
+ },
+ "FICO": {
+  "sponsors_h1b": null,
+  "fy2025": "6 LCAs in FY2026; FY2025 count not retrieved"
+ },
+ "Guardian Life": {
+  "sponsors_h1b": true,
+  "fy2025": "15 to 63 LCAs depending on source"
+ },
+ "Guidewire": {
+  "sponsors_h1b": true,
+  "fy2025": "80 LCAs"
+ },
+ "HHMI": {
+  "sponsors_h1b": true,
+  "fy2025": "160 LCAs"
+ },
+ "Hagerty": {
+  "sponsors_h1b": false,
+  "fy2025": "0 LCAs in FY2025"
+ },
+ "Healthfirst": {
+  "sponsors_h1b": true,
+  "fy2025": "28 to 35 LCAs as HF Management Services"
+ },
+ "Highmark Health": {
+  "sponsors_h1b": true,
+  "fy2025": "27 LCAs in the first three quarters"
+ },
+ "Itron": {
+  "sponsors_h1b": null,
+  "fy2025": "69 historical; FY2025 count not retrieved"
+ },
+ "J.D. Power": {
+  "sponsors_h1b": null,
+  "fy2025": "10 LCAs and LCs; 4 petitions"
+ },
+ "LiveRamp": {
+  "sponsors_h1b": true,
+  "fy2025": "35 LCAs"
+ },
+ "Manulife John Hancock": {
+  "sponsors_h1b": true,
+  "fy2025": "43 LCAs as John Hancock Life Insurance"
+ },
+ "Mimecast": {
+  "sponsors_h1b": null,
+  "fy2025": "3 LCAs"
+ },
+ "NASA JPL": {
+  "sponsors_h1b": true,
+  "fy2025": "58 H-1B petitions as Caltech/JPL; many roles still carry US-person restrictions in the posting"
+ },
+ "NXP": {
+  "sponsors_h1b": true,
+  "fy2025": "311 LCAs and LCs"
+ },
+ "Nationwide": {
+  "sponsors_h1b": true,
+  "fy2025": "54 LCAs"
+ },
+ "Neurocrine": {
+  "sponsors_h1b": true,
+  "fy2025": "16 LCAs"
+ },
+ "PRA Group": {
+  "sponsors_h1b": true,
+  "fy2025": "14 LCAs in the first three quarters; data engineer and data scientist titles"
+ },
+ "Pluralsight": {
+  "sponsors_h1b": null,
+  "fy2025": "no record found"
+ },
+ "ProMach": {
+  "sponsors_h1b": false,
+  "fy2025": "no filings FY2022 through FY2025"
+ },
+ "Procter & Gamble": {
+  "sponsors_h1b": null,
+  "fy2025": "7 LCAs"
+ },
+ "Q2": {
+  "sponsors_h1b": true,
+  "fy2025": "18 LCAs"
+ },
+ "Risepoint": {
+  "sponsors_h1b": null,
+  "fy2025": "1 to 2 LCAs"
+ },
+ "Samsung": {
+  "sponsors_h1b": true,
+  "fy2025": "hundreds across Samsung Semiconductor, Research America and SDS America"
+ },
+ "Sanofi": {
+  "sponsors_h1b": true,
+  "fy2025": "101 LCAs as Sanofi US Services"
+ },
+ "Strategic Education": {
+  "sponsors_h1b": true,
+  "fy2025": "27 LCAs and LCs; 15 petitions"
+ },
+ "Synechron": {
+  "sponsors_h1b": true,
+  "fy2025": "498 LCAs; H-1B dependent employer"
+ },
+ "TD Bank": {
+  "sponsors_h1b": true,
+  "fy2025": "110 LCAs and LCs; 51 petitions"
+ },
+ "TransUnion": {
+  "sponsors_h1b": true,
+  "fy2025": "FY2025 filings listed for TransUnion LLC; count not retrieved"
+ },
+ "Yahoo": {
+  "sponsors_h1b": true,
+  "fy2025": "329 LCAs as Yahoo Holdings"
+ },
+ "Zendesk": {
+  "sponsors_h1b": true,
+  "fy2025": "36 LCAs"
+ },
+ "Zillow": {
+  "sponsors_h1b": true,
+  "fy2025": "83 LCAs"
+ }
+}

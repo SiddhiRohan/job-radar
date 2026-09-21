@@ -5,6 +5,7 @@
 **49 more companies.** `companies.json` grows from 113 to 162 verified Workday tenants, among them Samsung, TD Bank,
 Zillow, Procter & Gamble, NXP, AIG, Chubb, TransUnion, Sanofi, Yahoo, Zendesk, F5, FICO and Nationwide. Every tenant
 came from a posting URL seen in search results and passed a live check. "head" joins the seniority exclusions.
+Sponsorship defaults for all 49 come from a fiscal 2025 LCA lookup recorded in `companies/h1b_check.json`.
 
 ## v0.3 (2026-09-20)
 
