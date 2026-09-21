@@ -137,7 +137,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     Ellis (DOL LCA data, fiscal year 2025); evidence is in `companies/h1b_check.json` and `expand.py` reads it in
     place of the unchecked list from decision 33. Rule: 10 or more LCAs is true, 1 to 9 or unclear is null, none is
     false. Result: 31 true, 16 null, 2 false. Five guesses were wrong and moved to tier 3 (BD, Cencora, FICO,
-    Mimecast, Procter & Gamble); twelve unknowns turned out to be real filers and moved to tier 2, including HHMI
+    Mimecast, Procter & Gamble); eleven unknowns turned out to be real filers and moved to tier 2, including HHMI
     with 160 LCAs and PRA Group, which files for data engineer and data scientist titles. Hagerty and ProMach show
     no filings and are false. Counts differ between the three sites because they split legal entities differently,
     so the file records the range. NASA JPL files petitions but many of its postings carry US-person wording; the
