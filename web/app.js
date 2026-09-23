@@ -56,7 +56,7 @@ function rowEl(r) {
   } }, done ? "Applied" : "Mark applied");
   if (done) applyBtn.disabled = true;
   const row = el("article", { class: "row" + (done ? " done" : "") },
-    el("div", { class: "score", "aria-label": "best score" }, String(best(r) || "–")),
+    el("div", { class: "score", "data-s": String(best(r)), "aria-label": `best score ${best(r) || "none"}` }, String(best(r) || "–")),
     el("div", {},
       el("div", { class: "head" }, el("span", { class: "company" }, r.company), el("span", { class: "title" }, r.title),
         el("span", { class: "meta" }, r.location), el("span", { class: "meta" }, r.posted_on)),
