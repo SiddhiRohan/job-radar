@@ -51,12 +51,17 @@ input, select, textarea { font: inherit; color: inherit; background: var(--surfa
 .empty { color: var(--ash); padding: 24px 0; }
 .error { color: var(--danger); padding: 12px 0; }
 
+/* Section headings stick to the top while their rows scroll, so the current section is always named. */
+h2, details > summary { position: sticky; top: 0; z-index: 2; background: var(--bg); }
 h2 { font-size: var(--fs-md); font-weight: 600; line-height: var(--lh-tight); margin: 22px 0 8px; padding: 10px 0 8px;
   border-bottom: 1px solid var(--rule); display: flex; align-items: baseline; gap: 8px; }
+details > summary h2 { position: static; margin-bottom: 0; }
 details > summary { margin-bottom: 8px; }
 h2 .n { color: var(--ink-2); font-weight: 400; font-size: var(--fs-sm); }
 h2.apply { color: var(--apply); } h2.entry { color: var(--accent); } h2.maybe { color: var(--maybe); } h2.lower, h2.contract { color: var(--ink-2); }
 details summary { cursor: pointer; list-style: none; } details summary::-webkit-details-marker { display: none; }
+details > summary h2::before { content: "B8"; font-size: var(--fs-sm); color: var(--ink-3); transition: transform .15s ease; }
+details[open] > summary h2::before { transform: rotate(90deg); }
 
 /* Rows are cards. The border and a shadow on hover carry the separation; no shadow at rest keeps long lists cheap. */
 .row { display: grid; grid-template-columns: 56px 1fr; column-gap: 14px; align-items: start; margin: 0 0 8px;
@@ -83,8 +88,9 @@ details summary { cursor: pointer; list-style: none; } details summary::-webkit-
 .row .sub a { text-underline-offset: 2px; }
 .row .sub a:hover { color: var(--accent); }
 .row .acts { margin-left: auto; display: flex; gap: 8px; }
-@media (prefers-reduced-motion: reduce) { .row { transition: none; } }
-@media (max-width: 640px) { .row { grid-template-columns: 1fr; row-gap: 8px; } .row .score { width: 36px; height: 36px; font-size: var(--fs-md); } }
+@media (prefers-reduced-motion: reduce) { .row, details > summary h2::before { transition: none; } }
+@media (max-width: 640px) { .top { flex-wrap: wrap; gap: 8px 16px; } .datectl { margin-left: 0; flex-wrap: wrap; }
+  .row { grid-template-columns: 1fr; row-gap: 8px; } .row .score { width: 36px; height: 36px; font-size: var(--fs-md); } }
 .tag { padding: 1px 7px; border-radius: 999px; border: 1px solid color-mix(in srgb, currentColor 45%, transparent); font-size: var(--fs-xs); }
 .tag.yes, .tag.likely { color: var(--apply); } .tag.unknown { color: var(--maybe); }
 .tag.no, .tag.unlikely, .tag.perm_ad { color: var(--skip); }
