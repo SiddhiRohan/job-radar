@@ -34,7 +34,7 @@ const fail = (where, e, retry) => {
 };
 
 /* ---------- Today ---------- */
-const T = { date: "", dates: [] };
+const T = { date: "", dates: [], open: new Set() };
 const best = r => Math.max(r.score_entry || 0, r.score_experienced || 0);
 const scorePair = r => {
   const rec = r.recommended_resume;
@@ -45,12 +45,17 @@ const variant = r => r.recommended_resume ? `${r.recommended_resume}${r.recommen
 const tag = r => el("span", { class: `tag ${r.sponsorship || "unknown"}`, title: r.evidence || "no phrase found in the posting" }, r.sponsorship || "unknown");
 function rowEl(r) {
   const done = r.applied;
+  /* Update this row in place: reloading the list closed the collapsed sections and lost the scroll position. */
   const applyBtn = el("button", { type: "button", onclick: async () => {
-    await api("/api/applied", { company: r.company, req_id: r.req_id, title: r.title });
-    toast(`Marked applied: ${r.company}, ${r.title}`); loadToday();
+    applyBtn.disabled = true;
+    try {
+      await api("/api/applied", { company: r.company, req_id: r.req_id, title: r.title });
+      r.applied = true; row.classList.add("done"); applyBtn.textContent = "Applied";
+      toast(`Marked applied: ${r.company}, ${r.title}`);
+    } catch (e) { applyBtn.disabled = false; toast(`Could not mark applied: ${e.message}`); }
   } }, done ? "Applied" : "Mark applied");
   if (done) applyBtn.disabled = true;
-  return el("article", { class: "row" + (done ? " done" : "") },
+  const row = el("article", { class: "row" + (done ? " done" : "") },
     el("div", { class: "score", "aria-label": "best score" }, String(best(r) || "–")),
     el("div", {},
       el("div", { class: "head" }, el("span", { class: "company" }, r.company), el("span", { class: "title" }, r.title),
@@ -59,12 +64,15 @@ function rowEl(r) {
         el("a", { href: r.url, target: "_blank", rel: "noopener" }, "Open posting"),
         el("div", { class: "acts" }, applyBtn)),
       r.why ? el("p", { class: "why" }, r.why) : null));
+  return row;
 }
 function sectionEl(name, cls, rows, collapsed) {
   const h = el("h2", { class: cls }, name, el("span", { class: "n" }, String(rows.length)));
   const body = rows.length ? rows.map(rowEl) : [el("p", { class: "empty" }, "Nothing here today.")];
   if (!collapsed) return [h, ...body];
-  const d = el("details", {}, el("summary", {}, h), ...body);
+  /* Remember which collapsed sections are open so a refresh, a date change or the end of a run keeps them open. */
+  const d = el("details", { open: T.open.has(name) ? "" : null }, el("summary", {}, h), ...body);
+  d.addEventListener("toggle", () => { if (d.open) T.open.add(name); else T.open.delete(name); });
   return [d];
 }
 async function loadToday() {
