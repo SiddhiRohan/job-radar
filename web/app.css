@@ -51,24 +51,41 @@ input, select, textarea { font: inherit; color: inherit; background: var(--surfa
 .empty { color: var(--ash); padding: 24px 0; }
 .error { color: var(--danger); padding: 12px 0; }
 
-h2 { font-size: var(--fs-md); font-weight: 600; line-height: var(--lh-tight); margin: 26px 0 4px; padding-top: 10px; border-top: 1px solid var(--rule); }
-h2 .n { color: var(--ash); font-weight: 400; margin-left: 8px; }
-h2.apply { color: var(--apply); } h2.entry { color: var(--teal); } h2.maybe { color: var(--maybe); } h2.lower, h2.contract { color: var(--ash); }
+h2 { font-size: var(--fs-md); font-weight: 600; line-height: var(--lh-tight); margin: 22px 0 8px; padding: 10px 0 8px;
+  border-bottom: 1px solid var(--rule); display: flex; align-items: baseline; gap: 8px; }
+details > summary { margin-bottom: 8px; }
+h2 .n { color: var(--ink-2); font-weight: 400; font-size: var(--fs-sm); }
+h2.apply { color: var(--apply); } h2.entry { color: var(--accent); } h2.maybe { color: var(--maybe); } h2.lower, h2.contract { color: var(--ink-2); }
 details summary { cursor: pointer; list-style: none; } details summary::-webkit-details-marker { display: none; }
 
-.row { display: grid; grid-template-columns: 64px 1fr; column-gap: 12px; padding: 12px 0; border-top: 1px solid var(--rule); }
-.row:first-of-type { border-top: 0; }
-.row.done { color: var(--skip); }
-.row .score { font-size: var(--fs-xl); line-height: 1; font-weight: 500; letter-spacing: -0.02em; padding-top: 2px; }
-.row.done .score { color: var(--skip); }
-.row .head { display: flex; flex-wrap: wrap; gap: 0 14px; align-items: baseline; }
+/* Rows are cards. The border and a shadow on hover carry the separation; no shadow at rest keeps long lists cheap. */
+.row { display: grid; grid-template-columns: 56px 1fr; column-gap: 14px; align-items: start; margin: 0 0 8px;
+  padding: 12px 14px; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius);
+  transition: border-color .12s ease, box-shadow .12s ease; }
+.row:hover { border-color: var(--rule-strong); box-shadow: var(--shadow); }
+.row:focus-within { border-color: var(--accent); }
+.row.done { background: var(--surface-2); color: var(--ink-3); }
+.row.done .company, .row.done .title { text-decoration: line-through; text-decoration-color: var(--rule-strong); }
+
+/* Score badge, tinted by fit: 4 and 5 green, 3 accent, below that neutral. */
+.row .score { --tint: var(--ink-3); width: 44px; height: 44px; display: grid; place-items: center; border-radius: var(--radius);
+  font-size: var(--fs-lg); line-height: 1; font-weight: 600; letter-spacing: -0.02em; color: var(--tint);
+  background: color-mix(in srgb, var(--tint) 13%, var(--surface)); }
+.row .score[data-s="5"], .row .score[data-s="4"] { --tint: var(--apply); }
+.row .score[data-s="3"] { --tint: var(--accent); }
+.row.done .score { --tint: var(--ink-3); }
+.row .head { display: flex; flex-wrap: wrap; gap: 2px 12px; align-items: baseline; }
 .row .company { font-weight: 600; }
 .row .title { font-weight: 500; }
-.row .meta { color: var(--ash); }
-.row .sub { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; margin-top: 4px; color: var(--ash); }
+.row .meta { color: var(--ink-2); font-size: var(--fs-sm); }
+.row .sub { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; margin-top: 6px; color: var(--ink-2); font-size: var(--fs-sm); }
 .row .sub b { color: var(--ink); font-weight: 600; }
+.row .sub a { text-underline-offset: 2px; }
+.row .sub a:hover { color: var(--accent); }
 .row .acts { margin-left: auto; display: flex; gap: 8px; }
-.tag { padding: 0 6px; border-radius: var(--radius-sm); border: 1px solid currentColor; font-size: var(--fs-xs); }
+@media (prefers-reduced-motion: reduce) { .row { transition: none; } }
+@media (max-width: 640px) { .row { grid-template-columns: 1fr; row-gap: 8px; } .row .score { width: 36px; height: 36px; font-size: var(--fs-md); } }
+.tag { padding: 1px 7px; border-radius: 999px; border: 1px solid color-mix(in srgb, currentColor 45%, transparent); font-size: var(--fs-xs); }
 .tag.yes, .tag.likely { color: var(--apply); } .tag.unknown { color: var(--maybe); }
 .tag.no, .tag.unlikely, .tag.perm_ad { color: var(--skip); }
 .why { margin: 4px 0 0; color: var(--ink-2); font-size: var(--fs-sm); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
