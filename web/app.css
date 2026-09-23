@@ -1,6 +1,6 @@
 /* Tokens. Every color and size below comes from here; dark mode only swaps these values. */
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   /* surfaces and text */
   --bg: #F3F3EF; --surface: #FFFFFF; --surface-2: #F9F9F6;
   --ink: #16191C; --ink-2: #545B61; --ink-3: #686E74;
@@ -16,6 +16,16 @@
   --radius: 6px; --radius-sm: 4px;
   /* old names kept so nothing else breaks */
   --stone: var(--bg); --ash: var(--ink-2); --teal: var(--accent); --skip: var(--ink-3);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111315; --surface: #181B1E; --surface-2: #1D2024;
+    --ink: #E7E9E5; --ink-2: #A3AAB0; --ink-3: #868D93;
+    --rule: #272B2F; --rule-strong: #373C41;
+    --accent: #58B9A0; --on-accent: #0A1411; --wash: #1B3A32; --wash-edge: #2E6B5A;
+    --apply: #5FC293; --maybe: #D6AC4F; --danger: #E57F7F;
+    --shadow: 0 1px 2px rgb(0 0 0 / .4);
+  }
 }
 * { box-sizing: border-box; }
 html { background: var(--bg); color: var(--ink); }
