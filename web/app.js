@@ -36,6 +36,12 @@ const fail = (where, e, retry) => {
 const skeleton = n => Array.from({ length: n }, () => el("div", { class: "row skel", "aria-hidden": "true" },
   el("div", { class: "score" }), el("div", {}, el("i", { class: "bar w60" }), el("i", { class: "bar w40" }), el("i", { class: "bar w80" }))));
 const laterSkeleton = (body, n) => setTimeout(() => { body.setAttribute("aria-busy", "true"); body.replaceChildren(...skeleton(n)); }, 150);
+const RADAR_ICON = '<svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".35"/><circle cx="24" cy="24" r="12" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".55"/><path d="M24 24 L38 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>';
+const emptyState = (title, hint, ...actions) => {
+  const icon = el("div", { class: "es-icon" }); icon.innerHTML = RADAR_ICON;
+  return el("div", { class: "empty-state" }, icon, el("p", { class: "es-title" }, title), hint ? el("p", { class: "es-hint" }, hint) : null,
+    actions.length ? el("div", { class: "es-acts" }, ...actions) : null);
+};
 
 /* ---------- Today ---------- */
 const T = { date: "", dates: [], open: new Set() };
@@ -90,9 +96,15 @@ async function loadToday() {
     const sel = $("#date"); sel.replaceChildren(...d.dates.map(x => el("option", { value: x, selected: x === d.date ? "" : null }, x)));
     $("#datectl").hidden = false;
     $("#stats").textContent = d.stats || (d.date ? "No run stats for this date; the header only covers the latest run." : "");
-    if (!d.date) { body.replaceChildren(el("p", { class: "empty" }, "No digest yet. Run the radar (python run.py) and reload.")); return; }
+    if (!d.date) { body.replaceChildren(emptyState("No shortlist yet", "The radar has not run on this machine. A run polls every company and takes about half an hour.",
+      el("button", { type: "button", class: "primary", onclick: () => runRadar(1, false) }, "Run the radar"))); return; }
     const s = d.sections;
-    if (!Object.values(s).some(v => v.length)) { body.replaceChildren(el("p", { class: "empty" }, "No digest for this date. Run the radar or pick another day.")); return; }
+    if (!Object.values(s).some(v => v.length)) {
+      const latest = d.dates.find(x => x !== d.date);
+      body.replaceChildren(emptyState("Nothing new on " + d.date, "Weekends and holidays are often quiet: companies post fewer roles.",
+        latest ? el("button", { type: "button", onclick: () => { T.date = latest; loadToday(); } }, "Show " + latest) : null));
+      return;
+    }
     body.replaceChildren(...sectionEl("Apply", "apply", s.apply),
       ...sectionEl("Entry level", "entry", s.entry || []), ...sectionEl("Maybe", "maybe", s.maybe),
       ...sectionEl("Contract or backup", "contract", s.contract), ...sectionEl("Everything else", "lower", s.lower, true),
@@ -280,7 +292,8 @@ async function loadApplied() {
   try {
     const rows = await api("/api/applied");
     clearTimeout(sk); body.removeAttribute("aria-busy");
-    if (!rows.length) { body.replaceChildren(el("p", { class: "empty" }, "Nothing marked applied yet. Use Mark applied on Today or Tailor.")); return; }
+    if (!rows.length) { body.replaceChildren(emptyState("Nothing marked applied yet", "Use Mark applied on Today or in Tailor, and it shows up here with a status you can update.",
+      el("a", { href: "#today", class: "btnlink" }, "Go to Today"))); return; }
     const tr = r => el("tr", {}, el("td", {}, r.date), el("td", {}, r.company), el("td", {}, r.title),
       el("td", {}, el("select", { onchange: async e => { await api("/api/applied/status", { req_id: r.req_id, company: r.company, status: e.target.value }); toast(`Set ${r.company} to ${e.target.value}`); } },
         ...["applied", "screen", "interview", "rejected", "offer"].map(s => el("option", { value: s, selected: s === r.status ? "" : null }, s)))),

@@ -49,7 +49,9 @@ input, select, textarea { font: inherit; color: inherit; background: var(--surfa
 .datectl { margin-left: auto; display: flex; gap: 6px; align-items: center; }
 .stats { color: var(--ash); margin: 10px 0 18px; }
 .empty { color: var(--ash); padding: 24px 0; }
-.error { color: var(--danger); padding: 12px 0; }
+.error { color: var(--danger); padding: 12px 14px; margin: 12px 0; border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent);
+  border-radius: var(--radius); background: color-mix(in srgb, var(--danger) 7%, var(--surface)); }
+.error button { margin-left: 8px; }
 
 /* Section headings stick to the top while their rows scroll, so the current section is always named. */
 h2, details > summary { position: sticky; top: 0; z-index: 2; background: var(--bg); }
@@ -159,4 +161,13 @@ body.with-chat main, body.with-chat .top { margin-right: 380px; }
 details[open] > .det-body { animation: reveal .18s ease-out; }
 @keyframes reveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 
+/* Empty states name what happened and offer the next step. */
+.empty-state { text-align: center; padding: 48px 16px; color: var(--ink-2); }
+.empty-state .es-icon { color: var(--accent); margin-bottom: 8px; }
+.empty-state .es-title { font-size: var(--fs-md); font-weight: 600; color: var(--ink); margin: 0 auto 4px; }
+.empty-state .es-hint { margin: 0 auto 16px; max-width: 46ch; }
+.empty-state .es-acts { display: flex; justify-content: center; gap: 8px; }
+.btnlink { display: inline-block; text-decoration: none; border: 1px solid var(--rule-strong); border-radius: var(--radius-sm);
+  padding: 4px 10px; background: var(--surface); }
+.btnlink:hover { border-color: var(--ink-2); }
 @media (prefers-reduced-motion: reduce) { .row.skel, details[open] > .det-body { animation: none; } }
