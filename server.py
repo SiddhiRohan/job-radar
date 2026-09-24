@@ -473,6 +473,11 @@ def index():
     return RedirectResponse("/web/index.html")
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return RedirectResponse("/web/favicon.svg")
+
+
 if __name__ == "__main__":
     UI_DIR.mkdir(parents=True, exist_ok=True)
     threading.Timer(1.0, lambda: webbrowser.open("http://localhost:8000")).start()

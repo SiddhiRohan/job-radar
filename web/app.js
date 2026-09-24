@@ -36,9 +36,8 @@ const fail = (where, e, retry) => {
 const skeleton = n => Array.from({ length: n }, () => el("div", { class: "row skel", "aria-hidden": "true" },
   el("div", { class: "score" }), el("div", {}, el("i", { class: "bar w60" }), el("i", { class: "bar w40" }), el("i", { class: "bar w80" }))));
 const laterSkeleton = (body, n) => setTimeout(() => { body.setAttribute("aria-busy", "true"); body.replaceChildren(...skeleton(n)); }, 150);
-const RADAR_ICON = '<svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".35"/><circle cx="24" cy="24" r="12" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".55"/><path d="M24 24 L38 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>';
 const emptyState = (title, hint, ...actions) => {
-  const icon = el("div", { class: "es-icon" }); icon.innerHTML = RADAR_ICON;
+  const icon = el("div", { class: "es-icon" }); icon.innerHTML = '<svg width="40" height="40" aria-hidden="true"><use href="#mark"/></svg>';
   return el("div", { class: "empty-state" }, icon, el("p", { class: "es-title" }, title), hint ? el("p", { class: "es-hint" }, hint) : null,
     actions.length ? el("div", { class: "es-acts" }, ...actions) : null);
 };
