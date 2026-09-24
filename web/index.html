@@ -10,7 +10,18 @@
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
+<!-- The mark, defined once and reused by the header and the empty states. A blip ahead of the sweep: a posting found. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/>
+    <circle cx="16" cy="16" r="7.5" fill="none" stroke="currentColor" stroke-width="2" opacity=".6"/>
+    <path d="M16 16 25.2 6.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="16" cy="16" r="2.4" fill="currentColor"/>
+    <circle cx="22.4" cy="21.2" r="2.3" fill="currentColor"/>
+  </symbol>
+</svg>
 <header class="top">
+  <a class="brand" href="#today" aria-label="Job radar, today's shortlist"><svg width="26" height="26" aria-hidden="true"><use href="#mark"/></svg><span>Job radar</span></a>
   <nav class="nav" aria-label="Views">
     <a href="#today" data-view="today">Today</a>
     <a href="#tailor" data-view="tailor">Tailor</a>
