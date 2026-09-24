@@ -400,5 +400,5 @@ function show() {
   $("#datectl").hidden = v !== "today";
   if (v === "today") loadToday(); if (v === "applied") loadApplied();
 }
-window.addEventListener("hashchange", show);
+window.addEventListener("hashchange", () => { window.scrollTo(0, 0); show(); });  /* a new view starts at the top; refreshes keep the place */
 show();
