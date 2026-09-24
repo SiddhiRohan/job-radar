@@ -118,6 +118,9 @@ The app opens at http://localhost:8000.
 whether it sponsors. The posting text always overrides that default. The tools that found and verified
 the entries are in `companies/`, and `docs/COMPANIES_REPORT.md` lists every employer.
 
+Every setting and field, with its current value and what changing it does, is in
+[docs/CONFIG.md](docs/CONFIG.md).
+
 ## Project layout
 
 | Path | What is there |
