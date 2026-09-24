@@ -7,6 +7,17 @@ Zillow, Procter & Gamble, NXP, AIG, Chubb, TransUnion, Sanofi, Yahoo, Zendesk, F
 came from a posting URL seen in search results and passed a live check. "head" joins the seniority exclusions.
 Sponsorship defaults for all 49 come from a fiscal 2025 LCA lookup recorded in `companies/h1b_check.json`.
 
+**Capital One and per-posting sponsorship.** Capital One is a tier 1 sponsor; a posting the scorer reads as
+sponsoring now reaches Apply even under a negative company default. The Today view lists Skipped postings, collapsed.
+
+**UI refresh.** Mark applied updates its row in place and collapsed sections stay open. Design tokens, a type scale
+and a dark mode that follows the system. Rows are cards with a score badge tinted by fit, and section headings stay
+pinned while scrolling. Placeholder cards while loading, a fade when a section opens, and empty and error states that
+name the next step. A radar mark in the header and empty states, and an SVG favicon.
+
+**README.** Rewritten with a banner, screenshots in light and dark, a pipeline diagram, a quickstart and a
+configuration table. Screenshots are taken from a demo copy with neutral fit notes and made-up applications.
+
 ## v0.3 (2026-09-20)
 
 **Outreach in Tailor.** Write outreach builds a note and a message from the visible resume sections, both editable

@@ -156,3 +156,11 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     default. Replayed on stored data nothing else was buried; only the four defense contractors carry "unlikely"
     rows and the scorer agrees with all of them. The Today view also lists the Skipped rows, collapsed, so a
     wrong skip can be seen rather than silently lost.
+
+## 2026-09-24: README
+
+38. **README screenshots use demo data.** The real Today view carries notes about Rohan's own projects and the
+    Applied view shows where he applied. Git keeps images forever, including if the repo goes public, so the
+    screenshots come from a throwaway copy of the app: the same public postings, neutral fit notes, and four
+    made-up applications. Captions say so. The banner was generated with Higgsfield (GPT Image 2.5) and saved as a
+    17 KB WebP.
