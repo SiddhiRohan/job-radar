@@ -48,12 +48,12 @@
 </aside>
 
 <main>
-  <section id="today" class="view">
+  <section id="view-today" data-view="today" class="view">
     <p id="stats" class="stats"></p>
     <div id="today-body"></div>
   </section>
 
-  <section id="tailor" class="view" hidden>
+  <section id="view-tailor" data-view="tailor" class="view" hidden>
     <form id="urlform" class="urlform">
       <input id="url" type="url" placeholder="Paste a Workday job URL" aria-label="Workday job URL" required>
       <button type="submit" class="primary">Load posting</button>
@@ -61,7 +61,7 @@
     <div id="tailor-body"><p class="empty">Tailoring is on demand: ask the chat ("tailor the Netflix one"), or paste a Workday job URL above to open the editor.</p></div>
   </section>
 
-  <section id="applied" class="view" hidden>
+  <section id="view-applied" data-view="applied" class="view" hidden>
     <div id="applied-body"></div>
   </section>
 </main>

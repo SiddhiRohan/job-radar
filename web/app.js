@@ -393,10 +393,12 @@ setChat(C.open);
 /* ---------- routing ---------- */
 function show() {
   const v = (location.hash || "#today").slice(1);
-  document.querySelectorAll(".view").forEach(s => (s.hidden = s.id !== v));
+  /* Sections carry data-view, not an id equal to the hash: an id match made the browser jump to the section and
+     scroll the header out of view on every tab click. */
+  document.querySelectorAll(".view").forEach(s => (s.hidden = s.dataset.view !== v));
   document.querySelectorAll(".nav a").forEach(a => a.classList.toggle("on", a.dataset.view === v));
   $("#datectl").hidden = v !== "today";
   if (v === "today") loadToday(); if (v === "applied") loadApplied();
 }
-window.addEventListener("hashchange", show);
+window.addEventListener("hashchange", () => { window.scrollTo(0, 0); show(); });  /* a new view starts at the top; refreshes keep the place */
 show();
