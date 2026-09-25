@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Pay on every posting.** `radar/salary.py` reads the pay range from the posting text, since Workday has no pay
+field. It handles the common formats (commas or none, K suffix, USD prefix, hourly rates, several ranges by
+location) and ignores money that is not pay, such as bonuses, revenue and placeholder ranges. 82% of stored postings
+carry a range. Today cards and digest lines show it, or "Pay not listed".
+
 **49 more companies.** `companies.json` grows from 113 to 162 verified Workday tenants, among them Samsung, TD Bank,
 Zillow, Procter & Gamble, NXP, AIG, Chubb, TransUnion, Sanofi, Yahoo, Zendesk, F5, FICO and Nationwide. Every tenant
 came from a posting URL seen in search results and passed a live check. "head" joins the seniority exclusions.

@@ -93,6 +93,8 @@ details[open] > summary h2::before { transform: rotate(90deg); }
 .row .sub a { text-underline-offset: 2px; }
 .row .sub a:hover { color: var(--accent); }
 .row .acts { margin-left: auto; display: flex; gap: 8px; }
+.row .pay { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.row .pay.none { color: var(--ink-3); font-weight: 400; }
 @media (prefers-reduced-motion: reduce) { .row, details > summary h2::before { transition: none; } }
 @media (max-width: 640px) { .top { flex-wrap: wrap; gap: 8px 16px; } .datectl { margin-left: 0; flex-wrap: wrap; }
   .row { grid-template-columns: 1fr; row-gap: 8px; } .row .score { width: 36px; height: 36px; font-size: var(--fs-md); } }
