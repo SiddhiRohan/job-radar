@@ -16,7 +16,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from radar import applications, chat, digest, poll, prepare, salary, score, wd
+from radar import applications, chat, digest, mail, poll, prepare, salary, score, wd
 from tailoring import apply as applier
 from tailoring import finalize, letters, resumes, skills, tailor
 
@@ -157,6 +157,29 @@ def set_status(body: dict):
                 r["folder"] = body["folder"]
     write_applied(rows)
     return {"ok": True}
+
+
+@app.get("/api/mail")
+def mail_state():
+    """Whether Gmail is set up, when it was last read, the needs-review list, and recent status updates."""
+    s = mail.load()
+    configured = bool(mail.env("GMAIL_ADDRESS") and mail.env("GMAIL_APP_PASSWORD"))
+    return {
+        "configured": configured,
+        "last_sync": s["last_sync"],
+        "review": s["review"],
+        "events": s["events"][-8:][::-1],
+    }
+
+
+@app.post("/api/mail/sync")
+def mail_sync():
+    return background(mail.sync)
+
+
+@app.post("/api/mail/resolve")
+def mail_resolve(body: dict):
+    return mail.resolve(body["message_id"], body.get("company"), body.get("req_id"), body.get("status"))
 
 
 @app.post("/api/pick-folder")
