@@ -92,13 +92,17 @@ The app opens at http://localhost:8000.
 | Morning run | Scheduled at 7:30, or `python run.py` |
 | Wider window when the list is thin | `python run.py --days 3 --all-tiers` |
 | Start a run from the app | **Run the radar**, top right of Today |
-| Mark a posting applied | **Mark applied** on its card, then track status in Applied |
+| Mark a posting applied | **Mark applied** on its card, then move it between stages on the Applied board |
 | Tailor a resume | Ask the chat ("tailor the Capital One one"), or paste a Workday job URL in Tailor |
 | Tailor from the terminal | `python -m tailoring.apply <company> <req_id> --cover` |
 
-<img src="docs/img/applied.png" alt="The Applied view: a table of applications with date, company, title and a status menu.">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/applied-dark.png">
+  <img src="docs/img/applied.png" alt="The Applied view: headline tiles for applications, last 7 days, companies and replies, a column chart of applications per day, and bar charts of where applications stand and which companies were applied to most.">
+</picture>
 
-<sub>The Applied view, with a status you can change in place. Demo data.</sub>
+<sub>The Applied view: how many you have sent, how fast, where they stand and where they went. A board below
+lets you move each application between stages. Demo data.</sub>
 
 ## Configuration
 
