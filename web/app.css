@@ -220,4 +220,15 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .vtip { position: absolute; z-index: 20; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--rule-strong);
   border-radius: var(--radius-sm); box-shadow: var(--shadow); padding: 6px 10px; display: grid; font-size: var(--fs-sm); }
 .vtip b { font-weight: 600; } .vtip span { color: var(--ink-2); font-size: var(--fs-xs); }
+.mailcard { margin-bottom: 10px; }
+.mailhead { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.mailcard h4 { font-size: var(--fs-sm); margin: 8px 0 6px; display: flex; gap: 6px; } .mailcard h4 .n { color: var(--ink-3); font-weight: 400; }
+.mailitem { border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 8px; display: grid; gap: 4px; }
+.mailmeta { display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--ink-3); font-size: var(--fs-xs); align-items: center; }
+.mailsubj { font-weight: 600; color: var(--ink); text-underline-offset: 2px; }
+.mailsnip { margin: 0; color: var(--ink-2); font-size: var(--fs-sm); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mailacts { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 4px; min-width: 0; }
+.mailacts select { max-width: 100%; min-width: 0; } .mailacts .mailpick { flex: 1 1 260px; width: 0; }
+.mailitem { min-width: 0; }
+.mailevents { margin: 0; padding-left: 18px; font-size: var(--fs-sm); color: var(--ink-2); } .mailevents li { margin: 2px 0; }
 @media (max-width: 760px) { .vgrid { grid-template-columns: 1fr; } }
