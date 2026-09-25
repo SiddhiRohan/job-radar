@@ -16,15 +16,13 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from radar import chat, digest, poll, prepare, salary, score, wd
+from radar import applications, chat, digest, poll, prepare, salary, score, wd
 from tailoring import apply as applier
 from tailoring import finalize, letters, resumes, skills, tailor
 
 app = FastAPI()
 JOBS, JOB_LOCK = {}, threading.Lock()
 UI_DIR = Path(".cache/ui")
-APPLIED = Path("applications.md")
-CAP = ["date", "company", "title", "status", "folder", "req_id"]
 
 
 def jobs_all():
@@ -114,20 +112,11 @@ def today(date: str = ""):
 
 
 def applied_rows():
-    if not APPLIED.exists():
-        return []
-    rows = []
-    for line in APPLIED.read_text(encoding="utf-8").splitlines():
-        cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        if len(cells) == 6 and cells[0] not in ("date", "---"):
-            rows.append(dict(zip(CAP, cells)))
-    return rows
+    return applications.rows()
 
 
 def write_applied(rows):
-    lines = ["| date | company | title | status | folder | req_id |", "|---|---|---|---|---|---|"]
-    lines += ["| " + " | ".join(r[c].replace("|", "/") for c in CAP) + " |" for r in rows]
-    APPLIED.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    applications.write(rows)
 
 
 @app.get("/api/applied")
@@ -163,11 +152,7 @@ def set_status(body: dict):
     rows = applied_rows()
     for r in rows:
         if r["req_id"] == body["req_id"] and r["company"] == body["company"]:
-            r["status"] = (
-                body["status"]
-                if body["status"] in ("applied", "screen", "interview", "rejected", "offer")
-                else r["status"]
-            )
+            r["status"] = body["status"] if body["status"] in applications.STATUSES else r["status"]
             if body.get("folder") is not None:
                 r["folder"] = body["folder"]
     write_applied(rows)
