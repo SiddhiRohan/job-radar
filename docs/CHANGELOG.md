@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Postings since you applied.** `radar/watch.py` re-reads the posting behind every open application once a day
+(after the mail step) and records when it closed, was retitled, repriced or rewritten. Closed with no reply is
+shown as the quiet rejection it usually is. A card on Applied with a "Check postings" button, `/api/watch`, and a
+`posting_status` chat tool.
+
 **What the rejections say.** `radar/patterns.py` joins applications with the stored postings and shows where
 rejections cluster (title family, seniority wording, resume base, fit score, years asked, sponsorship default,
 company) against the overall rate. Counts only, with a three-rejection floor. A card on Applied and a chat tool.

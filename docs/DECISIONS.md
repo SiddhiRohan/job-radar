@@ -211,3 +211,12 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     because it reads at 16 pixels and matches the existing mark. The ident video is a 6 s Seedance render from the
     logo; the README shows it as an 800 px animated WebP because GitHub does not play repo-hosted mp4 files.
     `docs/img/social-preview.png` is for the repository's social preview setting, which only the web UI can set.
+
+## 2026-09-25: the postings behind applications
+
+46. **A taken-down Workday posting answers 403, not 404.** Checked against a posting the owner was rejected from: the
+    detail endpoint returns `403 {"errorCode":"S22","message":"permission denied"}`, while a path that never existed
+    returns 404 `S21`. The watcher treats 403 as closed only when Workday's JSON error body is present, so a
+    firewall block or an outage (usually HTML) stays "unknown" and never reads as a closure. Closures and changes
+    keep the date first seen; a posting that comes back drops its closure. Applications already rejected or at
+    offer are not checked, which keeps the daily run to one request per open application.
