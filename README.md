@@ -35,6 +35,9 @@ are opinionated because of that, and every one of them lives in `config.json`.
   so a 3 out of 5 on a junior role is not buried under senior roles.
 - **Tailors without inventing.** On request it rewrites a resume for one posting. Any skill outside the
   base resume and a confirmed skills list is turned into a question instead of added.
+- **Reads replies for you.** With a Gmail app password it checks your inbox, read-only, and moves an application
+  to screen, interview, rejected or offer when an email carries its requisition id. Emails without one wait in a
+  needs-review list for you to settle.
 - **Stays on your machine.** Resumes, applications and chat history are local files, ignored by git.
 
 ## How it works
@@ -72,6 +75,8 @@ ignored by git:
 - `profile.md`: who you are and what you are looking for, in plain prose.
 - `skills_confirmed.md`: skills the tailoring step may name even if the base resume does not.
 - Base resumes under `Resume/`, at the paths set in `tailoring/resumes.py`.
+- Optional: `GMAIL_ADDRESS` and `GMAIL_APP_PASSWORD` in `.env` to read hiring emails. See
+  [docs/CONFIG.md](docs/CONFIG.md#email-statuses-from-hiring-emails).
 
 Run the pipeline once, then open the app:
 

@@ -90,6 +90,40 @@ employer named in its lists, so hand edits to those fields are lost the next tim
 3. Check it against the live site: `python -m companies.resolve`.
 4. Rebuild the list: `python -m companies.expand`, then `python -m companies.report_companies`.
 
+## Email: statuses from hiring emails
+
+The run and the **Check mail** button on Applied read your Gmail over IMAP and move application statuses. It is
+read-only: the mailbox is opened with IMAP's read-only mode and messages are fetched without marking them read.
+Nothing is sent, moved or deleted.
+
+**Setting it up.** Gmail needs an app password, a separate 16-character password for one app:
+
+1. Turn on 2-Step Verification for the Google account, if it is not on already.
+2. Create an app password at https://myaccount.google.com/apppasswords and name it "Job radar".
+3. Add two lines to `.env`, which git ignores:
+
+   ```
+   GMAIL_ADDRESS=you@gmail.com
+   GMAIL_APP_PASSWORD=the16characterpassword
+   ```
+
+4. Press **Check mail** on Applied, or wait for the next `python run.py`.
+
+Revoke the app password on the same Google page at any time; the step then turns itself off.
+
+**What it does with an email.** Only messages since the first application are read, and your own sent mail is
+skipped.
+
+| The email | What happens |
+| --- | --- |
+| Contains the requisition id of exactly one application, and the wording is clear (thank you for applying, phone screen or assessment, interview, other candidates, offer) | The status moves on its own, forward only: applied, screen, interview, rejected, offer. An older email never moves a status back. |
+| Contains a requisition id but the wording is unclear, or ids of several applications | Needs review, with the matched application pre-selected |
+| Has no requisition id, but comes from an applicant tracking system or names a company you applied to, and reads like a hiring email | Needs review, with that company's applications listed first |
+| Anything else | Ignored |
+
+Each update and review item links to the email in Gmail. Seen message ids, recent updates and the review list are
+kept in `.cache/ui/mail.json`, with a short snippet of each email; the full text is never stored.
+
 ## Fixed in code
 
 These rules are not settings. Changing them means changing the code, with a test.
