@@ -51,6 +51,10 @@ const scorePair = r => {
   return el("span", { class: "pair-score" }, E, " / ", X);
 };
 const variant = r => r.recommended_resume ? `${r.recommended_resume}${r.recommended_variant ? ", " + r.recommended_variant.split("/").pop() : ""}` : "";
+/* Pay comes from the posting text; several location ranges show as one lowest-to-highest span. */
+const pay = r => r.salary
+  ? el("span", { class: "pay", title: r.salary.multiple ? "Varies by location: lowest to highest range in the posting" : "Pay range stated in the posting" }, r.salary.text)
+  : el("span", { class: "pay none", title: "The posting does not state a pay range" }, "Pay not listed");
 const tag = r => el("span", { class: `tag ${r.sponsorship || "unknown"}`, title: r.evidence || "no phrase found in the posting" }, r.sponsorship || "unknown");
 function rowEl(r) {
   const done = r.applied;
@@ -69,7 +73,7 @@ function rowEl(r) {
     el("div", {},
       el("div", { class: "head" }, el("span", { class: "company" }, r.company), el("span", { class: "title" }, r.title),
         el("span", { class: "meta" }, r.location), el("span", { class: "meta" }, r.posted_on)),
-      el("div", { class: "sub" }, scorePair(r), el("span", {}, variant(r)), tag(r),
+      el("div", { class: "sub" }, scorePair(r), pay(r), el("span", {}, variant(r)), tag(r),
         el("a", { href: r.url, target: "_blank", rel: "noopener" }, "Open posting"),
         el("div", { class: "acts" }, applyBtn)),
       r.why ? el("p", { class: "why" }, r.why) : null));

@@ -5,7 +5,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from radar import filters, store
+from radar import filters, salary, store
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -30,9 +30,10 @@ def line(j):
     pair = f"E{v.get('score_entry', '-')}/X{v.get('score_experienced', '-')}"
     rec = f"{v.get('recommended_resume') or '?'} · {v.get('recommended_variant') or '?'}"
     cover = " · [COVER LETTER]" if v.get("cover_letter_required") else ""
+    pay = (salary.extract(j.get("description", "")) or {}).get("text", "pay not listed")
     out = [
         f"- **{j['company']}** | {j['title']} | {j.get('detail_location') or j['location']} | {j['posted_on']} | "
-        f"{pair} | {rec}{cover} | [link]({j['url']})"
+        f"{pair} | {pay} | {rec}{cover} | [link]({j['url']})"
     ]
     if v.get("why"):
         out.append(f"    {v['why']}")

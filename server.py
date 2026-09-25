@@ -16,7 +16,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from radar import chat, digest, poll, prepare, score, wd
+from radar import chat, digest, poll, prepare, salary, score, wd
 from tailoring import apply as applier
 from tailoring import finalize, letters, resumes, skills, tailor
 
@@ -49,6 +49,7 @@ def row(j):
         "evidence": j.get("sponsorship_evidence") or v.get("sponsorship_evidence"),
         "why": v.get("why") or v.get("error"),
         "cover": v.get("cover_letter_required", False),
+        "salary": salary.extract(j.get("description", "")),
     }
 
 
