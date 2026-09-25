@@ -129,3 +129,13 @@ def test_review_guess_prefers_sender_and_subject_over_footer():
     body = "We regret to inform you that we will not be proceeding. Powered by Workday."
     d = mailmatch.decide(mail("Capital One job application: update", body, "Capital One <c@myworkday.com>"), apps)
     assert d["action"] == "review" and d["company"] == "Capital One"
+
+
+def test_workday_sender_address_names_the_employer():
+    tenants = {"pwc": "PwC", "capitalone": "Capital One"}
+    apps = APPS + [{"company": "Workday", "req_id": "JR-0109848", "title": "Data Engineer"}]
+    body = "We regret to inform you that we will not be proceeding. Powered by Workday."
+    not_tracked = mailmatch.decide(mail("Job application: update", body, "pwc@myworkday.com"), apps, tenants)
+    assert not_tracked["company"] is None and not_tracked["candidates"] == []  # never applied to PwC: no guess
+    tracked = mailmatch.decide(mail("Job application: update", body, "capitalone@myworkday.com"), apps, tenants)
+    assert tracked["company"] == "Capital One"

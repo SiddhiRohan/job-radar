@@ -79,9 +79,16 @@ def by_company(text, apps):
     return [a for a in apps if re.search(rf"(?<![A-Za-z]){re.escape(a['company'])}(?![A-Za-z])", text, re.I)]
 
 
-def decide(msg, apps):
+def sender_company(sender, tenants):
+    """The employer behind a Workday sender such as pwc@myworkday.com, from companies.json tenants, or None."""
+    m = re.search(r"([\w.-]+)@myworkday\.com", sender or "", re.I)
+    return tenants.get(m.group(1).lower()) if m else None
+
+
+def decide(msg, apps, tenants=None):
     """msg has sender, subject, body. Returns None to ignore the email, else a dict with action "update" or "review".
-    Emails that cannot move a status past "applied" (confirmations, account and password mail) are ignored."""
+    Emails that cannot move a status past "applied" (confirmations, account and password mail) are ignored.
+    tenants maps a Workday tenant to the employer name, so a review guess can come from the sender address."""
     text = f"{msg.get('subject', '')}\n{msg.get('body', '')}"
     status, clear = classify(text)
     if status is None:
@@ -104,8 +111,14 @@ def decide(msg, apps):
     sender = msg.get("sender", "")
     if not (ATS_SENDERS.search(sender) or by_company(f"{sender} {msg.get('subject', '')}", apps)):
         return None  # not recognisably about an application
-    # Guess from the sender and subject first: every email sent through Workday names Workday in its footer.
-    guesses = by_company(f"{sender} {msg.get('subject', '')}", apps) or by_company(text, apps)
+    # A Workday sender address names the employer; when it does, guess only among that employer's applications
+    # (none if Rohan never applied there). Otherwise the sender and subject, then the body: every Workday email
+    # names Workday in its footer, so the body comes last.
+    employer = sender_company(sender, tenants or {})
+    if employer:
+        guesses = [a for a in apps if a["company"] == employer]
+    else:
+        guesses = by_company(f"{sender} {msg.get('subject', '')}", apps) or by_company(text, apps)
     return _review(status, guesses[0] if len(guesses) == 1 else None, "no req id", guesses)
 
 
