@@ -1,6 +1,35 @@
 # STATUS
 
-## Current state (2026-09-20)
+## Current state (2026-09-25)
+
+Live and in daily use. The 7:30 AM Task Scheduler entry "JobRadar" runs poll, score, digest, then the two
+follow-up steps: mail (statuses from hiring emails) and watch (the posting behind every open application). Prepare
+is off, so tailoring happens on demand. The UI runs with `python server.py`. Everything is merged to `main` on the
+private repo; the repo was public for a few hours on 2026-09-25 and is private again (DECISIONS 44).
+
+- Sourcing covers 162 verified Workday tenants (48 tier 1, 77 tier 2, 37 tier 3), tiers 1 and 2 daily and tier 3 on
+  Mondays and Thursdays. Four role search terms plus three entry-level terms with a 14-day window. Every posting
+  shows a pay range when the description has one (about 82 percent do).
+- Recent runs kept 80 (09-22), 94 (09-23), 101 (09-24, a tier-3 day), 49 (09-25), with 4 to 13 in Apply each day.
+- Applications recorded through the UI: 107, of which 11 rejected and none with a reply yet. Rejections arrive by
+  email and are applied automatically when the email carries exactly one known requisition id and clear wording;
+  18 emails without an id wait in Needs review on the Applied page.
+- Two agents run on the applications. "What the rejections say" compares rejection rates by title family, seniority,
+  resume base, fit score, years asked, sponsorship default and company (counts only, three-rejection floor).
+  "Postings since you applied" re-reads each open posting daily: 81 still open, 15 closed without a reply.
+- The chat assistant can check mail, report rejection patterns and posting status, plan and build a tailored
+  resume, and drive the page.
+- Brand: 3D logo, six-second ident, favicons and a social preview image in docs/img. The owner's name, resume file
+  name and personal stopwords live in `.env` (`radar/owner.py`), never in tracked files.
+- Workflow: branch and PR for every change, CI (ruff, pytest) on PRs and main, pre-commit locally, 154 offline
+  tests, 38 merged PRs. Branch protection is unavailable on the free private plan; the rule lives in CLAUDE.md.
+  Never stack PRs.
+- Known gaps: hosting is still the laptop (issue #4); several sourced new-grad roles are 2027 start dates; the
+  social preview image must be uploaded by hand in repository settings; open issues are #1 to #6, #16 and #17.
+
+The sections below are kept as history. Dates in them are the dates they were written.
+
+## State recorded on 2026-09-20
 
 Live and in daily use. The 7:30 AM Task Scheduler entry "JobRadar" runs poll, score and digest; prepare is off, so
 tailoring happens on demand. The UI runs with `python server.py`. Everything is merged to `main` on the private repo.
@@ -18,8 +47,6 @@ tailoring happens on demand. The UI runs with `python server.py`. Everything is 
   Branch protection is unavailable on the free private plan; the rule lives in CLAUDE.md. Never stack PRs.
 - Known gaps: hosting is still the laptop (the Actions plan in this session's notes is not built); several sourced
   new-grad roles are 2027 start dates, which do not suit a May 2026 graduate; backlog is GitHub issues #1 to #7.
-
-The sections below are kept as history. Dates in them are the dates they were written.
 
 ## Outreach in Tailor (2026-09-17): issue #7
 
