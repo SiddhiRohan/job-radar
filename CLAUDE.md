@@ -29,7 +29,8 @@ These hold Rohan's data and must stay out of git even if they appear in the work
 
 - `run.py`, `server.py` at the root are the entry points (`python run.py`, `python server.py`); `config.json` and
   `companies.json` are the two files Rohan edits.
-- `radar/` daily pipeline (wd, poll, filters, sponsor, store, score, digest, prepare) plus `llm` and `chat`.
+- `radar/` daily pipeline (wd, poll, filters, sponsor, store, score, digest, prepare, mail) plus `llm`, `chat`,
+  `salary`, `mailmatch` and `applications` (the applications.md table).
 - `tailoring/` apply, plan, tailor, letters, finalize, skills, resumes, skills_extract. CLI: `python -m tailoring.apply`.
 - `companies/` verify, ledger, resolve, expand, report_companies and their data (candidates, not_on_workday,
   recheck_later). CLI: `python -m companies.<module>`.

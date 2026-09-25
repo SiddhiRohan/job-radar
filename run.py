@@ -1,4 +1,4 @@
-"""python run.py [--days N]: poll -> score -> digest. Score failures don't block the digest."""
+"""python run.py [--days N]: poll -> score -> digest -> prepare -> mail. Only a poll failure stops the run."""
 
 import argparse
 import subprocess
@@ -26,6 +26,7 @@ def main():
     step("radar.score", [])
     step("radar.digest", [])
     step("radar.prepare", [])  # plans the Apply rows so Tailor opens instantly; failures do not block
+    step("radar.mail", [])  # reads hiring emails and moves application statuses; off until Gmail is set up
 
 
 if __name__ == "__main__":

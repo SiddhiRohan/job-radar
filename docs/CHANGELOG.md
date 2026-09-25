@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+**Statuses from hiring emails.** `radar/mail.py` reads Gmail over IMAP, read-only, with an app password from `.env`.
+An email carrying the requisition id of exactly one application, with clear wording, moves that application forward
+on its own; anything else that looks like hiring mail lands in a needs-review list on Applied, with likely
+applications first. Runs in the daily pipeline and from a Check mail button. Application storage moved into
+`radar/applications.py` so the server and the mail step share it.
+
 **Pay on every posting.** `radar/salary.py` reads the pay range from the posting text, since Workday has no pay
 field. It handles the common formats (commas or none, K suffix, USD prefix, hourly rates, several ranges by
 location) and ignores money that is not pay, such as bonuses, revenue and placeholder ranges. 82% of stored postings

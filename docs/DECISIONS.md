@@ -164,3 +164,16 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     screenshots come from a throwaway copy of the app: the same public postings, neutral fit notes, and four
     made-up applications. Captions say so. The banner was generated with Higgsfield (GPT Image 2.5) and saved as a
     17 KB WebP.
+
+## 2026-09-25: statuses from email
+
+39. **IMAP with an app password, not the Gmail API.** A personal Google Cloud app in testing mode loses its sign-in
+    every seven days, which would break the unattended 7:30 run weekly. An app password does not expire, is revoked
+    in one place, and IMAP is in the standard library. The folder is opened read-only and bodies are fetched with
+    `BODY.PEEK`, so nothing in the mailbox changes.
+40. **Automatic only with a requisition id.** Rohan's rule: a status changes on its own only when an email contains
+    the id of exactly one application and its wording is clear. Everything else that looks like hiring mail goes to
+    review. Automatic changes only move forward (applied, screen, interview, rejected, offer), because a delayed
+    confirmation must not undo an interview; a person settling a review item can move a status any way.
+41. **Rejection wording is checked first.** Rejections usually also say "thank you for applying", and phone screens
+    mention interviews, so the rules run rejected, offer, screen, interview, applied.
