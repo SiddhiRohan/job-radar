@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+**Missed rejections.** Six more rejection wordings, found by scanning real hiring emails ("decided not to move
+forward" among them); review guesses come from the sender and subject before the body.
+
 **Email rules recalibrated.** Interview and screen need invitation wording; conditional phrases ("if you are selected
 for an interview") are ignored; plain confirmations and account mail are skipped instead of sent to review.
 

@@ -123,8 +123,9 @@ skipped.
 | A plain confirmation, or account, password and task mail | Ignored: it cannot move anything past applied |
 | Anything else | Ignored |
 
-**How wording is read.** A rejection needs phrases such as "decided to move forward with other candidates", "regret
-to inform", "unable to move you forward" or "can't move forward with your application". An interview or screen needs
+**How wording is read.** A rejection needs phrases such as "decided to move forward with other candidates",
+"decided not to move forward", "regret to inform", "won't be able to move forward", "aren't moving forward", "does not
+align with" or "pursuing other applicants". An interview or screen needs
 invitation wording, such as "we would like to invite you to interview" or "schedule a phone screen"; the bare word
 "interview" is not enough, because confirmations mention interviews as a possible next step. Any phrase shortly after
 "if", "may", "might" or "should" is ignored, so "if you are selected for an interview" and "if you are not selected"

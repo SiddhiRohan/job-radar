@@ -186,3 +186,16 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     automatically, 14 rejections without an id to review, no false interviews. Plain confirmations no longer go to
     review, a deliberate change from Rohan's first rule: they cannot move a status and filled the list with 35
     items. Paraphrases of the misread boilerplate are now regression tests.
+43. **The second rule set missed rejections, and one old-rule run slipped through.** Rohan found NVIDIA JR2024968 at
+    interview again. Reading both of its emails: a confirmation ("contact you to arrange an interview if the role is
+    a good match") and a rejection ("have decided not to move forward for the JR2024968 ... role"). Two causes. The
+    running server still held the first rules in memory after the fix merged, and a Check mail pressed before the
+    restart used them; the restart then cut that run off before it saved its record. And the second rules read the
+    rejection as a confirmation, because "decided not to" was not covered. The first calibration only compared the
+    old rules with the new ones, so a wording both missed went unnoticed. A fresh scan of every hiring email for
+    rejection-style words found four more: "won't be able to move forward", "aren't moving forward", "does not align
+    ... with", "pursuing other applicants". All are covered now; every one of the 28 rejections the rules find was
+    checked by its triggering phrase, and the only rejection-style words left unmatched are conditional ("if you are
+    not selected", "if the position is filled"). Review guesses now come from the sender and subject before the body,
+    because every Workday email names Workday in its footer. Lesson: restart the server as part of merging a rule
+    change, and calibrate against the emails themselves, not against the previous rules.

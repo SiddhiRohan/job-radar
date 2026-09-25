@@ -13,7 +13,14 @@ STATUS_RULES = {
     "rejected": r"other candidates|not (?:be )?mov(?:e|ing) forward|decided (?:to )?(?:pursue|proceed|move forward) with|"
     r"(?:were|have been|was) not selected|not been selected|regret to inform|no longer (?:under consideration|being considered)|"
     r"position has been filled|unable to (?:offer|move (?:you |your application )?forward)|will not be (?:moving|proceeding)|"
-    r"won't be moving forward|can(?:not|'t| not) move forward",
+    r"won't be moving forward|can(?:not|'t| not) move forward|"
+    # Added after NVIDIA's "have decided not to move forward for the JR2024968 ... role" read as a confirmation.
+    r"(?:decided|chosen|elected) not to|not (?:be )?(?:progressing|advancing|proceeding) (?:with )?your|"
+    r"not able to (?:offer|move|progress|proceed)|(?:selected|chosen|hired) (?:another|a different) (?:candidate|applicant)|"
+    r"(?:another|other) (?:qualified )?applicants|(?:role|position|requisition) (?:has been|was) (?:filled|closed|cancell?ed)|"
+    r"(?:aren't|are not|is not|isn't|won't be|will not be) (?:able to )?(?:mov(?:e|ing) (?:you |your application )?forward|"
+    r"proceed(?:ing)?|progress(?:ing)?|consider(?:ing)?|pursu(?:e|ing))|regret to (?:inform|share|let you know|advise)|"
+    r"(?:does|do) not (?:align|match) (?:as )?(?:closely )?with",
     "offer": r"pleased to offer|offer letter|extend(?:ing)? (?:you )?an offer|offer of employment",
     "screen": r"(?:schedule|book|set up|complete) (?:a |an |your )?(?:phone screen|recruiter (?:call|screen)|initial (?:call|screen))|"
     r"invit(?:e|ed|ation) (?:you )?to (?:complete|take) (?:an? |the )?(?:online |technical |coding )?(?:assessment|challenge|test)|"
@@ -97,7 +104,8 @@ def decide(msg, apps):
     sender = msg.get("sender", "")
     if not (ATS_SENDERS.search(sender) or by_company(f"{sender} {msg.get('subject', '')}", apps)):
         return None  # not recognisably about an application
-    guesses = by_company(text, apps)
+    # Guess from the sender and subject first: every email sent through Workday names Workday in its footer.
+    guesses = by_company(f"{sender} {msg.get('subject', '')}", apps) or by_company(text, apps)
     return _review(status, guesses[0] if len(guesses) == 1 else None, "no req id", guesses)
 
 
