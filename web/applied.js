@@ -99,7 +99,7 @@ function board(rows) {
     const all = rows.filter(r => r.status === s), cap = s === "applied" && !A.showAll ? 6 : all.length;
     const cards = all.slice(0, cap).map(r => el("article", { class: "kcard", title: r.title },
       el("span", { class: "kh" }, el("span", { class: "kc" }, r.company), el("span", { class: "kd" }, shortDay(dayOf(r)))),
-      el("span", { class: "kt" }, r.title), statusSelect(r)));
+      postingTitle(r.title, r.url), statusSelect(r)));
     const more = all.length > cap ? el("button", { type: "button", class: "quiet", onclick: () => { A.showAll = true; renderApplied(); } }, `Show all ${all.length}`) : null;
     return el("div", { class: "kcol" }, el("h4", {}, s[0].toUpperCase() + s.slice(1), el("span", { class: "n" }, String(all.length))),
       ...(cards.length ? cards : [el("p", { class: "kempty" }, "None yet")]), more);
@@ -107,7 +107,7 @@ function board(rows) {
   return el("section", { class: "card wide" }, el("h3", {}, "Board"), el("p", { class: "sub" }, "Change a status to move a card"), el("div", { class: "kboard" }, ...cols));
 }
 function table(rows) {
-  const tr = r => el("tr", {}, el("td", {}, r.date), el("td", {}, r.company), el("td", {}, r.title), el("td", {}, statusSelect(r)),
+  const tr = r => el("tr", {}, el("td", {}, r.date), el("td", {}, r.company), el("td", {}, postingTitle(r.title, r.url)), el("td", {}, statusSelect(r)),
     el("td", {}, r.folder ? el("button", { type: "button", class: "quiet", onclick: () => api("/api/open", { path: r.folder }).catch(e => toast(e.message)) }, r.folder) : ""));
   return el("details", { class: "tableview" }, el("summary", {}, "All applications as a table"),
     el("table", {}, el("thead", {}, el("tr", {}, ...["Date", "Company", "Title", "Status", "Folder"].map(h => el("th", {}, h)))), el("tbody", {}, ...rows.map(tr))));
