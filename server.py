@@ -182,6 +182,15 @@ def mail_resolve(body: dict):
     return mail.resolve(body["message_id"], body.get("company"), body.get("req_id"), body.get("status"))
 
 
+def check_mail_for(args):
+    """Chat hook: read mail now and report what moved and what waits for review, without the email text."""
+    result = mail.sync()
+    review = [
+        {k: r.get(k) for k in ("sender", "subject", "status", "company", "reason")} for r in mail.load()["review"]
+    ]
+    return result | {"needs_review": review[:8], "needs_review_total": len(review)}
+
+
 @app.post("/api/pick-folder")
 def pick_folder(body: dict):
     """Native folder dialog on this machine (the server is local); returns the chosen path or null if cancelled."""
@@ -435,6 +444,7 @@ def chat_message(body: dict):
         "tailor_posting": plan_for,
         "build_resume": build_for,
         "save_resume": save_for,
+        "check_mail": check_mail_for,
     }
     return background(chat.message, body.get("session", "default"), body["text"], body.get("context", {}), hooks)
 

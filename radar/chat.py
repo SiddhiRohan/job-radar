@@ -14,6 +14,8 @@ no flattery. Use tools to act instead of describing what he could do. After acti
 Finding postings comes first; tailoring a resume is on demand: tailor_posting to plan, then build_resume for the
 docx and its download link, then save_resume. Summarise a plan as the fit line plus the changed bullets, not the
 whole resume. open_tailor only when he asks to see or edit the full side-by-side.
+When he asks about replies, rejections or interviews, use check_mail, say what moved and what needs review, then
+navigate to applied so he can settle the review items.
 CONTEXT (what the page shows now) follows; the Today rows are ranked by score, E = entry base, X = experienced base."""
 
 PAGE_TOOLS = {"navigate", "refresh", "open_tailor", "edit_section", "rebuild"}
@@ -34,7 +36,7 @@ TOOLS = [
     },
     {
         "name": "run_radar",
-        "description": "Poll the companies for new postings, score them, and rebuild the digest. Takes 25-45 minutes; runs in the background. Use days>1 to widen the window when the shortlist is exhausted.",
+        "description": "Poll the companies for new postings, score them, rebuild the digest, and read new hiring emails. Takes 25-45 minutes; runs in the background. Use days>1 to widen the window when the shortlist is exhausted.",
         "input_schema": {
             "type": "object",
             "properties": {"days": {"type": "integer", "minimum": 1, "maximum": 7}, "all_tiers": {"type": "boolean"}},
@@ -131,6 +133,13 @@ TOOLS.append(
         "input_schema": {"type": "object", "properties": {"note": {"type": "string"}}, "required": ["note"]},
     }
 )
+TOOLS.append(
+    {
+        "name": "check_mail",
+        "description": "Read new hiring emails now (Gmail, read-only). An email carrying one application's req id and clear wording moves that status forward; other replies that could change a status go to the needs-review list on the Applied view. Returns how many moved, what needs review, or that Gmail is not set up. Takes a minute or two.",
+        "input_schema": {"type": "object", "properties": {}},
+    }
+)
 RUN = {"proc": None, "log": Path(".cache/ui/run.log")}
 SESSIONS = {}
 CHAT_DIR = Path(".cache/ui/chat")
@@ -191,7 +200,7 @@ def run_radar(days, all_tiers=False):
         "started": True,
         "days": days,
         "all_tiers": all_tiers,
-        "note": "poll, score, digest; refresh Today when done",
+        "note": "poll, score, digest, mail; refresh Today when done",
     }
 
 
@@ -220,7 +229,7 @@ def server_tool(name, args, hooks):
         return hooks["set_status"](args)
     if name == "remember":
         return remember(args.get("note", ""))
-    if name in ("tailor_posting", "build_resume", "save_resume"):
+    if name in ("tailor_posting", "build_resume", "save_resume", "check_mail"):
         return hooks[name](args)
     return {"error": f"unknown tool {name}"}
 
