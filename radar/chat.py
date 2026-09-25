@@ -6,10 +6,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-from radar import llm
+from radar import llm, owner
 
-SYSTEM = """You are the assistant inside a personal job-radar app. Rohan (F-1 OPT, needs H-1B, targets Data Engineer,
-Data Scientist, ML Engineer, AI Engineer roles) is working through today's shortlist. Be brief and plain; sentence case;
+SYSTEM = """You are the assistant inside a personal job-radar app. {name} is working through today's shortlist; the
+PROFILE section below says who they are and what they target. Be brief and plain; sentence case;
 no flattery. Use tools to act instead of describing what he could do. After acting, say in one line what you did.
 Finding postings comes first; tailoring a resume is on demand: tailor_posting to plan, then build_resume for the
 docx and its download link, then save_resume. Summarise a plan as the fit line plus the changed bullets, not the
@@ -50,7 +50,7 @@ TOOLS = [
     },
     {
         "name": "mark_applied",
-        "description": "Record that Rohan applied to a posting.",
+        "description": "Record that the owner applied to a posting.",
         "input_schema": {
             "type": "object",
             "properties": {"company": {"type": "string"}, "req_id": {"type": "string"}, "title": {"type": "string"}},
@@ -240,8 +240,11 @@ def message(session_id, text, context, hooks, max_turns=6):
     history.append({"role": "user", "content": text})
     memory = MEMORY.read_text(encoding="utf-8") if MEMORY.exists() else "(empty)"
     applied = hooks["applied_rows"]()
+    profile = Path("profile.md").read_text(encoding="utf-8") if Path("profile.md").exists() else "(no profile.md yet)"
     system = (
-        SYSTEM
+        SYSTEM.replace("{name}", owner.short_name())
+        + "\n\nPROFILE (profile.md):\n"
+        + profile[:3000]
         + "\n\nMEMORY (memory.md, durable notes; add with the remember tool):\n"
         + memory[-4000:]
         + "\n\nAPPLICATIONS (applications.md):\n"

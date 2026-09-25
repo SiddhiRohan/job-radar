@@ -12,15 +12,14 @@ from pathlib import Path
 
 from docx import Document
 
+from radar import owner
 from tailoring import letters, resumes, skills, tailor
 from tailoring import plan as planner
 
 sys.stdout.reconfigure(encoding="utf-8")
-OVERLAPS = [
-    "Kridha ran concurrently with StackNexus (part-time consulting alongside the full-time role).",
-    "The two AREC roles overlapped (research assistantship continued while the data engineering scope grew).",
-    "The two Adventaus roles overlapped (promoted from Data Engineer to Data Scientist on the same client).",
-]
+# One line per date overlap on the base resume, kept in the ignored Resume/ folder because it is personal.
+_OVERLAPS = Path("Resume/overlaps.txt")
+OVERLAPS = [x for x in _OVERLAPS.read_text(encoding="utf-8").splitlines() if x.strip()] if _OVERLAPS.exists() else []
 HEADLINE = re.compile(r"^(?:\*\*)?(Data Engineer|Data Scientist|ML Engineer|Machine Learning Engineer|AI Engineer)")
 
 
@@ -37,14 +36,14 @@ def assess(j):
     v, lines, skip = j.get("verdict") or {}, [], False
     if j.get("sponsorship") in ("no", "perm_ad"):
         skip = True
-        lines.append(f"SKIP: sponsorship={j['sponsorship']}: \"{j.get('sponsorship_evidence')}\"")
+        lines.append(f'SKIP: sponsorship={j["sponsorship"]}: "{j.get("sponsorship_evidence")}"')
     elif j.get("sponsorship") == "unlikely":
         lines.append("WARN: company default says no sponsorship; posting text is silent")
     if j.get("years_gate"):
         skip = True
         lines.append(f"SKIP: years gate, {j.get('years_required')}+ years required")
     if v.get("platform_tools_missing"):
-        lines.append("WARN: platform tools required that Rohan lacks: " + ", ".join(v["platform_tools_missing"]))
+        lines.append("WARN: platform tools required that the owner lacks: " + ", ".join(v["platform_tools_missing"]))
     if v.get("hard_requirements_missing"):
         lines.append("missing: " + "; ".join(v["hard_requirements_missing"]))
     lines.append(
@@ -122,7 +121,7 @@ def main():
     if not a.yes and input("\nBuild the docx with these changes? [y/N] ").strip().lower() != "y":
         sys.exit("not built")
 
-    out = folder / f"Resume - Siddhi Rohan ({plan['headline']}).docx"
+    out = folder / f"{owner.resume_stem()} ({plan['headline']}).docx"
     doc.save(out)
     notes = [f"# {j['title']} at {j['company']} ({j['req_id']})", "", j["url"], "", "## Fit assessment", ""]
     notes += [f"- {x}" for x in lines] + [
@@ -138,8 +137,8 @@ def main():
         notes += [f"### {where}", "", f"BEFORE: {before}", "", f"AFTER: {after}", ""]
     notes += ["## Hard to defend", ""] + ([f"- {x}" for x in plan["hard_to_defend"]] or ["- none"])
     notes += ["", "## JD skills outside skills_confirmed.md", ""] + ([f"- {s}" for s in skill_notes] or ["- none"])
-    notes += ["", "## Questions for Rohan (nothing below went into the resume)", ""]
-    notes += [f"- {q}" for q in plan["questions_for_rohan"]] or ["- none"]
+    notes += ["", "## Questions for the owner (nothing below went into the resume)", ""]
+    notes += [f"- {q}" for q in plan.get("questions_for_owner", plan.get("questions_for_rohan", []))] or ["- none"]
     notes += ["", "## Date overlap explanations", ""] + [f"- {o}" for o in OVERLAPS]
     v = j.get("verdict") or {}
     if a.cover or v.get("cover_letter_required"):
@@ -155,7 +154,7 @@ def main():
             encoding="utf-8",
         )
     (folder / "notes.md").write_text("\n".join(notes) + "\n", encoding="utf-8")
-    print(f"\nbuilt {out}\nnotes: {folder / 'notes.md'}\nnext: python finalize.py \"{folder}\"")
+    print(f'\nbuilt {out}\nnotes: {folder / "notes.md"}\nnext: python finalize.py "{folder}"')
 
 
 if __name__ == "__main__":

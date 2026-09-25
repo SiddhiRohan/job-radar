@@ -5,12 +5,14 @@ import re
 import zipfile
 from pathlib import Path
 
+from radar import owner
+
 ROOT = Path("Resume")
-ENTRY_BASE = ROOT / "Entry" / "1 Page" / "Resume - Siddhi Rohan.docx"
+BASE_NAME = owner.resume_filename()  # e.g. "Resume - Jane Public.docx", set in .env
+ENTRY_BASE = ROOT / "Entry" / "1 Page" / BASE_NAME
 EXPERIENCED_DIR = ROOT / "Experienced" / "V1"
-EXPERIENCED_BASE = EXPERIENCED_DIR / "DS and DE Resumes" / "2 Page" / "Resume - Siddhi Rohan.docx"
+EXPERIENCED_BASE = EXPERIENCED_DIR / "DS and DE Resumes" / "2 Page" / BASE_NAME
 VARIANT_DIRS = {"one-page": "1 Page", "two-page": "2 Page"}
-BASE_NAME = "Resume - Siddhi Rohan.docx"
 
 
 def docx_text(path):

@@ -108,11 +108,11 @@ def test_real_rejection_wordings(body):
     assert mailmatch.classify(body) == ("rejected", True)
 
 
-# Real rejection wordings the second version missed (NVIDIA JR2024968 and four others, 2026-09-25).
+# Real rejection wordings the second version missed (five real rejections, 2026-09-25).
 @pytest.mark.parametrize(
     "body",
     [
-        "We have reviewed your application and have decided not to move forward for the JR2024968 role at this time.",
+        "We have reviewed your application and have decided not to move forward for the R0000001 role at this time.",
         "Unfortunately, as visa sponsorship is not available for this position, we won't be able to move forward.",
         "Unfortunately, we regret to share that we aren't moving forward with your application.",
         "While your experience is impressive, unfortunately, it does not align as closely with what our team is seeking.",

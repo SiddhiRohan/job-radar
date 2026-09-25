@@ -1,4 +1,4 @@
-"""applications.md: the table of postings Rohan applied to. Read and written by the web app and the mail step."""
+"""applications.md: the table of postings the owner applied to. Read and written by the web app and the mail step."""
 
 from pathlib import Path
 

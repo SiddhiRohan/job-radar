@@ -5,13 +5,14 @@ from pathlib import Path
 
 from docx import Document
 
+from radar import owner
 from tailoring import tailor
 
 # fmt: off
 STOP = {"University", "Maryland", "College", "Park", "Washington", "India", "Bengaluru", "Hyderabad", "United", "States",
         "America", "Relocation", "Open", "Data", "Engineer", "Scientist", "Present", "Aug", "Dec", "May", "June", "July",
         "Jan", "Feb", "Mar", "Apr", "Sep", "Oct", "Nov", "Master", "Science", "GPA", "Coursework", "Portfolio", "GitHub",
-        "Siddhi", "Rohan", "Chakka", "Adventaus", "Technologies", "Pvt", "Ltd", "StackNexus", "ENST", "AREC", "UMD", "USDA",
+        "Technologies", "Pvt", "Ltd",
         "Hebrew", "Pedon", "English", "Have", "Built", "Owned", "Designed", "Developed", "Delivered", "Led", "Scoped",
         "Modeled", "Mined", "Drove", "Scaled", "Shipped", "Launched", "Partnered", "Structured", "Served", "Set", "Defined",
         "Reframed", "Established", "Productionized", "Instrumented", "Overhauled", "Automated", "Translated", "Quantified",
@@ -20,6 +21,7 @@ STOP = {"University", "Maryland", "College", "Park", "Washington", "India", "Ben
         "Sound", "Processing", "Synthesis", "Projects", "Morpheus", "Arbiter", "MedPal", "Professional", "Summary", "Work",
         "Experience", "Skills", "Education", "The", "This", "Own", "Deliver", "Repeatedly", "Comfortable", "Applied"}
 # fmt: on
+STOP |= owner.skills_stopwords()  # the owner's name, employers and schools, from .env
 
 
 def terms_from_doc(path):
