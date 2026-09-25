@@ -103,3 +103,13 @@ def test_fetch_is_read_only_and_skips_seen_and_own_mail(monkeypatch):
     assert ("select", mail.FOLDER, True) in fake.calls
     fetches = [c[2] for c in fake.calls if c[0] == "FETCH"]
     assert fetches and all("PEEK" in f for f in fetches)
+
+
+def test_app_password_is_used_without_display_spaces(tmp_path, monkeypatch):
+    setup(tmp_path, monkeypatch)
+    values = {"GMAIL_ADDRESS": "me@gmail.com", "GMAIL_APP_PASSWORD": "abcd efgh ijkl mnop"}
+    monkeypatch.setattr(mail, "env", values.get)
+    used = {}
+    monkeypatch.setattr(mail, "fetch", lambda address, password, since, seen: used.update(password=password) or [])
+    assert mail.sync()["configured"] is True
+    assert used["password"] == "abcdefghijklmnop"

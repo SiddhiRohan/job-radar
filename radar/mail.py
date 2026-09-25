@@ -98,7 +98,8 @@ def sync(messages=None):
     """Apply every new message. messages defaults to a live IMAP fetch; tests pass a list instead."""
     state, apps = load(), applications.rows()
     if messages is None:
-        address, password = env("GMAIL_ADDRESS"), env("GMAIL_APP_PASSWORD")
+        # Google shows app passwords as four groups of four; the spaces are display only.
+        address, password = env("GMAIL_ADDRESS"), (env("GMAIL_APP_PASSWORD") or "").replace(" ", "")
         if not (address and password):
             return {"configured": False, "updated": 0, "review": 0}
         first = min((a["date"][:10] for a in apps), default=datetime.now().strftime("%Y-%m-%d"))
