@@ -109,6 +109,8 @@ Nothing is sent, moved or deleted.
 
 4. Press **Check mail** on Applied, or wait for the next `python run.py`.
 
+The password works with or without the spaces Google shows between its four groups.
+
 Revoke the app password on the same Google page at any time; the step then turns itself off.
 
 **What it does with an email.** Only messages since the first application are read, and your own sent mail is
