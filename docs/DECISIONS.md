@@ -177,3 +177,12 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     confirmation must not undo an interview; a person settling a review item can move a status any way.
 41. **Rejection wording is checked first.** Rejections usually also say "thank you for applying", and phone screens
     mention interviews, so the rules run rejected, offer, screen, interview, applied.
+42. **The first real mail run was wrong, and the rules were recalibrated on it.** It moved 14 statuses; 8 were false
+    interviews, because confirmation emails say things like "you will be contacted if you're selected for an
+    interview" and the rule matched the bare word. All 14 were undone from a backup taken just before the run. Against
+    the 179 hiring emails from that run, read once into a temporary file and deleted after: interview and screen now
+    need invitation wording, phrases after "if", "may", "might" or "should" are ignored, curly apostrophes read as
+    straight, and two missed rejection wordings were added. Result on the same emails: 6 rejections applied
+    automatically, 14 rejections without an id to review, no false interviews. Plain confirmations no longer go to
+    review, a deliberate change from Rohan's first rule: they cannot move a status and filled the list with 35
+    items. Paraphrases of the misread boilerplate are now regression tests.

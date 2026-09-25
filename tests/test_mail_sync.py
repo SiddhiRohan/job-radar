@@ -43,7 +43,7 @@ def test_review_then_resolve_or_dismiss(tmp_path, monkeypatch):
     mail.sync(
         [
             msg("<c@x>", "Capital One update", "We regret to inform you."),
-            msg("<d@x>", "Capital One news", "Thank you for your interest."),
+            msg("<d@x>", "Capital One news", "The position has been filled."),
         ]
     )
     assert [r["message_id"] for r in mail.load()["review"]] == ["<c@x>", "<d@x>"]

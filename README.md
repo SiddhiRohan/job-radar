@@ -36,8 +36,8 @@ are opinionated because of that, and every one of them lives in `config.json`.
 - **Tailors without inventing.** On request it rewrites a resume for one posting. Any skill outside the
   base resume and a confirmed skills list is turned into a question instead of added.
 - **Reads replies for you.** With a Gmail app password it checks your inbox, read-only, and moves an application
-  to screen, interview, rejected or offer when an email carries its requisition id. Emails without one wait in a
-  needs-review list for you to settle.
+  to screen, interview, rejected or offer when an email carries its requisition id and says so plainly. Replies
+  without one wait in a needs-review list for you to settle; plain confirmations are skipped.
 - **Stays on your machine.** Resumes, applications and chat history are local files, ignored by git.
 
 ## How it works

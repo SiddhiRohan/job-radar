@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+**Email rules recalibrated.** Interview and screen need invitation wording; conditional phrases ("if you are selected
+for an interview") are ignored; plain confirmations and account mail are skipped instead of sent to review.
+
 **Statuses from hiring emails.** `radar/mail.py` reads Gmail over IMAP, read-only, with an app password from `.env`.
 An email carrying the requisition id of exactly one application, with clear wording, moves that application forward
 on its own; anything else that looks like hiring mail lands in a needs-review list on Applied, with likely

@@ -1,4 +1,7 @@
-"""Hiring-email rules: automatic only with exactly one matching req id and clear wording; the rest goes to review."""
+"""Hiring-email rules: automatic only with exactly one matching req id and clear wording; other emails that could
+change a status go to review; confirmations and account mail are ignored."""
+
+import pytest
 
 from radar import mailmatch
 
@@ -15,7 +18,7 @@ def mail(subject, body, sender="Capital One <capitalone@myworkday.com>"):
     return {"sender": sender, "subject": subject, "body": body}
 
 
-def test_confirmation_with_req_id_updates():
+def test_confirmation_with_req_id_updates_to_applied():
     d = mailmatch.decide(mail("Thank you for applying", "We received your application for R1001740."), APPS)
     assert d["action"] == "update" and d["req_id"] == "R1001740" and d["status"] == "applied"
 
@@ -25,14 +28,17 @@ def test_rejection_wins_over_thank_you():
     assert mailmatch.decide(mail("Your application", body), APPS)["status"] == "rejected"
 
 
-def test_phone_screen_is_screen_and_interview_is_interview():
-    assert (
-        mailmatch.decide(mail("Next steps", "Let us set up a phone screen for R1001740."), APPS)["status"] == "screen"
-    )
-    assert (
-        mailmatch.decide(mail("Invitation", "We would like to interview you for R1001740."), APPS)["status"]
-        == "interview"
-    )
+def test_invitations_to_screen_and_interview():
+    d = mailmatch.decide(mail("Next steps", "Please schedule a phone screen for R1001740."), APPS)
+    assert d["action"] == "update" and d["status"] == "screen"
+    d = mailmatch.decide(mail("Invitation", "We would like to invite you to interview for R1001740."), APPS)
+    assert d["action"] == "update" and d["status"] == "interview"
+
+
+def test_invitation_inside_a_confirmation_goes_to_review():
+    body = "Thank you for applying to R1001740. We would like to invite you to interview next week."
+    d = mailmatch.decide(mail("Next steps", body), APPS)
+    assert d["action"] == "review" and d["status"] == "interview" and d["req_id"] == "R1001740"
 
 
 def test_req_id_without_hyphen_still_matches():
@@ -41,11 +47,11 @@ def test_req_id_without_hyphen_still_matches():
 
 
 def test_longer_number_is_not_a_match():
-    d = mailmatch.decide(mail("Thank you for applying", "Reference R10017401 for your records."), APPS)
-    assert d["action"] == "review" and d["req_id"] is None  # hiring mail from Capital One, but no matching id
+    d = mailmatch.decide(mail("Update", "We regret to inform you. Reference R10017401."), APPS)
+    assert d["action"] == "review" and d["req_id"] is None  # a Capital One rejection, but no matching id
 
 
-def test_no_req_id_goes_to_review_with_a_guess():
+def test_rejection_without_req_id_goes_to_review_with_a_guess():
     d = mailmatch.decide(
         mail("Your Capital One application", "We regret to inform you the position has been filled."), APPS
     )
@@ -53,25 +59,50 @@ def test_no_req_id_goes_to_review_with_a_guess():
     assert (d["company"], d["req_id"]) == ("Capital One", "R1001740")
 
 
-def test_two_applications_at_one_company_leave_the_choice_to_rohan():
+def test_two_applications_at_one_company_list_both_first():
     body = "We have decided to move forward with other candidates."
     d = mailmatch.decide(mail("Walmart update", body, "Walmart <walmart@myworkday.com>"), APPS)
     assert d["action"] == "review" and d["company"] is None
-    assert {c["req_id"] for c in d["candidates"]} == {"R-2331482", "R-2023715"}  # listed first in the menu
-
-
-def test_req_id_with_unclear_wording_goes_to_review():
-    d = mailmatch.decide(mail("Update on R1001740", "Please see the attached document."), APPS)
-    assert d["action"] == "review" and d["req_id"] == "R1001740" and d["status"] is None
+    assert {c["req_id"] for c in d["candidates"]} == {"R-2331482", "R-2023715"}
 
 
 def test_two_req_ids_go_to_review():
-    d = mailmatch.decide(mail("Thank you for applying", "Roles R-2331482 and R-2023715 received."), APPS)
+    d = mailmatch.decide(mail("Update", "For R-2331482 and R-2023715 we regret to inform you."), APPS)
     assert d["action"] == "review" and "2 req ids" in d["reason"]
 
 
-def test_newsletters_and_short_ids_are_ignored():
+def test_mail_that_cannot_change_a_status_is_ignored():
+    assert mailmatch.decide(mail("Update on R1001740", "Please see the attached document."), APPS) is None
+    assert mailmatch.decide(mail("Verify your candidate account", "Code for R1001740: 482913"), APPS) is None
+    assert mailmatch.decide(mail("Thank you for applying!", "We received your application."), APPS) is None
     assert mailmatch.decide(mail("Weekly deals", "Save 20% this week", "Store <deals@shop.com>"), APPS) is None
-    assert (
-        mailmatch.decide(mail("Order 1234 shipped", "Thank you for your interest", "Shop <x@shop.com>"), APPS) is None
-    )
+
+
+# Paraphrases of boilerplate from real confirmation emails that the first version misread (2026-09-25).
+@pytest.mark.parametrize(
+    "body",
+    [
+        "Thank you for applying. You will be contacted if you're selected for an interview.",
+        "We received your application. If you are selected to move forward in the interview process, we will reach out.",
+        "Application received. You'll find resources like interview tips while you wait.",
+        "Thank you for your interest. We will contact you to arrange an interview if the role is a good match.",
+        "Thanks for applying. Based on your skills, you may receive an invitation to take a coding assessment.",
+        "Thank you for your application. If you are not selected for this position, keep an eye on our jobs page.",
+        "We received your application. Let us know if you need adjustments when applying and interviewing.",
+    ],
+)
+def test_confirmation_boilerplate_is_not_a_status_change(body):
+    d = mailmatch.decide(mail("Thank you for applying", f"{body} Req R1001740."), APPS)
+    assert d["action"] == "update" and d["status"] == "applied"  # forward-only, so this changes nothing
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "We are unable to move you forward to the next step in the recruiting process.",
+        "Unfortunately, we can’t move forward with your application.",
+        "This is to notify you that you were not selected to proceed to the next stage.",
+    ],
+)
+def test_real_rejection_wordings(body):
+    assert mailmatch.classify(body) == ("rejected", True)
