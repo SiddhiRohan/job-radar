@@ -287,17 +287,13 @@ $("#urlform").addEventListener("submit", e => { e.preventDefault(); startTailor(
 /* ---------- Applied ---------- */
 async function loadApplied() {
   const body = $("#applied-body");
-  const sk = body.querySelector("table") ? 0 : laterSkeleton(body, 3);
+  const sk = body.childElementCount ? 0 : laterSkeleton(body, 3);
   try {
     const rows = await api("/api/applied");
     clearTimeout(sk); body.removeAttribute("aria-busy");
     if (!rows.length) { body.replaceChildren(emptyState("Nothing marked applied yet", "Use Mark applied on Today or in Tailor, and it shows up here with a status you can update.",
       el("a", { href: "#today", class: "btnlink" }, "Go to Today"))); return; }
-    const tr = r => el("tr", {}, el("td", {}, r.date), el("td", {}, r.company), el("td", {}, r.title),
-      el("td", {}, el("select", { onchange: async e => { await api("/api/applied/status", { req_id: r.req_id, company: r.company, status: e.target.value }); toast(`Set ${r.company} to ${e.target.value}`); } },
-        ...["applied", "screen", "interview", "rejected", "offer"].map(s => el("option", { value: s, selected: s === r.status ? "" : null }, s)))),
-      el("td", {}, r.folder ? el("button", { type: "button", class: "quiet", onclick: () => api("/api/open", { path: r.folder }).catch(e => toast(e.message)) }, r.folder) : ""));
-    body.replaceChildren(el("table", {}, el("thead", {}, el("tr", {}, ...["Date", "Company", "Title", "Status", "Folder"].map(h => el("th", {}, h)))), el("tbody", {}, ...rows.map(tr))));
+    renderApplied(rows);  /* web/applied.js */
   } catch (e) { clearTimeout(sk); body.removeAttribute("aria-busy"); fail(body, e, loadApplied); }
 }
 
