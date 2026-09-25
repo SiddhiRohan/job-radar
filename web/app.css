@@ -231,4 +231,8 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .mailacts select { max-width: 100%; min-width: 0; } .mailacts .mailpick { flex: 1 1 260px; width: 0; }
 .mailitem { min-width: 0; }
 .mailevents { margin: 0; padding-left: 18px; font-size: var(--fs-sm); color: var(--ink-2); } .mailevents li { margin: 2px 0; }
+.prow { display: grid; grid-template-columns: minmax(150px, 34%) 1fr 64px 56px; align-items: center; gap: 10px; }
+.prow .pl { display: flex; flex-direction: column; line-height: 1.2; } .prow .pd { color: var(--ink-3); font-size: var(--fs-xs); }
+.prow .pv, .prow .pr { font-size: var(--fs-sm); text-align: right; font-variant-numeric: tabular-nums; } .prow .pr { color: var(--ink-2); }
+.prow.hot .pr { color: var(--danger); font-weight: 600; }
 @media (max-width: 760px) { .vgrid { grid-template-columns: 1fr; } }

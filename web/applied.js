@@ -117,5 +117,5 @@ function renderApplied(rows = A.rows) {
   A.rows = rows;
   const body = $("#applied-body"), open = body.querySelector("details.tableview")?.open;
   const t = table(rows); if (open) t.open = true;
-  body.replaceChildren(tiles(rows), mailCard(rows), el("div", { class: "vgrid" }, perDay(rows), stages(rows), companies(rows), board(rows)), t);  /* mailCard: web/mail.js */
+  body.replaceChildren(tiles(rows), mailCard(rows), el("div", { class: "vgrid" }, perDay(rows), stages(rows), companies(rows), patternsCard(), board(rows)), t);  /* mailCard: web/mail.js, patternsCard: web/insights.js */
 }
