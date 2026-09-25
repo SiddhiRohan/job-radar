@@ -27,6 +27,7 @@ def main():
     step("radar.digest", [])
     step("radar.prepare", [])  # plans the Apply rows so Tailor opens instantly; failures do not block
     step("radar.mail", [])  # reads hiring emails and moves application statuses; off until Gmail is set up
+    step("radar.watch", [])  # re-reads the posting behind every open application: closed, retitled, repriced
 
 
 if __name__ == "__main__":

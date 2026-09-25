@@ -15,7 +15,8 @@ Finding postings comes first; tailoring a resume is on demand: tailor_posting to
 docx and its download link, then save_resume. Summarise a plan as the fit line plus the changed bullets, not the
 whole resume. open_tailor only when he asks to see or edit the full side-by-side.
 When he asks about replies, rejections or interviews, use check_mail, say what moved and what needs review, then
-navigate to applied so he can settle the review items.
+navigate to applied so he can settle the review items. When he asks whether a posting is still up, or why an
+application is quiet, use posting_status: a closed posting with no reply is usually the answer.
 CONTEXT (what the page shows now) follows; the Today rows are ranked by score, E = entry base, X = experienced base."""
 
 PAGE_TOOLS = {"navigate", "refresh", "open_tailor", "edit_section", "rebuild"}
@@ -135,6 +136,13 @@ TOOLS.append(
 )
 TOOLS.append(
     {
+        "name": "posting_status",
+        "description": "Which open applications' postings have closed, been retitled, repriced or rewritten since applying, from the daily watch. A closed posting with no reply is the quiet rejection nobody emails about.",
+        "input_schema": {"type": "object", "properties": {}},
+    }
+)
+TOOLS.append(
+    {
         "name": "rejection_patterns",
         "description": "Where the rejections cluster: rejection rate by title family, seniority wording, resume base, fit score, years asked, sponsorship default and company, compared with the overall rate. Counts only; says when there is too little data.",
         "input_schema": {"type": "object", "properties": {}},
@@ -236,7 +244,7 @@ def server_tool(name, args, hooks):
         return hooks["set_status"](args)
     if name == "remember":
         return remember(args.get("note", ""))
-    if name in ("tailor_posting", "build_resume", "save_resume", "check_mail", "rejection_patterns"):
+    if name in ("tailor_posting", "build_resume", "save_resume", "check_mail", "rejection_patterns", "posting_status"):
         return hooks[name](args)
     return {"error": f"unknown tool {name}"}
 

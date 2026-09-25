@@ -134,6 +134,15 @@ change nothing.
 Each update and review item links to the email in Gmail. Seen message ids, recent updates and the review list are
 kept in `.cache/ui/mail.json`, with a short snippet of each email; the full text is never stored.
 
+## Postings since you applied
+
+Once a day, after the email step, `radar/watch.py` re-reads the posting behind every application that is not
+already rejected or at offer, one request per posting at the usual 1.5 second gap. It records, with the date first
+seen, whether the posting closed (Workday answers "permission denied" for a posting that was taken down), was
+retitled, changed its pay range, or had its description rewritten. The Applied page shows closed postings with the
+days since you applied, and changed ones with what changed; "Check postings" runs it now. State lives in
+`.cache/ui/watch.json`. Nothing here changes a status: a closed posting is a hint, not a rejection.
+
 ## Fixed in code
 
 These rules are not settings. Changing them means changing the code, with a test.
