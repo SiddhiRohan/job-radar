@@ -18,6 +18,11 @@ name the next step. A radar mark in the header and empty states, and an SVG favi
 **README.** Rewritten with a banner, screenshots in light and dark, a pipeline diagram, a quickstart and a
 configuration table. Screenshots are taken from a demo copy with neutral fit notes and made-up applications.
 
+**Applied as a dashboard.** The Applied view shows headline tiles (applications, last 7 days, companies, heard
+back), applications per day for the last 14 days, where applications stand, the companies applied to most, and a
+board where changing a status moves the card. Plain SVG and CSS in `web/applied.js`, chart color checked with the
+dataviz palette validator in both modes. The full table stays one click away.
+
 ## v0.3 (2026-09-20)
 
 **Outreach in Tailor.** Write outreach builds a note and a message from the visible resume sections, both editable
