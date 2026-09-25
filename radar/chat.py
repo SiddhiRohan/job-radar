@@ -135,6 +135,13 @@ TOOLS.append(
 )
 TOOLS.append(
     {
+        "name": "rejection_patterns",
+        "description": "Where the rejections cluster: rejection rate by title family, seniority wording, resume base, fit score, years asked, sponsorship default and company, compared with the overall rate. Counts only; says when there is too little data.",
+        "input_schema": {"type": "object", "properties": {}},
+    }
+)
+TOOLS.append(
+    {
         "name": "check_mail",
         "description": "Read new hiring emails now (Gmail, read-only). An email carrying one application's req id and clear wording moves that status forward; other replies that could change a status go to the needs-review list on the Applied view. Returns how many moved, what needs review, or that Gmail is not set up. Takes a minute or two.",
         "input_schema": {"type": "object", "properties": {}},
@@ -229,7 +236,7 @@ def server_tool(name, args, hooks):
         return hooks["set_status"](args)
     if name == "remember":
         return remember(args.get("note", ""))
-    if name in ("tailor_posting", "build_resume", "save_resume", "check_mail"):
+    if name in ("tailor_posting", "build_resume", "save_resume", "check_mail", "rejection_patterns"):
         return hooks[name](args)
     return {"error": f"unknown tool {name}"}
 

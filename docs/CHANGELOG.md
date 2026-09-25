@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**What the rejections say.** `radar/patterns.py` joins applications with the stored postings and shows where
+rejections cluster (title family, seniority wording, resume base, fit score, years asked, sponsorship default,
+company) against the overall rate. Counts only, with a three-rejection floor. A card on Applied and a chat tool.
+
 **Brand.** A 3D logo (Higgsfield, GPT Image 2.5), a six-second ident video (Seedance 2.5), PNG favicons and a
 social preview card. The header and README use the logo; the README opens with the ident loop.
 
