@@ -16,7 +16,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from radar import applications, chat, digest, mail, owner, poll, prepare, salary, score, wd
+from radar import applications, chat, digest, mail, owner, patterns, poll, prepare, salary, score, wd
 from tailoring import apply as applier
 from tailoring import finalize, letters, resumes, skills, tailor
 
@@ -157,6 +157,12 @@ def set_status(body: dict):
                 r["folder"] = body["folder"]
     write_applied(rows)
     return {"ok": True}
+
+
+@app.get("/api/patterns")
+def rejection_patterns():
+    """Where the rejections cluster, from applications.md joined with the stored postings."""
+    return patterns.analyse()
 
 
 @app.get("/api/mail")
@@ -445,6 +451,7 @@ def chat_message(body: dict):
         "build_resume": build_for,
         "save_resume": save_for,
         "check_mail": check_mail_for,
+        "rejection_patterns": lambda args: {"lines": patterns.summary(patterns.analyse())},
     }
     return background(chat.message, body.get("session", "default"), body["text"], body.get("context", {}), hooks)
 
