@@ -132,7 +132,10 @@ def write_applied(rows):
 
 @app.get("/api/applied")
 def applied():
-    return sorted(applied_rows(), key=lambda r: r["date"], reverse=True)
+    """Applications, newest first, each with its posting URL from jobs.jsonl so the page can link it."""
+    urls = {f"{j['company']}|{j['req_id']}": j.get("url") for j in jobs_all()}
+    rows = [dict(r, url=urls.get(f"{r['company']}|{r['req_id']}")) for r in applied_rows()]
+    return sorted(rows, key=lambda r: r["date"], reverse=True)
 
 
 @app.post("/api/applied")

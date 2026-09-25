@@ -55,6 +55,10 @@ const variant = r => r.recommended_resume ? `${r.recommended_resume}${r.recommen
 const pay = r => r.salary
   ? el("span", { class: "pay", title: r.salary.multiple ? "Varies by location: lowest to highest range in the posting" : "Pay range stated in the posting" }, r.salary.text)
   : el("span", { class: "pay none", title: "The posting does not state a pay range" }, "Pay not listed");
+/* A job title links to its posting whenever the URL is known; opens in a new tab. */
+const postingTitle = (title, url) => url
+  ? el("a", { class: "title", href: url, target: "_blank", rel: "noopener", title: "Open the posting" }, title)
+  : el("span", { class: "title" }, title);
 const tag = r => el("span", { class: `tag ${r.sponsorship || "unknown"}`, title: r.evidence || "no phrase found in the posting" }, r.sponsorship || "unknown");
 function rowEl(r) {
   const done = r.applied;
@@ -71,7 +75,7 @@ function rowEl(r) {
   const row = el("article", { class: "row" + (done ? " done" : "") },
     el("div", { class: "score", "data-s": String(best(r)), "aria-label": `best score ${best(r) || "none"}` }, String(best(r) || "–")),
     el("div", {},
-      el("div", { class: "head" }, el("span", { class: "company" }, r.company), el("span", { class: "title" }, r.title),
+      el("div", { class: "head" }, el("span", { class: "company" }, r.company), postingTitle(r.title, r.url),
         el("span", { class: "meta" }, r.location), el("span", { class: "meta" }, r.posted_on)),
       el("div", { class: "sub" }, scorePair(r), pay(r), el("span", {}, variant(r)), tag(r),
         el("a", { href: r.url, target: "_blank", rel: "noopener" }, "Open posting"),
@@ -264,7 +268,7 @@ function renderTailor(st) {
       S.cover = r.text; coverBox.replaceChildren(el("h3", {}, "Cover letter"), el("textarea", {}, r.text)); toast("Wrote cover letter; edit it, then rebuild");
     } catch (e) { toast(e.message); } finally { coverBtn.disabled = false; }
   } }, j.cover ? "Write cover letter (required)" : "Write cover letter");
-  body.replaceChildren(el("p", { class: "head" }, el("span", { class: "company" }, j.company), " ", el("span", { class: "title" }, j.title), " ", el("span", { class: "meta" }, j.req_id), " ",
+  body.replaceChildren(el("p", { class: "head" }, el("span", { class: "company" }, j.company), " ", postingTitle(j.title, j.url), " ", el("span", { class: "meta" }, j.req_id), " ",
     el("a", { href: j.url, target: "_blank", rel: "noopener" }, "Open posting")), v, jd, ...secs, gen, coverBox, outreachBox,
     el("div", { class: "actions" }, rebuild, save, dest, browse, applied, coverBtn, outreachBtn,
       el("button", { type: "button", class: "quiet", onclick: () => startTailor({ company: j.company, req_id: j.req_id, fresh: true }) }, "Re-plan")), files);
