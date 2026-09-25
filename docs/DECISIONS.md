@@ -199,3 +199,15 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     not selected", "if the position is filled"). Review guesses now come from the sender and subject before the body,
     because every Workday email names Workday in its footer. Lesson: restart the server as part of merging a rule
     change, and calibrate against the emails themselves, not against the previous rules.
+
+## 2026-09-25: public for an afternoon, then brand
+
+44. **Personal details never in tracked files.** The owner made the repo public for a few hours. Old commits carry
+    `jobs.jsonl`, `skills_confirmed.md` and early run data; the docs named the owner, their visa status and specific
+    applications. The repo is private again. Per the owner's wish the history is untouched, and the current tree is
+    scrubbed: name, resume file name, personal stopwords and overlap notes live in `.env` and the ignored `Resume/`
+    folder (`radar/owner.py`). If the repo ever goes public again, it should be a fresh repo with no history.
+45. **Brand.** Three logo concepts were generated with Higgsfield; the frosted teal disc (concept A) was chosen
+    because it reads at 16 pixels and matches the existing mark. The ident video is a 6 s Seedance render from the
+    logo; the README shows it as an 800 px animated WebP because GitHub does not play repo-hosted mp4 files.
+    `docs/img/social-preview.png` is for the repository's social preview setting, which only the web UI can set.

@@ -48,7 +48,7 @@ input, select, textarea { font: inherit; color: inherit; background: var(--surfa
 .top { max-width: 1100px; margin: 0 auto; padding: 18px 28px 6px; display: flex; align-items: baseline; gap: 28px; }
 .brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink);
   font-weight: 600; font-size: var(--fs-md); letter-spacing: -0.01em; align-self: center; }
-.brand svg { color: var(--accent); flex: none; }
+.brand img { flex: none; filter: drop-shadow(0 1px 1px rgb(0 0 0 / .15)); }
 .nav a { margin-right: 18px; text-decoration: none; color: var(--ash); font-weight: 500; }
 .nav a.on { color: var(--ink); border-bottom: 2px solid var(--ink); padding-bottom: 2px; }
 .datectl { margin-left: auto; display: flex; gap: 6px; align-items: center; }
