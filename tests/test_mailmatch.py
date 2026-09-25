@@ -48,7 +48,7 @@ def test_req_id_without_hyphen_still_matches():
 
 def test_longer_number_is_not_a_match():
     d = mailmatch.decide(mail("Update", "We regret to inform you. Reference R10017401."), APPS)
-    assert d["action"] == "review" and d["req_id"] is None  # a Capital One rejection, but no matching id
+    assert d["action"] == "review" and d["reason"] == "no req id"  # a guess to confirm, never an automatic update
 
 
 def test_rejection_without_req_id_goes_to_review_with_a_guess():
@@ -106,3 +106,26 @@ def test_confirmation_boilerplate_is_not_a_status_change(body):
 )
 def test_real_rejection_wordings(body):
     assert mailmatch.classify(body) == ("rejected", True)
+
+
+# Real rejection wordings the second version missed (NVIDIA JR2024968 and four others, 2026-09-25).
+@pytest.mark.parametrize(
+    "body",
+    [
+        "We have reviewed your application and have decided not to move forward for the JR2024968 role at this time.",
+        "Unfortunately, as visa sponsorship is not available for this position, we won't be able to move forward.",
+        "Unfortunately, we regret to share that we aren't moving forward with your application.",
+        "While your experience is impressive, unfortunately, it does not align as closely with what our team is seeking.",
+        "At this time we are pursuing other applicants.",
+        "We will not be moving you forward in the process for this position.",
+    ],
+)
+def test_more_rejection_wordings(body):
+    assert mailmatch.classify(body) == ("rejected", True)
+
+
+def test_review_guess_prefers_sender_and_subject_over_footer():
+    apps = APPS + [{"company": "Workday", "req_id": "JR-0109848", "title": "Data Engineer"}]
+    body = "We regret to inform you that we will not be proceeding. Powered by Workday."
+    d = mailmatch.decide(mail("Capital One job application: update", body, "Capital One <c@myworkday.com>"), apps)
+    assert d["action"] == "review" and d["company"] == "Capital One"
