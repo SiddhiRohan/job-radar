@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+**Brand.** A 3D logo (Higgsfield, GPT Image 2.5), a six-second ident video (Seedance 2.5), PNG favicons and a
+social preview card. The header and README use the logo; the README opens with the ident loop.
+
 **Personal details out of the code and docs.** Name, resume file name and personal stopwords move to `.env`
 (`radar/owner.py`); the resume folder map and date-overlap notes move to the ignored `Resume/` folder; docs speak
 of the owner.

@@ -1,6 +1,8 @@
-<p align="center"><img src="docs/img/banner.webp" alt="" width="100%"></p>
+<p align="center"><img src="docs/img/logo.png" alt="Job radar logo: a teal radar disc with a mint sweep and one blip" width="160"></p>
 
-# Job radar
+<h1 align="center">Job radar</h1>
+
+<p align="center"><img src="docs/img/ident.webp" alt="The Job radar mark, its sweep turning and a blip appearing" width="720"></p>
 
 A morning shortlist of data and ML jobs, pulled straight from company career sites and filtered for
 H-1B sponsorship one posting at a time.
