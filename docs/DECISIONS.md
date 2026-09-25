@@ -22,7 +22,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 6. **Empty role subfolder (AI Engineer).** Creating a true one-page variant from a two-page base needs page
    fitting I cannot measure without rendering. I copy the `DS and DE Resumes` variant of the same length and
    rotate the headline, then tailor. The result should be checked visually once.
-7. **Approval gate while unattended.** Rohan asked to skip the terminal approval this round. `apply.py --yes`
+7. **Approval gate while unattended.** The owner asked to skip the terminal approval this round. `apply.py --yes`
    writes the before/after list into `notes.md` and builds the docx anyway.
 8. **Part D tools.** The remove-ai-marks service was not running and neither `exiftool` nor `qpdf` is installed.
    `finalize.py` uses the local fallback: invisible-Unicode strip plus core/app property clearing for .docx.
@@ -48,7 +48,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 
 ## 2026-09-14 and 2026-09-15
 
-13. **Do not stack PRs.** PR #11 was based on the folders branch (#10). Rohan merged #10 first, then #11 merged into
+13. **Do not stack PRs.** PR #11 was based on the folders branch (#10). The owner merged #10 first, then #11 merged into
     the already-merged branch and never reached main; the commit had to be re-opened as #12. From now on every PR
     is based on main; if a change depends on another PR, wait for it to merge.
 14. **Prepare is off by default.** Planning every Apply row after the morning run cost about a minute per row for
@@ -97,7 +97,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     spent before entry rows were reached. Order is now entry wording or two years and under, then newest.
 27. **include_override never rescues director, VP, manager, principal, or intern titles.** "associate" as an
     override had kept Associate Director and Associate Vice President, and "early career" kept an internship.
-28. **Overlapping runs are allowed; duplicates are not.** Rohan prefers a second run to proceed rather than be
+28. **Overlapping runs are allowed; duplicates are not.** The owner prefers a second run to proceed rather than be
     refused. `radar/store.py` re-reads the file under a short write lock, appends only keys not on disk, and the
     scorer merges instead of overwriting, so two runs at once store each posting once and lose nothing. On
     2026-09-17 the scheduled run and a UI run both appended the same 176 rows; they were removed (977 to 801,
@@ -108,7 +108,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 29. **Entry-level roles get their own section.** The entry terms added on 2026-09-17 do source junior roles (12 on
     2026-09-18, 8 on 2026-09-19), but the scorer rarely gives them a 4: it marks them down for being a narrow or
     generic fit, which is fair for a senior role and wrong for a new-grad one. With an Apply bar of 4 they all
-    landed in the collapsed tail, so Rohan saw none of them. `sections()` now returns an `entry` bucket for
+    landed in the collapsed tail, so the owner saw none of them. `sections()` now returns an `entry` bucket for
     entry-titled postings scoring 3 or better, shown under Apply in the digest and the UI. The Apply bar is
     unchanged; score 2 and below stay in the tail, where the 2027 start dates and hardware roles belong.
 30. **The digest selects a day's postings by date, not by the run timestamp.** A second run on the same day writes
@@ -159,7 +159,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 
 ## 2026-09-24: README
 
-38. **README screenshots use demo data.** The real Today view carries notes about Rohan's own projects and the
+38. **README screenshots use demo data.** The real Today view carries notes about the owner's own projects and the
     Applied view shows where he applied. Git keeps images forever, including if the repo goes public, so the
     screenshots come from a throwaway copy of the app: the same public postings, neutral fit notes, and four
     made-up applications. Captions say so. The banner was generated with Higgsfield (GPT Image 2.5) and saved as a
@@ -171,7 +171,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     every seven days, which would break the unattended 7:30 run weekly. An app password does not expire, is revoked
     in one place, and IMAP is in the standard library. The folder is opened read-only and bodies are fetched with
     `BODY.PEEK`, so nothing in the mailbox changes.
-40. **Automatic only with a requisition id.** Rohan's rule: a status changes on its own only when an email contains
+40. **Automatic only with a requisition id.** The owner's rule: a status changes on its own only when an email contains
     the id of exactly one application and its wording is clear. Everything else that looks like hiring mail goes to
     review. Automatic changes only move forward (applied, screen, interview, rejected, offer), because a delayed
     confirmation must not undo an interview; a person settling a review item can move a status any way.
@@ -184,11 +184,11 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     need invitation wording, phrases after "if", "may", "might" or "should" are ignored, curly apostrophes read as
     straight, and two missed rejection wordings were added. Result on the same emails: 6 rejections applied
     automatically, 14 rejections without an id to review, no false interviews. Plain confirmations no longer go to
-    review, a deliberate change from Rohan's first rule: they cannot move a status and filled the list with 35
+    review, a deliberate change from the owner's first rule: they cannot move a status and filled the list with 35
     items. Paraphrases of the misread boilerplate are now regression tests.
-43. **The second rule set missed rejections, and one old-rule run slipped through.** Rohan found NVIDIA JR2024968 at
+43. **The second rule set missed rejections, and one old-rule run slipped through.** The owner found one application at
     interview again. Reading both of its emails: a confirmation ("contact you to arrange an interview if the role is
-    a good match") and a rejection ("have decided not to move forward for the JR2024968 ... role"). Two causes. The
+    a good match") and a rejection ("have decided not to move forward for the ... role"). Two causes. The
     running server still held the first rules in memory after the fix merged, and a Check mail pressed before the
     restart used them; the restart then cut that run off before it saved its record. And the second rules read the
     rejection as a confirmation, because "decided not to" was not covered. The first calibration only compared the

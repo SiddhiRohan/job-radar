@@ -1,6 +1,6 @@
 # Resume tailoring rules
 
-Read by `apply.py` on every run. These are the rules Rohan set; do not relax them.
+Read by `apply.py` on every run. These are the rules the owner set; do not relax them.
 
 ## Where to start
 - Start from the base the scorer recommended (`entry` or `experienced`), and from the matching role and
@@ -11,13 +11,13 @@ Read by `apply.py` on every run. These are the rules Rohan set; do not relax the
 
 ## Assess fit before touching anything
 - Check sponsorship exclusions, PERM-ad patterns, the years gate (6+ years required means skip), and
-  platform tools Rohan lacks (Databricks, Snowflake, Azure, GCP, Power BI, SAS).
+  platform tools the owner lacks (as listed in their profile).
 - If the assessment says skip, say so plainly and stop unless `--force` is passed.
 
 ## What may change and what may not
 - LOCKED, always: numbers, dates, titles, employers, GPA, and the header.
 - Vocabulary: everything on the base resumes is real, and `skills_confirmed.md` lists every tool, library,
-  platform, method, and domain term found under `Resume/` plus anything Rohan has added by hand. Tailoring may
+  platform, method, and domain term found under `Resume/` plus anything the owner has added by hand. Tailoring may
   freely reword the summary, reorder and reword bullets, and edit the Skills line using anything in that file,
   phrased to mirror the JD.
 - Nothing outside the base text plus `skills_confirmed.md` goes into the resume. A bullet rewrite that adds a
@@ -35,8 +35,7 @@ Read by `apply.py` on every run. These are the rules Rohan set; do not relax the
 - Print every changed bullet as before/after in the terminal for approval BEFORE building the docx.
   No approval, no build. (`--yes` skips the prompt; the before/after list still goes into `notes.md`.)
 - Flag any bullet that would be hard to defend in an interview.
-- Note the one-line explanations for date overlaps: Kridha concurrent with StackNexus, two concurrent
-  AREC roles, two concurrent Adventaus roles.
+- Note the one-line explanations for date overlaps, read from `Resume/overlaps.txt` (one line each, ignored by git).
 
 ## Length and style
 - The experienced base stays two pages, the entry base stays one. Cover letters are one page.

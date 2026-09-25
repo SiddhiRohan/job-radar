@@ -13,7 +13,7 @@ tailoring happens on demand. The UI runs with `python server.py`. Everything is 
 - Today's shortlist has an Entry level section between Apply and Maybe, for junior postings scoring 3 or better.
   Junior roles rarely score 4, so before this they sat in the collapsed tail and were never seen.
 - Direction: the sourcer is the product; resume tailoring is on demand through the chat drawer, with the Tailor view
-  kept for the side-by-side and outreach. Multi-user is parked until Rohan asks.
+  kept for the side-by-side and outreach. Multi-user is parked until the owner asks.
 - Workflow: branch and PR for every change, CI (ruff, pytest) on PRs and main, pre-commit locally, 70 offline tests.
   Branch protection is unavailable on the free private plan; the rule lives in CLAUDE.md. Never stack PRs.
 - Known gaps: hosting is still the laptop (the Actions plan in this session's notes is not built); several sourced
@@ -44,7 +44,7 @@ default); the UI runs with `python server.py`; everything is merged to `main` on
   Materials, Bank of America, Cardinal Health, Disney, Freddie Mac, Visa, Home Depot, Humana, KLA, Lowe's, Mastercard,
   McKesson, Thomson Reuters, Walmart, Workday.
 - Direction: the sourcer is the product; resume tailoring is on demand through the chat drawer (plan, build, save),
-  with the Tailor view kept for the side-by-side. Multi-user is parked until Rohan asks.
+  with the Tailor view kept for the side-by-side. Multi-user is parked until the owner asks.
 - Workflow: branch and PR for every change, CI (ruff, pytest) on PRs and main, pre-commit locally. Branch protection
   is not available on the free private plan; the rule is in CLAUDE.md. Do not stack PRs (see DECISIONS.md).
 - Backlog: GitHub issues #1 to #7.
@@ -69,7 +69,7 @@ The sections below are the round-2 report as written on 2026-09-13 and are kept 
   `RESUME_MAP.md`, new digest layout. Files: filters.py, sponsor.py, resumes.py, poll.py, score.py, digest.py, wd.py.
 - **Part C.** `apply.py`, `tailor.py`, `plan.py`, `letters.py`, `RESUME_RULES.md`. Ran on the top Apply posting,
   Adobe R171718 Machine Learning Engineer. Output in `Resume/For Adobe/R171718_Machine-Learning-Engineer/`:
-  `jd.txt`, `Resume - Siddhi Rohan (ML Engineer).docx`, `outreach.md`, `notes.md` (fit assessment, every before/after
+  `jd.txt`, the tailored resume docx, `outreach.md`, `notes.md` (fit assessment, every before/after
   change, hard-to-defend flags, questions, overlap explanations). No cover letter: the posting does not ask for one.
 - **Part D.** `finalize.py` ran on that folder: humanized 12 of 38 prose paragraphs (diff in notes.md), invisible
   Unicode stripped (0 in the docx, 5 in jd.txt), docx author/lastModifiedBy/app properties cleared. Report appended
@@ -109,7 +109,6 @@ Cron equivalent (WSL or Mac):
 ## Apply (6)
 
 - **Adobe** | Machine Learning Engineer | San Jose | Posted 2 Days Ago | E3/X4 | experienced · DS and DE Resumes/two-page | https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/San-Jose/Machine-Learning-Engineer_R171718
-    Payment fraud analytics at Adventaus and production ML/data engineering (SageMaker, PySpark/EMR, OpenSearch) align with the ML lifecycle and fraud focus. Platform tools missing: Databricks.
 - **Humana** | Senior Data Scientist | Louisville, KY | Posted 2 Days Ago | E2/X4 | experienced · DS and DE Resumes/two-page
     Hits nearly every must-have: production LLM/RAG, agentic-style systems, Python/SQL/PySpark, ETL, ML frameworks; clears Master's + 3 years.
 - **KLA** | AI Software Engineer|Manufacturing | Ann Arbor, MI | Posted 3 Days Ago | E3/X4 | experienced · DS and DE Resumes/two-page
