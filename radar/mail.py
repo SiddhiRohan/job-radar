@@ -133,7 +133,7 @@ def sync(messages=None):
 
 
 def resolve(message_id, company=None, req_id=None, status=None):
-    """Settle a needs-review item: set the chosen status (any direction, it is Rohan's call) or just dismiss it."""
+    """Settle a needs-review item: set the chosen status (any direction, it is the owner's call) or just dismiss it."""
     state = load()
     item = next((r for r in state["review"] if r["message_id"] == message_id), None)
     state["review"] = [r for r in state["review"] if r["message_id"] != message_id]

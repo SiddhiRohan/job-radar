@@ -1,9 +1,9 @@
 """Decide what a hiring email means for the applications. Pure functions: no mailbox, no files.
 
-Rule agreed with Rohan (2026-09-25): a status changes on its own only when the email contains the requisition id of
+Rule agreed with the owner (2026-09-25): a status changes on its own only when the email contains the requisition id of
 exactly one application and its wording is clear. Other hiring emails that could change a status go to review.
 
-Calibrated on Rohan's first real run: confirmation emails mention interviews as a possible next step ("if you are
+Calibrated on the owner's first real run: confirmation emails mention interviews as a possible next step ("if you are
 selected for an interview"), so interview and screen need invitation wording, and any phrase that follows "if",
 "may" or "should" nearby is ignored."""
 
@@ -14,7 +14,7 @@ STATUS_RULES = {
     r"(?:were|have been|was) not selected|not been selected|regret to inform|no longer (?:under consideration|being considered)|"
     r"position has been filled|unable to (?:offer|move (?:you |your application )?forward)|will not be (?:moving|proceeding)|"
     r"won't be moving forward|can(?:not|'t| not) move forward|"
-    # Added after NVIDIA's "have decided not to move forward for the JR2024968 ... role" read as a confirmation.
+    # Added after a real "have decided not to move forward for the ... role" rejection read as a confirmation.
     r"(?:decided|chosen|elected) not to|not (?:be )?(?:progressing|advancing|proceeding) (?:with )?your|"
     r"not able to (?:offer|move|progress|proceed)|(?:selected|chosen|hired) (?:another|a different) (?:candidate|applicant)|"
     r"(?:another|other) (?:qualified )?applicants|(?:role|position|requisition) (?:has been|was) (?:filled|closed|cancell?ed)|"
@@ -112,7 +112,7 @@ def decide(msg, apps, tenants=None):
     if not (ATS_SENDERS.search(sender) or by_company(f"{sender} {msg.get('subject', '')}", apps)):
         return None  # not recognisably about an application
     # A Workday sender address names the employer; when it does, guess only among that employer's applications
-    # (none if Rohan never applied there). Otherwise the sender and subject, then the body: every Workday email
+    # (none if the owner never applied there). Otherwise the sender and subject, then the body: every Workday email
     # names Workday in its footer, so the body comes last.
     employer = sender_company(sender, tenants or {})
     if employer:

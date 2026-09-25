@@ -3,12 +3,12 @@
 from docx import Document
 from docx.shared import Pt
 
-from radar import llm
+from radar import llm, owner
 
 COVER_RULES = """Write a one-page cover letter for this posting. Role and company specific. Add to the resume rather than
 repeating it: pick two or three things from the resume that matter for THIS job and say why, in plain human voice.
 No buzzwords, no visa or sponsorship mention, no em dashes, no bullet points. About 250-320 words.
-Format: greeting line, 3-4 short paragraphs, sign-off with the name Rohan Chakka. Return only the letter text."""
+Format: greeting line, 3-4 short paragraphs, sign-off with the name {name}. Return only the letter text."""
 
 OUTREACH_SCHEMA = {
     "type": "object",
@@ -19,7 +19,7 @@ OUTREACH_SCHEMA = {
 OUTREACH_RULES = """Write cold outreach for this posting. Two pieces:
 1. linkedin_note: a LinkedIn connection note UNDER 300 characters (aim 250-270). No name sign-off. Mention the role.
 2. message: a DM or application message of 100-120 words, plain and specific to the company and role, no buzzwords.
-No visa or sponsorship mention anywhere. No em dashes. Sign the message as Rohan only if it reads naturally."""
+No visa or sponsorship mention anywhere. No em dashes. Sign the message as {name} only if it reads naturally."""
 
 
 def cover_letter(job, jd, profile, resume_text):
@@ -27,7 +27,8 @@ def cover_letter(job, jd, profile, resume_text):
         f"POSTING: {job['title']} at {job['company']} ({job.get('detail_location') or job['location']})\n"
         f"{jd[:10000]}\n\nTAILORED RESUME:\n{resume_text[:8000]}\n\nWrite the letter."
     )
-    text, _ = llm.complete(COVER_RULES + "\n\nCANDIDATE PROFILE:\n" + profile, user, max_tokens=2000)
+    rules = COVER_RULES.replace("{name}", owner.name())
+    text, _ = llm.complete(rules + "\n\nCANDIDATE PROFILE:\n" + profile, user, max_tokens=2000)
     return text.replace("—", "-").strip()
 
 
@@ -37,7 +38,8 @@ def outreach(job, jd, profile, resume_text=""):
         f"that appear here):\n{resume_text[:6000]}\n\nWrite both pieces."
     )
     for _ in range(3):
-        o, _ = llm.complete(OUTREACH_RULES + "\n\nCANDIDATE PROFILE:\n" + profile, user, OUTREACH_SCHEMA)
+        rules = OUTREACH_RULES.replace("{name}", owner.short_name())
+        o, _ = llm.complete(rules + "\n\nCANDIDATE PROFILE:\n" + profile, user, OUTREACH_SCHEMA)
         o = {k: v.replace("—", "-").strip() for k, v in o.items()}
         if 200 <= len(o["linkedin_note"]) < 285 and 100 <= len(o["message"].split()) <= 120:
             return o
@@ -59,5 +61,5 @@ def write_docx(text, out_path, base_path):
     doc.styles["Normal"].font.size = Pt(11)
     for para in [p for p in text.split("\n") if p.strip()]:
         doc.add_paragraph(para.strip())
-    doc.core_properties.author = "Siddhi Rohan Chakka"
+    doc.core_properties.author = owner.name()
     doc.save(out_path)

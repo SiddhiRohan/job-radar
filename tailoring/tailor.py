@@ -91,7 +91,7 @@ def apply_plan(doc, info, plan, extra_allowed=""):
 
     unsupported = new_terms(plan["summary"], base_lower)
     if unsupported:
-        plan["questions_for_rohan"].append(
+        plan["questions_for_owner"].append(
             "Summary uses terms outside the base resume and skills_confirmed.md: " + ", ".join(unsupported)
         )
     change("summary", info["summary"], plan["summary"])
@@ -102,7 +102,7 @@ def apply_plan(doc, info, plan, extra_allowed=""):
                 continue
             added = new_terms(rw["text"], base_lower)
             if added:
-                plan["questions_for_rohan"].append(
+                plan["questions_for_owner"].append(
                     f"Reverted job {pj['job']} bullet {rw['bullet']} rewrite: it added "
                     f"{', '.join(added)}. Is that accurate? Proposed: {rw['text']}"
                 )
@@ -115,14 +115,14 @@ def apply_plan(doc, info, plan, extra_allowed=""):
     skills = [s.strip() for s in plan["skills"].split(",")]
     pruned = [s for s in skills if s and s.lower() not in base_lower]
     if pruned:
-        plan["questions_for_rohan"].append(
+        plan["questions_for_owner"].append(
             "Dropped skills not on the base resume or in skills_confirmed.md: " + ", ".join(pruned)
         )
     change("skills", info["skills"], ", ".join(s for s in skills if s and s not in pruned))
     if info["coursework"] is not None and plan["coursework"]:
         old = marked_text(ps[info["coursework"]])
         if "capstone" in old.lower() and "capstone" not in plan["coursework"].lower():
-            plan["questions_for_rohan"].append("Coursework rewrite dropped the capstone line; kept the original.")
+            plan["questions_for_owner"].append("Coursework rewrite dropped the capstone line; kept the original.")
         else:
             change(
                 "coursework",

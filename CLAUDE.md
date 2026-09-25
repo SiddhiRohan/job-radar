@@ -7,7 +7,7 @@ under about 150 lines, one request to Workday at a time with a 1.5 s gap, JSON e
 ## Git
 
 - Never commit to `main` directly. Branch from `main` (`feature/<name>`, `fix/<name>`, `chore/<name>`), open a
-  PR, let CI pass, and squash-merge. Rohan merges.
+  PR, let CI pass, and squash-merge. The owner merges.
 - Never stack PRs. Every PR is based on `main`; if a change needs another PR first, wait for that merge. A PR merged
   into an already-merged branch never reaches `main` (this happened with #11).
 - One change per commit. Commit message: `area: what changed`, imperative, under 60 characters. The body says
@@ -20,15 +20,16 @@ under about 150 lines, one request to Workday at a time with a 1.5 s gap, JSON e
 
 ## Personal files: ignored, never re-add
 
-These hold Rohan's data and must stay out of git even if they appear in the working tree:
-`Resume/`, `profile.md`, `skills_confirmed.md`, `memory.md`, `applications.md`, `.env`,
+These hold the owner's data and must stay out of git even if they appear in the working tree:
+`Resume/`, `profile.md`, `skills_confirmed.md`, `memory.md`, `applications.md`, `.env` (which also holds the
+owner's name and resume file name, see `radar/owner.py`),
 `jobs.jsonl`, `seen.json`, `last_run.json`, `digests/`, `.cache/`, `logs/`, `*.log`, and the root
 `Resume - *.docx` / `.pdf`. If one shows up in `git status`, fix `.gitignore`, do not commit it.
 
 ## Layout
 
 - `run.py`, `server.py` at the root are the entry points (`python run.py`, `python server.py`); `config.json` and
-  `companies.json` are the two files Rohan edits.
+  `companies.json` are the two files the owner edits.
 - `radar/` daily pipeline (wd, poll, filters, sponsor, store, score, digest, prepare, mail) plus `llm`, `chat`,
   `salary`, `mailmatch` and `applications` (the applications.md table).
 - `tailoring/` apply, plan, tailor, letters, finalize, skills, resumes, skills_extract. CLI: `python -m tailoring.apply`.

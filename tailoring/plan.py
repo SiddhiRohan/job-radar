@@ -40,7 +40,7 @@ PLAN_SCHEMA = {
         "coursework": {"type": "string"},
         "jd_skills_not_confirmed": {"type": "array", "items": {"type": "string"}},
         "hard_to_defend": {"type": "array", "items": {"type": "string"}},
-        "questions_for_rohan": {"type": "array", "items": {"type": "string"}},
+        "questions_for_owner": {"type": "array", "items": {"type": "string"}},
         "fit_notes": {"type": "string"},
     },
     "required": [
@@ -51,7 +51,7 @@ PLAN_SCHEMA = {
         "coursework",
         "jd_skills_not_confirmed",
         "hard_to_defend",
-        "questions_for_rohan",
+        "questions_for_owner",
         "fit_notes",
     ],
 }
@@ -111,11 +111,11 @@ def fix_summary(plan, doc, info, profile):
     out, _ = llm.complete(PLAN_RULES + "\n\nCANDIDATE PROFILE:\n" + profile, user, SUMMARY_SCHEMA)
     still = tailor.new_terms(out["summary"], base_text.lower())
     if still:
-        plan["questions_for_rohan"].append(
+        plan["questions_for_owner"].append(
             f"Summary retry still used unsupported terms ({', '.join(still)}); kept the "
             f"base summary with the headline rotated. Proposed: {out['summary']}"
         )
         plan["summary"] = re.sub(r"^(\*\*)?[A-Za-z ]+?(?= with )", f"**{plan['headline']}**", base_summary, count=1)
     else:
-        plan["questions_for_rohan"].append(f"Summary was rewritten once to drop unsupported terms ({', '.join(bad)}).")
+        plan["questions_for_owner"].append(f"Summary was rewritten once to drop unsupported terms ({', '.join(bad)}).")
         plan["summary"] = out["summary"]

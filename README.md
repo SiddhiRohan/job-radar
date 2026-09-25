@@ -10,8 +10,8 @@ Scientist, ML Engineer and AI Engineer roles that fit an entry-to-mid profile, a
 says it will not sponsor. The rest are scored against two versions of a resume. A small local web app
 shows the result, tracks applications, and can tailor a resume for one posting when asked.
 
-It was built for one person: a US master's graduate on F-1 OPT who needs H-1B sponsorship. The filters
-are opinionated because of that, and every one of them lives in `config.json`.
+It was built for one person, an international graduate who needs visa sponsorship, so the filters are
+opinionated. Every one of them lives in `config.json`, and everything personal lives in ignored files.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/today-dark.png">
@@ -73,6 +73,7 @@ Put the key in `.env` as `ANTHROPIC_API_KEY=...`, or export it. Then add the per
 ignored by git:
 
 - `profile.md`: who you are and what you are looking for, in plain prose.
+- Your name and resume file name in `.env` (`OWNER_NAME`, `OWNER_SHORT`, `RESUME_FILENAME`), see `radar/owner.py`.
 - `skills_confirmed.md`: skills the tailoring step may name even if the base resume does not.
 - Base resumes under `Resume/`, at the paths set in `tailoring/resumes.py`.
 - Optional: `GMAIL_ADDRESS` and `GMAIL_APP_PASSWORD` in `.env` to read hiring emails. See

@@ -16,7 +16,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from radar import applications, chat, digest, mail, poll, prepare, salary, score, wd
+from radar import applications, chat, digest, mail, owner, poll, prepare, salary, score, wd
 from tailoring import apply as applier
 from tailoring import finalize, letters, resumes, skills, tailor
 
@@ -290,7 +290,7 @@ def rebuild(state, edits, cover_text):
             tailor.set_text(ps[info[sec["id"]]], e.get("text", sec["text"])[0])
     out_dir = UI_DIR / uuid.uuid4().hex[:8]
     out_dir.mkdir(parents=True, exist_ok=True)
-    resume = out_dir / f"Resume - Siddhi Rohan ({state['headline']}).docx"
+    resume = out_dir / f"{owner.resume_stem()} ({state['headline']}).docx"
     doc.save(resume)
     report = []
     finalize.finalize_docx(resume, report)

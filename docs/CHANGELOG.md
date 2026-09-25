@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Personal details out of the code and docs.** Name, resume file name and personal stopwords move to `.env`
+(`radar/owner.py`); the resume folder map and date-overlap notes move to the ignored `Resume/` folder; docs speak
+of the owner.
+
 **Missed rejections.** Six more rejection wordings, found by scanning real hiring emails ("decided not to move
 forward" among them); review guesses come from the sender and subject before the body.
 
