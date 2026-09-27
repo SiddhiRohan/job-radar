@@ -147,6 +147,15 @@ def mark_applied(body: dict):
     return {"ok": True}
 
 
+@app.post("/api/applied/undo")
+def undo_applied(body: dict):
+    """Take a mistaken click back. Refused once an email has moved the application past "applied"."""
+    gone = applications.remove(body["company"], body["req_id"])
+    if gone is None:
+        raise HTTPException(409, "This application has moved past applied, so it stays; change its status on Applied")
+    return {"ok": True}
+
+
 @app.post("/api/applied/status")
 def set_status(body: dict):
     rows = applied_rows()
