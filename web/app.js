@@ -426,3 +426,35 @@ function show() {
 }
 window.addEventListener("hashchange", () => { window.scrollTo(0, 0); show(); });  /* a new view starts at the top; refreshes keep the place */
 show();
+
+/* ---------- keyboard ---------- */
+/* j/k walk the visible postings on Today, a marks or undoes, o opens the posting, [ ] change the day, 1 2 3 switch
+   views, / asks the assistant, ? lists this. Nothing fires while typing in a field or with a modifier held. */
+const K = { cur: null };
+const visibleRows = () => [...document.querySelectorAll("#today-body article.row")].filter(r => r.offsetParent !== null);
+function setCur(row) {
+  K.cur?.classList.remove("cur"); K.cur = row;
+  if (row) { row.classList.add("cur"); row.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+}
+function moveCur(step) {
+  const rows = visibleRows(); if (!rows.length) return;
+  const i = rows.indexOf(K.cur);
+  setCur(rows[i < 0 ? (step > 0 ? 0 : rows.length - 1) : Math.min(rows.length - 1, Math.max(0, i + step))]);
+}
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target, typing = t.matches?.("input, textarea, select, [contenteditable]") || $("#keys").open;
+  if (e.key === "Escape") { if ($("#keys").open) $("#keys").close(); else if (C.open) setChat(false); return; }
+  if (typing) return;
+  const today = (location.hash || "#today") === "#today";
+  const acts = {
+    j: () => today && moveCur(1), k: () => today && moveCur(-1),
+    a: () => today && K.cur?.querySelector("button.apply")?.click(),
+    o: () => today && (K.cur?.querySelector("a.title") || K.cur?.querySelector("a[href][target]"))?.click(),
+    "[": () => today && $("#prev").click(), "]": () => today && $("#next").click(),
+    1: () => (location.hash = "today"), 2: () => (location.hash = "tailor"), 3: () => (location.hash = "applied"),
+    "/": () => { setChat(true); $("#chatin").focus(); },
+    "?": () => $("#keys").showModal(),
+  };
+  if (acts[e.key]) { e.preventDefault(); acts[e.key](); }
+});
