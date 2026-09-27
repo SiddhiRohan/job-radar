@@ -37,6 +37,7 @@
     <button type="button" id="next" aria-label="Later day">&rsaquo;</button>
     <button type="button" id="runbtn">Run the radar</button>
   </div>
+  <button type="button" id="cmdkbtn" class="cmdkbtn" aria-label="Search and commands, Ctrl K"><span>Search</span><kbd>Ctrl K</kbd></button>
   <button type="button" id="chatbtn" class="quiet" aria-expanded="false">Chat</button>
 </header>
 
@@ -70,6 +71,11 @@
 </main>
 
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="cmdk" class="cmdk" aria-label="Search and commands">
+  <input id="cmdk-in" type="text" placeholder="Jump to a view, a day, a posting, or run something" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list">
+  <ul id="cmdk-list" role="listbox"></ul>
+  <p class="cmdk-foot"><kbd>&uarr;</kbd> <kbd>&darr;</kbd> move <kbd>&crarr;</kbd> choose <kbd>Esc</kbd> close</p>
+</dialog>
 <dialog id="keys" class="keys" aria-labelledby="keys-h">
   <h2 id="keys-h">Keyboard</h2>
   <dl>
@@ -78,6 +84,7 @@
     <dt><kbd>o</kbd></dt><dd>Open the current posting in a new tab</dd>
     <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Earlier and later day</dd>
     <dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></dt><dd>Today, Tailor, Applied</dd>
+    <dt><kbd>Ctrl</kbd> <kbd>K</kbd></dt><dd>Search and commands</dd>
     <dt><kbd>/</kbd></dt><dd>Ask the assistant</dd>
     <dt><kbd>?</kbd></dt><dd>This list</dd>
     <dt><kbd>Esc</kbd></dt><dd>Close</dd>
@@ -88,5 +95,6 @@
 <script src="mail.js"></script>
 <script src="insights.js"></script>
 <script src="app.js"></script>
+<script src="palette.js"></script>
 </body>
 </html>

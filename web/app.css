@@ -182,6 +182,26 @@ td select { padding: 2px 4px; }
 .keys dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0 0 14px; align-items: baseline; }
 .keys dt { display: flex; gap: 4px; } .keys dd { margin: 0; color: var(--ink-2); }
 kbd { font: inherit; font-size: var(--fs-sm); padding: 1px 7px; border: 1px solid var(--rule-strong); border-bottom-width: 2px; border-radius: 6px; background: var(--surface-2); }
+/* Command palette (Ctrl+K): a centred sheet that drops in over a dimmed page. */
+.cmdkbtn { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; padding: 4px 6px 4px 10px; color: var(--ink-2); border-radius: 999px; }
+.cmdkbtn kbd { font-size: var(--fs-xs); color: var(--ink-3); }
+.datectl:not([hidden]) + .cmdkbtn { margin-left: 0; }
+.cmdk { width: min(640px, calc(100vw - 32px)); margin: 12vh auto 0; padding: 0; border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); color: var(--ink);
+  box-shadow: 0 30px 80px -20px rgb(0 0 0 / .45), var(--shadow-lift); overflow: hidden; }
+.cmdk::backdrop { background: rgb(10 12 14 / .35); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.cmdk[open] { animation: cmdkin .16s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes cmdkin { from { opacity: 0; transform: translateY(-8px) scale(.985); } }
+#cmdk-in { width: 100%; border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; padding: 14px 18px; font-size: var(--fs-md); background: transparent; }
+#cmdk-in:focus { outline: none; }
+#cmdk-list { list-style: none; margin: 0; padding: 6px; max-height: 50vh; overflow-y: auto; }
+#cmdk-list li { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: baseline; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+#cmdk-list li[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+#cmdk-list .cg { font-size: var(--fs-xs); color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; }
+#cmdk-list .cl { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#cmdk-list .ch { font-size: var(--fs-sm); color: var(--ink-2); white-space: nowrap; }
+.cmdk-foot { margin: 0; padding: 8px 14px; border-top: 1px solid var(--rule); font-size: var(--fs-xs); color: var(--ink-3); display: flex; gap: 8px; align-items: center; }
+@media (max-width: 720px) { .cmdkbtn span { display: none; } #cmdk-list li { grid-template-columns: 1fr; } #cmdk-list .cg, #cmdk-list .ch { display: none; } }
+@media (prefers-reduced-motion: reduce) { .cmdk[open] { animation: none; } }
 .toast:not([hidden]) { animation: toastin .2s ease both; }
 @keyframes toastin { from { opacity: 0; transform: translateY(8px); } }
 .toast { position: fixed; left: 28px; bottom: 24px; background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: var(--radius); box-shadow: var(--shadow); max-width: 60ch; display: flex; gap: 14px; align-items: center; }
