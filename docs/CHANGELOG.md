@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+**More postings per day.** Every tier is polled daily, tier 2 reads three pages and tier 3 two, "analytics" joins
+the search terms, "Sr" no longer removes a title (Senior never did, and both score 4 at the same rate), and the
+score cap rises to 120. The run grows from about half an hour to about an hour.
+
+**Undo, keyboard, chips, motion.** A mistaken Mark applied, status change or settled email can be taken back from
+the toast. Keyboard shortcuts on Today (`?` lists them). Filter chips: hide applied, pay listed, score 4, entry
+level, and the day's busiest companies. Rows ease in and settle, views cross-fade, all off under reduced motion.
+
 **Postings since you applied.** `radar/watch.py` re-reads the posting behind every open application once a day
 (after the mail step) and records when it closed, was retitled, repriced or rewritten. Closed with no reply is
 shown as the quiet rejection it usually is. A card on Applied with a "Check postings" button, `/api/watch`, and a

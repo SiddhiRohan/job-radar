@@ -220,3 +220,14 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     firewall block or an outage (usually HTML) stays "unknown" and never reads as a closure. Closures and changes
     keep the date first seen; a posting that comes back drops its closure. Applications already rejected or at
     offer are not checked, which keeps the daily run to one request per open application.
+
+## 2026-09-26: thirty score-4 postings a day
+
+47. **Volume comes from the search, not the scorer.** The owner wants at least 30 score-4 postings a day; recent
+    days gave 6 to 14 from 35 to 101 kept. The score cap was not the limit (no posting went unscored), so the
+    levers are upstream: every tier daily, three pages for tier 2 and two for tier 3, "analytics" as a fifth term,
+    and the cap raised to 120 so it stays out of the way. "Sr" and "Sr." leave `exclude_seniority`: "Senior" was
+    never excluded, and across 927 scored postings Senior titles scored 4 at the same 10 percent rate as the
+    rest, so the abbreviation was removing matches for no reason. Estimated run time goes from about 32 to about
+    an hour. Google is not on Workday (own careers site), so it cannot appear until a non-Workday adapter exists
+    (issue #1); the same holds for every name in `companies/not_on_workday.json`.
