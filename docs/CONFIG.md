@@ -13,12 +13,12 @@ Current values below are as of 2026-09-24.
 
 | Key | Current | What it does |
 | --- | --- | --- |
-| `search_terms` | data engineer, data scientist, machine learning, AI engineer | Searches sent to every employer. Workday matches them against the whole posting, so each one returns many loose hits that the title rules then remove. |
+| `search_terms` | data engineer, data scientist, machine learning, AI engineer, analytics | Searches sent to every employer. Workday matches them against the whole posting, so each one returns many loose hits that the title rules then remove. |
 | `entry_terms` | early career, new college grad, entry level | Extra searches for tier 1 and 2 employers only. Each gets one page of results. |
 | `max_days_ago` | 1 | How recent a posting must be, in days, for the role searches. `python run.py --days 3` overrides it for one run. |
 | `entry_max_days_ago` | 14 | The same limit for the entry searches. Junior roles stay open for weeks and come back sorted by relevance rather than date, so they get a wider window. Postings already seen are never stored twice. |
-| `max_pages_by_tier` | tier 1: 3, tier 2: 2, tier 3: 1 | How many pages of 20 results each role search reads, by employer tier. |
-| `tier3_weekdays` | 0, 3 | Days tier 3 employers are polled, where 0 is Monday. `python run.py --all-tiers` polls them on any day. |
+| `max_pages_by_tier` | tier 1: 3, tier 2: 3, tier 3: 2 | How many pages of 20 results each role search reads, by employer tier. |
+| `tier3_weekdays` | 0 to 6, every day | Days tier 3 employers are polled, where 0 is Monday. `python run.py --all-tiers` polls them on any day. |
 
 **Run time** grows with every term and page. Each request waits 1.5 seconds, so one more role term costs
 roughly one request per page per employer. `python -m companies.report_companies` prints the estimated run
@@ -40,7 +40,7 @@ The title rules run in this order, before any detail is fetched.
 | `title_patterns` | 23 patterns, for example `data engineer`, `data scien`, `\bml\b`, `analytics` | Case-insensitive regular expressions, searched anywhere in the title. In JSON a word boundary is written `\\b`. A plain phrase like `data scien` works as a substring. |
 | `entry_title_patterns` | `software (engineer\|developer)`, `data` | Extra patterns allowed only for titles with entry wording. |
 | `include_override` | data scientist, junior; new college grad; early career; associate | Case-insensitive substrings. |
-| `exclude_seniority` | sr, lead, principal, staff, director, manager, architect, intern, head and others | Whole words or phrases, case-insensitive, so `lead` does not match `leadership`. Titles with "Senior" spelled out are kept on purpose; the six-year gate handles those. |
+| `exclude_seniority` | lead, principal, staff, director, manager, architect, intern, head and others | Whole words or phrases, case-insensitive, so `lead` does not match `leadership`. Titles with "Senior" or "Sr" are kept on purpose: they score 4 as often as the rest, and the six-year gate handles the ones that are really senior. |
 | `exclude_domain` | verification, packaging, devops, security, quality, firmware, mobile and others | Whole words or phrases, case-insensitive. |
 | `title_must_match_term` | true | Turns step 1 off when false. Not recommended: most search hits are unrelated titles. |
 
@@ -54,7 +54,7 @@ The title rules run in this order, before any detail is fetched.
 
 | Key | Current | What it does |
 | --- | --- | --- |
-| `score_cap` | 40 | The most postings sent to Claude in one run. Entry-level titles and postings asking two years or fewer go first, then the newest. Unscored postings wait for the next run. |
+| `score_cap` | 120 | The most postings sent to Claude in one run. Entry-level titles and postings asking two years or fewer go first, then the newest. Unscored postings wait for the next run. |
 | `prepare_cap` | 0 | How many Apply postings get a tailoring plan made in advance after the run. 0 turns it off; plans are made on demand from the chat or Tailor. |
 
 ## companies.json

@@ -6,6 +6,12 @@ from collections import Counter
 SEC_PER_PAGE = 1.6  # measured: 1122 pages in 30 min on the 2026-09-13 run (1.5 s gap, cache hits are free)
 
 
+def tier3_days(cfg):
+    """'Mon/Thu' or 'every day', from tier3_weekdays in config.json."""
+    days = sorted(set(cfg.get("tier3_weekdays", [0, 3])))
+    return "every day" if len(days) >= 7 else "/".join("Mon Tue Wed Thu Fri Sat Sun".split()[d] for d in days)
+
+
 def main():
     cands = json.load(open("companies/candidates.json", encoding="utf-8"))
     companies = json.load(open("companies.json", encoding="utf-8"))
@@ -49,7 +55,7 @@ def main():
         f"- Per search: pages x {SEC_PER_PAGE:.1f} s; pages per tier: {pages}; {terms} search terms per company",
         f"- Daily (tier 1 + 2, {sum(c['tier'] <= 2 for c in companies)} companies): about {daily:.0f} min for the search phase, "
         "plus roughly 2 s per new posting for detail fetches and 8 s per scored posting",
-        f"- Tier 3 days (Mon/Thu, +{sum(c['tier'] == 3 for c in companies)} companies): about {daily + tier3:.0f} min",
+        f"- Tier 3 days ({tier3_days(cfg)}, +{sum(c['tier'] == 3 for c in companies)} companies): about {daily + tier3:.0f} min",
         "- Cache hits (same day reruns) cost nothing.",
         "",
     ]
