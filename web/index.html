@@ -11,6 +11,8 @@
 <link rel="apple-touch-icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Instrument+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<script>/* Apply the remembered accent before first paint so the page never flashes the default. */
+try { const a = localStorage.getItem("radar-accent"); if (a) document.documentElement.dataset.accent = a; } catch (e) {}</script>
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -36,6 +38,11 @@
     <select id="date" aria-label="Digest date"></select>
     <button type="button" id="next" aria-label="Later day">&rsaquo;</button>
     <button type="button" id="runbtn">Run the radar</button>
+  </div>
+  <div class="accents" role="group" aria-label="Accent colour">
+    <button type="button" class="sw" data-accent="" aria-label="Teal" title="Teal"></button>
+    <button type="button" class="sw" data-accent="indigo" aria-label="Indigo" title="Indigo"></button>
+    <button type="button" class="sw" data-accent="rust" aria-label="Rust" title="Rust"></button>
   </div>
   <button type="button" id="cmdkbtn" class="cmdkbtn" aria-label="Search and commands, Ctrl K"><span>Search</span><kbd>Ctrl K</kbd></button>
   <button type="button" id="chatbtn" class="quiet" aria-expanded="false">Chat</button>

@@ -34,6 +34,9 @@ function buildItems() {
     { g: "Do", label: "Check postings", hint: "closed or changed since you applied", run: () => jobRun("/api/watch/run", "Posting check") },
     { g: "Do", label: "New chat thread", run: () => $("#chatnew").click() },
     { g: "Do", label: "Keyboard shortcuts", run: () => $("#keys").showModal() },
+    { g: "Look", label: "Accent: Teal", run: () => setAccent("") },
+    { g: "Look", label: "Accent: Indigo", run: () => setAccent("indigo") },
+    { g: "Look", label: "Accent: Rust", run: () => setAccent("rust") },
   ];
   for (const d of T.dates || []) items.push({ g: "Day", label: d, run: () => goToday(d) });
   const rows = Object.values(T.last?.sections || {}).flat();

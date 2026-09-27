@@ -456,6 +456,15 @@ $("#chatdel").addEventListener("click", async () => {
 });
 setChat(C.open);
 
+/* Accent colour: three swatches in the header, remembered per browser; index.html applies it before first paint. */
+function setAccent(name) {
+  if (name) document.documentElement.dataset.accent = name; else delete document.documentElement.dataset.accent;
+  try { name ? localStorage.setItem("radar-accent", name) : localStorage.removeItem("radar-accent"); } catch (e) {}
+  document.querySelectorAll(".sw").forEach(b => b.setAttribute("aria-pressed", String((b.dataset.accent || "") === (name || ""))));
+}
+document.querySelectorAll(".sw").forEach(b => b.addEventListener("click", () => setAccent(b.dataset.accent)));
+setAccent(document.documentElement.dataset.accent || "");
+
 /* The glass header shows its rule only once the page has scrolled. */
 addEventListener("scroll", () => $(".top").classList.toggle("scrolled", scrollY > 4), { passive: true });
 

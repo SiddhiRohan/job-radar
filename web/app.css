@@ -35,6 +35,13 @@
     --chart: #199E70;  /* dark */
   }
 }
+/* Accent variants. Only the accent family moves; score greens, warnings and chart colours stay semantic. */
+:root[data-accent="indigo"] { --accent: #3F4FB8; --on-accent: #FFFFFF; --wash: #E3E6F7; --wash-edge: #A6AEE6; --glow: rgb(63 79 184 / .08); --sw: #3F4FB8; }
+:root[data-accent="rust"] { --accent: #A9482A; --on-accent: #FFFFFF; --wash: #F6E4DC; --wash-edge: #E0AE9A; --glow: rgb(169 72 42 / .08); --sw: #A9482A; }
+@media (prefers-color-scheme: dark) {
+  :root[data-accent="indigo"] { --accent: #97A3F2; --on-accent: #0F1330; --wash: #23285A; --wash-edge: #46509A; --glow: rgb(151 163 242 / .07); }
+  :root[data-accent="rust"] { --accent: #E89C80; --on-accent: #2A120A; --wash: #4A2418; --wash-edge: #8A4A34; --glow: rgb(232 156 128 / .07); }
+}
 * { box-sizing: border-box; }
 /* A faint accent glow behind the top of the page so cards and the glass header have something to sit on. */
 html { background: var(--bg); color: var(--ink); }
@@ -55,7 +62,7 @@ input, select, textarea { font: inherit; color: inherit; background: var(--surfa
 
 /* Glass header: sticky, translucent, blurred; the rule under it only shows once the page has scrolled. */
 .top { position: sticky; top: 0; z-index: 5; min-height: var(--top-h); padding: 0 max(28px, calc((100% - 1100px) / 2 + 28px));  /* content lines up with main */
-  display: flex; align-items: center; gap: 28px; background: var(--glass); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+  display: flex; align-items: center; gap: 18px; background: var(--glass); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
   border-bottom: 1px solid transparent; transition: border-color .2s ease, box-shadow .2s ease; }
 .top.scrolled { border-bottom-color: var(--rule); box-shadow: 0 6px 20px -14px rgb(20 24 28 / .35); }
 @supports not (backdrop-filter: blur(1px)) { .top { background: var(--bg); } }
@@ -214,7 +221,17 @@ kbd { font: inherit; font-size: var(--fs-sm); padding: 1px 7px; border: 1px soli
 @media (min-width: 1500px) { body.has-drawer main { padding-right: 500px; } }
 @media (prefers-reduced-motion: reduce) { .drawer { animation: none; } }
 /* Command palette (Ctrl+K): a centred sheet that drops in over a dimmed page. */
-.cmdkbtn { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; padding: 4px 6px 4px 10px; color: var(--ink-2); border-radius: 999px; }
+/* Accent swatches in the header. */
+.accents { display: flex; gap: 6px; margin-left: auto; }
+.accents + .cmdkbtn, .datectl:not([hidden]) ~ .accents { margin-left: 0; }
+.datectl:not([hidden]) ~ .cmdkbtn { margin-left: 0; }
+.sw { width: 18px; height: 18px; padding: 0; border-radius: 50%; border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--rule-strong); cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+.sw[data-accent=""] { background: #0E5A4D; } .sw[data-accent="indigo"] { background: #3F4FB8; } .sw[data-accent="rust"] { background: #A9482A; }
+.sw:hover { transform: scale(1.12); } .sw[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ink); }
+@media (max-width: 1100px) { .accents { display: none; } }  /* the header is full at this width already */
+.brand span, .top button { white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .sw { transition: none; } }
+.cmdkbtn { display: inline-flex; align-items: center; gap: 10px; padding: 4px 6px 4px 10px; color: var(--ink-2); border-radius: 999px; }
 .cmdkbtn kbd { font-size: var(--fs-xs); color: var(--ink-3); }
 .datectl:not([hidden]) + .cmdkbtn { margin-left: 0; }
 .cmdk { width: min(640px, calc(100vw - 32px)); margin: 12vh auto 0; padding: 0; border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); color: var(--ink);
