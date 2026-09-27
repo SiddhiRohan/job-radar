@@ -86,9 +86,13 @@ function companies(rows) {
   return barList("By company", `${sorted.length} companies`, items, rows.length);
 }
 
-async function setStatus(r, status) {
+/* A status change can be taken back from the toast; the undo is the same call with the old status. */
+async function setStatus(r, status, undoing) {
+  const was = r.status;
   await api("/api/applied/status", { req_id: r.req_id, company: r.company, status });
-  r.status = status; toast(`Set ${r.company} to ${status}`); renderApplied();
+  r.status = status; renderApplied();
+  toast(undoing ? `Back to ${status}: ${r.company}` : `Set ${r.company} to ${status}`,
+    undoing ? null : { label: "Undo", run: () => setStatus(r, was, true).catch(err => toast(err.message)) });
 }
 const statusSelect = r => el("select", { "aria-label": `Status for ${r.company}, ${r.title}`, onchange: e => setStatus(r, e.target.value).catch(err => toast(err.message)) },
   ...STAGES.map(s => el("option", { value: s, selected: s === r.status ? "" : null }, s)));
