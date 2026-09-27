@@ -62,9 +62,14 @@ def by_title(text, apps):
 
 def named_role(text):
     """The role an email names, as written, or None. Used to tell "a role not on your list" from "no role named"."""
+    text = text or ""
     for rx in ROLE:
-        for m in rx.finditer(text or ""):
+        pos = 0
+        # Search again from just past each false start: "in Walmart. We appreciate ... apply for the (USA) Data
+        # Scientist III position" first matches from "in", and a non-overlapping scan would skip the real phrase.
+        while m := rx.search(text, pos):
             role = m.group(1).strip(" ,.-")
-            if role and not NOT_A_TITLE & set(words(role)):
+            if role and ". " not in role and not NOT_A_TITLE & set(words(role)):
                 return role
+            pos = m.start() + 1
     return None
