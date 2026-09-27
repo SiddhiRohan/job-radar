@@ -24,7 +24,12 @@ const waitJob = async (id, onTick) => {
   }
 };
 let toastTimer;
-const toast = msg => { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), 4000); };
+/* toast(msg) or toast(msg, {label, run}) for a one-tap action such as Undo; an action keeps the toast up longer. */
+const toast = (msg, action) => {
+  const t = $("#toast"); t.replaceChildren(msg);
+  if (action) t.append(el("button", { type: "button", class: "toast-act", onclick: () => { t.hidden = true; action.run(); } }, action.label));
+  t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), action ? 8000 : 4000);
+};
 const fail = (where, e, retry) => {
   const offline = /Failed to fetch|NetworkError|Load failed/.test(e.message);
   const msg = offline ? "The server is not answering. Start it with: python server.py (in the job-radar folder), then retry."
@@ -63,16 +68,30 @@ const tag = r => el("span", { class: `tag ${r.sponsorship || "unknown"}`, title:
 function rowEl(r) {
   const done = r.applied;
   /* Update this row in place: reloading the list closed the collapsed sections and lost the scroll position. */
-  const applyBtn = el("button", { type: "button", onclick: async () => {
+  const setDone = on => {
+    r.applied = on; row.classList.toggle("done", on);
+    applyBtn.textContent = on ? "Applied" : "Mark applied";
+    applyBtn.title = on ? "Applied. Click to undo" : "";
+    applyBtn.setAttribute("aria-pressed", String(on));
+  };
+  const undo = async () => {
+    applyBtn.disabled = true;
+    try { await api("/api/applied/undo", { company: r.company, req_id: r.req_id }); setDone(false); toast(`Back to not applied: ${r.company}, ${r.title}`); }
+    catch (e) { toast(`Could not undo: ${e.message}`); }
+    applyBtn.disabled = false;
+  };
+  const mark = async () => {
     applyBtn.disabled = true;
     try {
-      await api("/api/applied", { company: r.company, req_id: r.req_id, title: r.title });
-      r.applied = true; row.classList.add("done"); applyBtn.textContent = "Applied";
-      toast(`Marked applied: ${r.company}, ${r.title}`);
-    } catch (e) { applyBtn.disabled = false; toast(`Could not mark applied: ${e.message}`); }
-  } }, done ? "Applied" : "Mark applied");
-  if (done) applyBtn.disabled = true;
-  const row = el("article", { class: "row" + (done ? " done" : "") },
+      const res = await api("/api/applied", { company: r.company, req_id: r.req_id, title: r.title });
+      setDone(true); /* no Undo offer when it was already recorded elsewhere: undo would erase that record */
+      toast(`Marked applied: ${r.company}, ${r.title}`, res.already ? null : { label: "Undo", run: undo });
+    } catch (e) { toast(`Could not mark applied: ${e.message}`); }
+    applyBtn.disabled = false;
+  };
+  /* One button, two states: Mark applied, then Applied (press again to undo a slip). */
+  const applyBtn = el("button", { type: "button", class: "apply", onclick: () => (r.applied ? undo() : mark()) }, "");
+  const row = el("article", { class: "row" },
     el("div", { class: "score", "data-s": String(best(r)), "aria-label": `best score ${best(r) || "none"}` }, String(best(r) || "–")),
     el("div", {},
       el("div", { class: "head" }, el("span", { class: "company" }, r.company), postingTitle(r.title, r.url),
@@ -81,6 +100,7 @@ function rowEl(r) {
         el("a", { href: r.url, target: "_blank", rel: "noopener" }, "Open posting"),
         el("div", { class: "acts" }, applyBtn)),
       r.why ? el("p", { class: "why" }, r.why) : null));
+  setDone(done);
   return row;
 }
 function sectionEl(name, cls, rows, collapsed) {

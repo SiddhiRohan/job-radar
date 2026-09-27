@@ -41,3 +41,17 @@ def set_status(company, req_id, status, forward_only=False, path=None):
             write(items, path)
             return old, status
     return None
+
+
+def remove(company, req_id, path=None):
+    """Undo a mistaken "Mark applied". Only a row still at "applied" can go; anything an email moved on stays.
+    Returns the removed row, or None."""
+    items = rows(path)
+    for r in items:
+        if r["company"] == company and r["req_id"] == req_id:
+            if r["status"] != "applied":
+                return None
+            items.remove(r)
+            write(items, path)
+            return r
+    return None
