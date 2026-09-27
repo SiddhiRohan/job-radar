@@ -1,13 +1,18 @@
 """Decide what a hiring email means for the applications. Pure functions: no mailbox, no files.
 
 Rule agreed with the owner (2026-09-25): a status changes on its own only when the email contains the requisition id of
-exactly one application and its wording is clear. Other hiring emails that could change a status go to review.
+exactly one application and its wording is clear. Widened for rejections on 2026-09-27 at the owner's request: a
+rejection without an id moves the one application whose role it names (radar/rolematch.py), and a rejection for a
+role that is not on the list is filed apart instead of waiting for review. Other emails that could change a status
+still go to review.
 
 Calibrated on the owner's first real run: confirmation emails mention interviews as a possible next step ("if you are
 selected for an interview"), so interview and screen need invitation wording, and any phrase that follows "if",
 "may" or "should" nearby is ignored."""
 
 import re
+
+from radar import rolematch
 
 STATUS_RULES = {
     "rejected": r"other candidates|not (?:be )?mov(?:e|ing) forward|decided (?:to )?(?:pursue|proceed|move forward) with|"
@@ -119,7 +124,44 @@ def decide(msg, apps, tenants=None):
         guesses = [a for a in apps if a["company"] == employer]
     else:
         guesses = by_company(f"{sender} {msg.get('subject', '')}", apps) or by_company(text, apps)
+    if status == "rejected":
+        found = _rejection(msg, employer, guesses, apps)
+        if found:
+            return found
     return _review(status, guesses[0] if len(guesses) == 1 else None, "no req id", guesses)
+
+
+def _rejection(msg, employer, guesses, apps):
+    """A rejection without a usable id: the application whose role the email names, or "untracked" when the email
+    names a role that is not on the list or the employer has nothing open. None leaves it for review."""
+    pool = [a for a in apps if a["company"] == employer] if employer else guesses
+    text = rolematch.head(msg.get("subject"), msg.get("body"))
+    hits = rolematch.by_title(text, pool)
+    if len(hits) == 1:
+        a = hits[0]
+        if a.get("status") == "rejected":
+            return {"action": "ignore"}  # already recorded, usually by an earlier email about the same role
+        return {
+            "action": "update",
+            "company": a["company"],
+            "req_id": a["req_id"],
+            "status": "rejected",
+            "reason": "title",
+        }
+    if len(hits) > 1:
+        return _review("rejected", None, "several applications share this title", hits)
+    live = [a for a in pool if a.get("status", "applied") not in ("rejected", "offer")]
+    role = rolematch.named_role(text)
+    if role or not live:
+        company = employer or (guesses[0]["company"] if guesses else None)
+        return {
+            "action": "untracked",
+            "status": "rejected",
+            "company": company,
+            "role": role,
+            "reason": "not on your list",
+        }
+    return None
 
 
 def _review(status, app, why, candidates=()):

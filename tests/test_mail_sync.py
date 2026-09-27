@@ -26,7 +26,7 @@ def msg(mid, subject, body):
 def test_sync_moves_forward_and_records_the_email(tmp_path, monkeypatch):
     setup(tmp_path, monkeypatch)
     r = mail.sync([msg("<a@x>", "Interview", "We would like to interview you for R1001740.")])
-    assert r == {"configured": True, "updated": 1, "review": 0}
+    assert r == {"configured": True, "updated": 1, "review": 0, "untracked": 0}
     assert applications.rows()[0]["status"] == "interview"
     event = mail.load()["events"][0]
     assert event["from_status"] == "applied" and event["link"].startswith("https://mail.google.com/")
