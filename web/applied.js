@@ -7,7 +7,7 @@ const svg = (tag, attrs = {}) => { const e = document.createElementNS(SVGNS, tag
 const dayOf = r => r.date.slice(0, 10);  /* applications.md stores local time */
 const localDay = t => { const d = new Date(t); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
 const shortDay = d => new Date(d + "T12:00").toLocaleDateString(undefined, { month: "short", day: "numeric" });
-const A = { rows: [], showAll: false };
+const A = { rows: [], showAll: false, shown: {} };  /* shown: last tile value per label, so only a change counts up */
 
 /* One floating tooltip for every chart. Text only, never innerHTML: company names come from job postings. */
 let tipEl;  /* made on first use: el() is defined in app.js, which loads after this file */
@@ -26,10 +26,28 @@ const hoverable = (node, value, label) => {
   return node;
 };
 
+/* A tile number ticks up from the value last shown (0 on first paint) when it scrolls into view. Re-renders that
+   do not change the number stay still. Off under prefers-reduced-motion. */
+function countUp(label, value) {
+  const tv = el("span", { class: "tv" }, String(value));
+  const from = A.shown[label] ?? 0, still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  A.shown[label] = value;
+  if (still || from === value || typeof value !== "number") return tv;
+  tv.textContent = String(from);
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return; io.disconnect();
+    const t0 = performance.now(), ms = 700;
+    const tick = now => { const p = Math.min(1, (now - t0) / ms), k = 1 - Math.pow(1 - p, 3); tv.textContent = String(Math.round(from + (value - from) * k)); if (p < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  }), { threshold: .5 });
+  io.observe(tv);
+  return tv;
+}
+
 function tiles(rows) {
   const weekAgo = localDay(Date.now() - 6 * 864e5);
   const heard = rows.filter(r => r.status !== "applied").length;
-  const tile = (label, value, note) => el("div", { class: "tile" }, el("span", { class: "tl" }, label), el("span", { class: "tv" }, String(value)), note ? el("span", { class: "tn" }, note) : null);
+  const tile = (label, value, note) => el("div", { class: "tile reveal" }, el("span", { class: "tl" }, label), countUp(label, value), note ? el("span", { class: "tn" }, note) : null);
   return el("div", { class: "tiles" },
     tile("Applications", rows.length),
     tile("Last 7 days", rows.filter(r => dayOf(r) >= weekAgo).length),

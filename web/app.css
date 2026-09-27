@@ -104,6 +104,14 @@ details[open] > summary h2::before { transform: rotate(90deg); }
 .row { animation: rowin .22s ease both; }
 .row.settle { animation: settle .32s cubic-bezier(.2, .8, .2, 1) both; }
 @keyframes rowin { from { opacity: 0; transform: translateY(4px); } }
+/* Scroll reveal where the browser has scroll-driven animations: rows, cards and tiles fade up as they enter the
+   viewport instead of all at once on load. Everything else keeps the time-based ease-in. */
+@supports (animation-timeline: view()) {
+  .row, .card, .tile.reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 35%; }
+  .row.settle { animation: settle .32s cubic-bezier(.2, .8, .2, 1) both; animation-timeline: auto; }
+  .row.skel { animation-timeline: auto; }
+}
+@keyframes reveal { from { opacity: 0; transform: translateY(12px); } }
 @keyframes settle { 0% { transform: scale(1); } 35% { transform: scale(.985); } 100% { transform: scale(1); } }
 .row { transition: border-color .12s ease, box-shadow .18s ease, transform .18s ease, background-color .28s ease, color .28s ease; }
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .16s; }
@@ -134,7 +142,7 @@ a.title:hover, a.title:focus-visible { color: var(--accent); text-decoration: un
 .row .acts { margin-left: auto; display: flex; gap: 8px; }
 .row .pay { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 .row .pay.none { color: var(--ink-3); font-weight: 400; }
-@media (prefers-reduced-motion: reduce) { .row, details > summary h2::before, .chip { transition: none; } .row, .row.settle, .toast { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .row, details > summary h2::before, .chip { transition: none; } .row, .row.settle, .toast, .card, .tile.reveal { animation: none; } }
 @media (max-width: 640px) { .top { flex-wrap: wrap; gap: 8px 16px; } .datectl { margin-left: 0; flex-wrap: wrap; }
   .row { grid-template-columns: 1fr; row-gap: 8px; } .row .score { width: 36px; height: 36px; font-size: var(--fs-md); } }
 .tag { padding: 1px 7px; border-radius: 999px; border: 1px solid color-mix(in srgb, currentColor 45%, transparent); font-size: var(--fs-xs); }
