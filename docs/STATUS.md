@@ -11,20 +11,22 @@ demand. The UI runs with `python server.py`. Everything is merged to `main` on t
   entry-level terms, and "Sr" no longer removes a title. The estimated search phase is about an hour. Target set by
   the owner: at least 30 score-4 postings a day; the 2026-09-28 run is the first at these settings. Before it, days
   kept 35 to 101 postings with 6 to 14 scoring 4, and nothing went unscored, so the score cap was not the limit.
-- Applications recorded through the UI: 120, of which 11 rejected and none with a reply yet. 18 emails without a
+- Applications recorded through the UI: 120, of which 14 rejected and none with a reply yet. 18 emails without a
   requisition id wait in Needs review. The posting watcher found 81 postings still open and 15 closed with no reply.
 - Two agents run on the applications: "What the rejections say" (rejection rate by title family, seniority, resume
   base, fit score, years asked, sponsorship default, company) and "Postings since you applied" (closed, retitled,
   repriced, rewritten).
 - UI round of 2026-09-26 and 27: Undo from the toast for Mark applied, status changes and settled emails; keyboard
   shortcuts on Today (`?` lists them); filter chips; a motion pass; glass header, score rings and Instrument Sans;
-  a command palette on Ctrl+K. Vanilla HTML, CSS and JavaScript throughout, no framework.
+  a command palette on Ctrl+K; a posting drawer that reads the stored description with pay and sponsorship
+  highlighted; drag and drop on the Applied board; counting tiles and scroll reveal; an accent picker. Vanilla
+  HTML, CSS and JavaScript throughout, no framework.
 - The chat assistant can check mail, report rejection patterns and posting status, plan and build a tailored
   resume, and drive the page.
 - Brand: 3D logo, six-second ident, favicons and a social preview image in docs/img. The owner's name, resume file
   name and personal stopwords live in `.env` (`radar/owner.py`), never in tracked files.
-- Workflow: branch and PR for every change, CI (ruff, pytest) on PRs and main, pre-commit locally, 156 offline
-  tests, 47 merged PRs. Commits and merges carry no attribution trailers. Branch protection is unavailable on the
+- Workflow: branch and PR for every change, CI (ruff, pytest) on PRs and main, pre-commit locally, 157 offline
+  tests, 52 merged PRs. Commits and merges carry no attribution trailers. Branch protection is unavailable on the
   free private plan; the rule lives in CLAUDE.md. Never stack PRs.
 - Known gaps: hosting is still the laptop (issue #4); Google and the other 95 employers in
   `companies/not_on_workday.json` need a non-Workday adapter (issue #1); several sourced new-grad roles are 2027

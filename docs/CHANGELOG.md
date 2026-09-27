@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+**Posting drawer.** Click a row on Today, press Enter on the keyboard cursor, or pick a posting in the palette:
+the stored description opens in a sheet on the right with the pay sentence and the sponsorship phrase highlighted,
+the fit note on top, and Mark applied, Tailor and Open on Workday in the footer. `GET /api/posting`,
+`salary.sentence()`. No new requests to Workday.
+
+**Board, tiles, accents.** Cards drag between the Applied board's columns through the same status call, so Undo
+works. Tile numbers count up when they enter view; rows, cards and tiles fade up as they scroll in where the browser
+has scroll-driven animations. An accent picker in the header (teal, indigo, rust) remembered per browser and applied
+before first paint.
+
 **Command palette.** Ctrl+K (or the Search button) opens one box over the page: jump to a view, a digest day or
 any posting on the page, or run the radar, check mail, check postings, start a chat thread. A query that matches
 nothing goes to the assistant. `web/palette.js`, no server changes.
