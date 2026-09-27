@@ -73,6 +73,7 @@ function rowEl(r) {
     applyBtn.textContent = on ? "Applied" : "Mark applied";
     applyBtn.title = on ? "Applied. Click to undo" : "";
     applyBtn.setAttribute("aria-pressed", String(on));
+    row.classList.remove("settle"); void row.offsetWidth; row.classList.add("settle");  /* restart the settle animation */
     if (F.applied) applyFilters();  /* "Hide applied" is on: the row leaves the list; Undo in the toast brings it back */
   };
   const undo = async () => {
@@ -101,7 +102,7 @@ function rowEl(r) {
         el("a", { href: r.url, target: "_blank", rel: "noopener" }, "Open posting"),
         el("div", { class: "acts" }, applyBtn)),
       r.why ? el("p", { class: "why" }, r.why) : null));
-  setDone(done);
+  setDone(done); row.classList.remove("settle");  /* no animation on first paint */
   return row;
 }
 function sectionEl(name, cls, rows, collapsed) {
@@ -464,7 +465,12 @@ function show() {
   $("#datectl").hidden = v !== "today";
   if (v === "today") loadToday(); if (v === "applied") loadApplied();
 }
-window.addEventListener("hashchange", () => { window.scrollTo(0, 0); show(); });  /* a new view starts at the top; refreshes keep the place */
+/* A new view starts at the top; refreshes keep the place. Browsers with the View Transitions API cross-fade the
+   swap; the CSS turns that off under prefers-reduced-motion. */
+window.addEventListener("hashchange", () => {
+  const go = () => { window.scrollTo(0, 0); show(); };
+  if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(go); else go();
+});
 show();
 
 /* ---------- keyboard ---------- */

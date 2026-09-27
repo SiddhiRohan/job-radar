@@ -83,6 +83,14 @@ details[open] > summary h2::before { transform: rotate(90deg); }
   padding: 12px 14px; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius);
   transition: border-color .12s ease, box-shadow .12s ease; }
 .row:hover { border-color: var(--rule-strong); box-shadow: var(--shadow); }
+/* Motion: rows ease in on load, settle when marked or undone, the toast rises, views cross-fade. All off under
+   prefers-reduced-motion. */
+.row { animation: rowin .22s ease both; }
+.row.settle { animation: settle .32s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes rowin { from { opacity: 0; transform: translateY(4px); } }
+@keyframes settle { 0% { transform: scale(1); } 35% { transform: scale(.985); } 100% { transform: scale(1); } }
+.row { transition: border-color .12s ease, box-shadow .12s ease, background-color .28s ease, color .28s ease; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .16s; }
 .row:focus-within { border-color: var(--accent); }
 .row.done { background: var(--surface-2); color: var(--ink-3); }
 .row.done .company, .row.done .title { text-decoration: line-through; text-decoration-color: var(--rule-strong); }
@@ -107,7 +115,7 @@ a.title:hover, a.title:focus-visible { color: var(--accent); text-decoration: un
 .row .acts { margin-left: auto; display: flex; gap: 8px; }
 .row .pay { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 .row .pay.none { color: var(--ink-3); font-weight: 400; }
-@media (prefers-reduced-motion: reduce) { .row, details > summary h2::before { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .row, details > summary h2::before, .chip { transition: none; } .row, .row.settle, .toast { animation: none; } }
 @media (max-width: 640px) { .top { flex-wrap: wrap; gap: 8px 16px; } .datectl { margin-left: 0; flex-wrap: wrap; }
   .row { grid-template-columns: 1fr; row-gap: 8px; } .row .score { width: 36px; height: 36px; font-size: var(--fs-md); } }
 .tag { padding: 1px 7px; border-radius: 999px; border: 1px solid color-mix(in srgb, currentColor 45%, transparent); font-size: var(--fs-xs); }
@@ -155,6 +163,8 @@ td select { padding: 2px 4px; }
 .keys dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0 0 14px; align-items: baseline; }
 .keys dt { display: flex; gap: 4px; } .keys dd { margin: 0; color: var(--ink-2); }
 kbd { font: inherit; font-size: var(--fs-sm); padding: 1px 7px; border: 1px solid var(--rule-strong); border-bottom-width: 2px; border-radius: 6px; background: var(--surface-2); }
+.toast:not([hidden]) { animation: toastin .2s ease both; }
+@keyframes toastin { from { opacity: 0; transform: translateY(8px); } }
 .toast { position: fixed; left: 28px; bottom: 24px; background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: var(--radius); box-shadow: var(--shadow); max-width: 60ch; display: flex; gap: 14px; align-items: center; }
 .toast-act { background: none; border: 0; color: var(--bg); font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0; }
 .row.done .apply { color: var(--ink-3); }
