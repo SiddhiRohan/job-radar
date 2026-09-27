@@ -64,3 +64,9 @@ def test_several_locations_span_lowest_to_highest():
     )
     got = salary.extract(text)
     assert got["text"] == "$90k to $224k" and got["multiple"]
+
+
+def test_sentence_holding_the_first_pay_figure():
+    text = "Great team. The base salary range is $120,000 - $150,000 per year. Bonus eligible.\nApply by Friday."
+    assert salary.sentence(text) == "The base salary range is $120,000 - $150,000 per year."
+    assert salary.sentence("No pay here, 401(k) match only.") is None

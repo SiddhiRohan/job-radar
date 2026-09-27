@@ -40,7 +40,7 @@ function buildItems() {
   for (const r of rows) {
     items.push({ g: "Posting", label: `${r.company}, ${r.title}`, hint: r.location, run: () => goToday(null, () => {
       const row = [...document.querySelectorAll("#today-body article.row")].find(x => x.dataset.company === r.company && x.querySelector(".title")?.textContent === r.title);
-      if (row) { row.closest("details")?.setAttribute("open", ""); setCur(row); }
+      if (row) { row.closest("details")?.setAttribute("open", ""); setCur(row); openDrawer(r, row); }
     }) });
   }
   return items;

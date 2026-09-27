@@ -182,6 +182,29 @@ td select { padding: 2px 4px; }
 .keys dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0 0 14px; align-items: baseline; }
 .keys dt { display: flex; gap: 4px; } .keys dd { margin: 0; color: var(--ink-2); }
 kbd { font: inherit; font-size: var(--fs-sm); padding: 1px 7px; border: 1px solid var(--rule-strong); border-bottom-width: 2px; border-radius: 6px; background: var(--surface-2); }
+/* Posting drawer: a fixed sheet on the right; on wide screens the page makes room for it. */
+.drawer { position: fixed; top: var(--top-h); right: 0; bottom: 0; width: min(480px, 100vw); z-index: 4; display: flex; flex-direction: column;
+  background: var(--surface); border-left: 1px solid var(--rule); box-shadow: -18px 0 48px -30px rgb(0 0 0 / .35); animation: drawerin .22s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes drawerin { from { opacity: 0; transform: translateX(16px); } }
+.drawer header { padding: 16px 20px 12px; border-bottom: 1px solid var(--rule); display: grid; gap: 6px; }
+.drawer .d-top { display: flex; align-items: start; gap: 10px; }
+.drawer h3 { margin: 0; flex: 1; font: 600 var(--fs-lg)/1.2 var(--font-display); letter-spacing: -0.015em; }
+.drawer #d-close { font-size: var(--fs-lg); line-height: 1; text-decoration: none; padding: 0 4px; }
+.drawer .facts { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; color: var(--ink-2); font-size: var(--fs-sm); }
+.drawer .facts b { color: var(--ink); }
+.drawer .body { padding: 14px 20px; overflow-y: auto; flex: 1; font-size: var(--fs-sm); color: var(--ink-2); line-height: 1.55; }
+.drawer .body p, .drawer .body ul { margin: 0 0 10px; max-width: none; } .drawer .body ul { padding-left: 18px; }
+.drawer .body .dwhy { color: var(--ink); background: var(--surface-2); border-left: 3px solid var(--accent); padding: 8px 12px; border-radius: 0 6px 6px 0; }
+.drawer .body .dim { color: var(--ink-3); }
+.drawer mark { color: var(--ink); border-radius: 3px; padding: 0 3px; }
+.drawer mark.pay { background: color-mix(in srgb, var(--apply) 20%, transparent); }
+.drawer mark.spon { background: color-mix(in srgb, var(--maybe) 24%, transparent); }
+.drawer footer { padding: 12px 20px; border-top: 1px solid var(--rule); display: flex; gap: 8px; align-items: center; background: var(--surface-2); }
+.drawer footer a { margin-left: auto; color: var(--ink-2); font-size: var(--fs-sm); }
+.row.sel { border-color: var(--accent); }
+.row { cursor: pointer; } .row a, .row button, .row select { cursor: pointer; }
+@media (min-width: 1500px) { body.has-drawer main { padding-right: 500px; } }
+@media (prefers-reduced-motion: reduce) { .drawer { animation: none; } }
 /* Command palette (Ctrl+K): a centred sheet that drops in over a dimmed page. */
 .cmdkbtn { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; padding: 4px 6px 4px 10px; color: var(--ink-2); border-radius: 999px; }
 .cmdkbtn kbd { font-size: var(--fs-xs); color: var(--ink-3); }

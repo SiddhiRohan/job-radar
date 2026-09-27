@@ -70,6 +70,14 @@
   </section>
 </main>
 
+<aside id="drawer" class="drawer" aria-label="Posting" hidden>
+  <header>
+    <div class="d-top"><h3 id="d-title"></h3><button type="button" id="d-close" class="quiet" aria-label="Close">&times;</button></div>
+    <div id="d-facts" class="facts"></div>
+  </header>
+  <div id="d-body" class="body"></div>
+  <footer><button type="button" id="d-apply" class="primary">Mark applied</button><button type="button" id="d-tailor">Tailor</button><a id="d-open" href="#" target="_blank" rel="noopener">Open on Workday</a></footer>
+</aside>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <dialog id="cmdk" class="cmdk" aria-label="Search and commands">
   <input id="cmdk-in" type="text" placeholder="Jump to a view, a day, a posting, or run something" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list">
@@ -81,6 +89,7 @@
   <dl>
     <dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>Next and previous posting on Today</dd>
     <dt><kbd>a</kbd></dt><dd>Mark the current posting applied, or undo</dd>
+    <dt><kbd>&crarr;</kbd></dt><dd>Read the current posting in the drawer</dd>
     <dt><kbd>o</kbd></dt><dd>Open the current posting in a new tab</dd>
     <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Earlier and later day</dd>
     <dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></dt><dd>Today, Tailor, Applied</dd>
@@ -96,5 +105,6 @@
 <script src="insights.js"></script>
 <script src="app.js"></script>
 <script src="palette.js"></script>
+<script src="drawer.js"></script>
 </body>
 </html>

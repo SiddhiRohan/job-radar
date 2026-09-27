@@ -119,6 +119,20 @@ def write_applied(rows):
     applications.write(rows)
 
 
+@app.get("/api/posting")
+def posting(company: str, req_id: str):
+    """One stored posting with its description, for the drawer: the row fields plus the text and what to highlight."""
+    j = next((x for x in jobs_all() if x["company"] == company and x["req_id"] == req_id), None)
+    if j is None:
+        raise HTTPException(404, "posting not stored")
+    text = j.get("description", "")
+    return row(j) | {
+        "description": text,
+        "years_required": j.get("years_required"),
+        "pay_sentence": salary.sentence(text),
+    }
+
+
 @app.get("/api/applied")
 def applied():
     """Applications, newest first, each with its posting URL from jobs.jsonl so the page can link it."""
