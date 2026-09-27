@@ -73,6 +73,7 @@ function rowEl(r) {
     applyBtn.textContent = on ? "Applied" : "Mark applied";
     applyBtn.title = on ? "Applied. Click to undo" : "";
     applyBtn.setAttribute("aria-pressed", String(on));
+    if (F.applied) applyFilters();  /* "Hide applied" is on: the row leaves the list; Undo in the toast brings it back */
   };
   const undo = async () => {
     applyBtn.disabled = true;
@@ -91,7 +92,7 @@ function rowEl(r) {
   };
   /* One button, two states: Mark applied, then Applied (press again to undo a slip). */
   const applyBtn = el("button", { type: "button", class: "apply", onclick: () => (r.applied ? undo() : mark()) }, "");
-  const row = el("article", { class: "row" },
+  const row = el("article", { class: "row", "data-company": r.company, "data-score": String(best(r)), "data-pay": r.salary ? "1" : "0" },
     el("div", { class: "score", "data-s": String(best(r)), "aria-label": `best score ${best(r) || "none"}` }, String(best(r) || "–")),
     el("div", {},
       el("div", { class: "head" }, el("span", { class: "company" }, r.company), postingTitle(r.title, r.url),
@@ -105,7 +106,7 @@ function rowEl(r) {
 }
 function sectionEl(name, cls, rows, collapsed) {
   const h = el("h2", { class: cls }, name, el("span", { class: "n" }, String(rows.length)));
-  const body = rows.length ? rows.map(rowEl) : [el("p", { class: "empty" }, "Nothing here today.")];
+  const body = rows.length ? rows.map(r => { const x = rowEl(r); x.dataset.section = cls; return x; }) : [el("p", { class: "empty" }, "Nothing here today.")];
   if (!collapsed) return [h, ...body];
   /* Remember which collapsed sections are open so a refresh, a date change or the end of a run keeps them open. */
   const d = el("details", { open: T.open.has(name) ? "" : null }, el("summary", {}, h), el("div", { class: "det-body" }, ...body));
@@ -132,12 +133,51 @@ async function loadToday() {
         latest ? el("button", { type: "button", onclick: () => { T.date = latest; loadToday(); } }, "Show " + latest) : null));
       return;
     }
-    body.replaceChildren(...sectionEl("Apply", "apply", s.apply),
+    body.replaceChildren(chipBar(Object.values(s).flat()), ...sectionEl("Apply", "apply", s.apply),
       ...sectionEl("Entry level", "entry", s.entry || []), ...sectionEl("Maybe", "maybe", s.maybe),
       ...sectionEl("Contract or backup", "contract", s.contract), ...sectionEl("Everything else", "lower", s.lower, true),
       ...sectionEl("Skipped for sponsorship", "lower", s.skipped || [], true));
+    applyFilters();
   } catch (e) { clearTimeout(sk); body.removeAttribute("aria-busy"); fail(body, e, loadToday); }
 }
+/* ---------- filter chips ---------- */
+/* Client-side only: chips hide rows that are already on the page. The choice is remembered per browser; the company
+   chip is not, since companies change every day. Section counts show "shown of total" while a filter is on. */
+let F = { applied: false, pay: false, entry: false, four: false, company: null };
+try { F = { ...F, ...JSON.parse(localStorage.getItem("radar-filters") || "{}"), company: null }; } catch (e) {}
+const saveF = () => { try { localStorage.setItem("radar-filters", JSON.stringify({ ...F, company: null })); } catch (e) {} };
+function chipBar(rows) {
+  const chip = (key, label, on, set) => el("button", { type: "button", class: "chip" + (on ? " on" : ""), "aria-pressed": String(on),
+    onclick: () => { set(); saveF(); $("#today-body").replaceChild(chipBar(rows), $("#chips")); applyFilters(); } }, label);
+  const counts = rows.reduce((m, r) => m.set(r.company, (m.get(r.company) || 0) + 1), new Map());
+  const big = [...counts].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const any = F.applied || F.pay || F.entry || F.four || F.company;
+  return el("div", { id: "chips", class: "chips", role: "group", "aria-label": "Filters" },
+    chip("applied", "Hide applied", F.applied, () => (F.applied = !F.applied)),
+    chip("pay", "Pay listed", F.pay, () => (F.pay = !F.pay)),
+    chip("four", "Score 4", F.four, () => (F.four = !F.four)),
+    chip("entry", "Entry level", F.entry, () => (F.entry = !F.entry)),
+    big.length ? el("span", { class: "chipsep" }) : null,
+    ...big.map(([c, n]) => chip(c, `${c} ${n}`, F.company === c, () => (F.company = F.company === c ? null : c))),
+    any ? el("button", { type: "button", class: "chip clear", onclick: () => { F = { ...F, applied: false, pay: false, entry: false, four: false, company: null }; saveF(); $("#today-body").replaceChild(chipBar(rows), $("#chips")); applyFilters(); } }, "Clear") : null);
+}
+function applyFilters() {
+  const rows = document.querySelectorAll("#today-body article.row");
+  rows.forEach(x => {
+    const d = x.dataset;
+    x.hidden = (F.applied && x.classList.contains("done")) || (F.pay && d.pay !== "1") || (F.four && d.score !== "4")
+      || (F.entry && d.section !== "entry") || (F.company && d.company !== F.company);
+  });
+  document.querySelectorAll("#today-body h2").forEach(h => {
+    const n = h.querySelector(".n");
+    const all = [...(h.closest("details")?.querySelectorAll("article.row") || nextRows(h))];
+    const shown = all.filter(x => !x.hidden).length;
+    n.textContent = shown === all.length ? String(all.length) : `${shown} of ${all.length}`;
+  });
+}
+/* Rows that follow an open heading until the next heading or details block. */
+function nextRows(h) { const out = []; for (let e = h.nextElementSibling; e && !e.matches("h2, details"); e = e.nextElementSibling) if (e.matches("article.row")) out.push(e); return out; }
+
 $("#date").addEventListener("change", e => { T.date = e.target.value; loadToday(); });
 $("#prev").addEventListener("click", () => { const i = T.dates.indexOf(T.date); if (i < T.dates.length - 1) { T.date = T.dates[i + 1]; loadToday(); } });
 $("#next").addEventListener("click", () => { const i = T.dates.indexOf(T.date); if (i > 0) { T.date = T.dates[i - 1]; loadToday(); } });
