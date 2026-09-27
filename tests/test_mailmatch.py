@@ -212,3 +212,10 @@ def test_footer_job_suggestions_do_not_count():
     body = "Thank you for your interest in Mastercard." + " " * 1600 + "Jobs you may like: Data Scientist, New York."
     d = reject("mastercard@myworkday.com", body)
     assert d["action"] == "review"  # three open Mastercard applications, no role named up top
+
+
+def test_role_phrase_after_a_false_start():
+    from radar import rolematch
+
+    text = "Thank you for your interest in Walmart. We appreciate the time you took to apply for the (USA) Data Scientist III position."
+    assert rolematch.named_role(text) == "(USA) Data Scientist III"
