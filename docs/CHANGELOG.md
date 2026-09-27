@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+**Command palette.** Ctrl+K (or the Search button) opens one box over the page: jump to a view, a digest day or
+any posting on the page, or run the radar, check mail, check postings, start a chat thread. A query that matches
+nothing goes to the assistant. `web/palette.js`, no server changes.
+
+**Visual pass.** Sticky glass header with a blur and a rule that appears on scroll, pill navigation, conic score
+rings that fill to the fit out of five, Instrument Sans for headings, company names and big numbers, two-stop
+shadows on cards and tiles, a faint accent glow behind the top of the page. Dark mode has its own values.
+
 **More postings per day.** Every tier is polled daily, tier 2 reads three pages and tier 3 two, "analytics" joins
 the search terms, "Sr" no longer removes a title (Senior never did, and both score 4 at the same rate), and the
 score cap rises to 120. The run grows from about half an hour to about an hour.
