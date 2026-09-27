@@ -115,18 +115,29 @@ async function setStatus(r, status, undoing) {
 const statusSelect = r => el("select", { "aria-label": `Status for ${r.company}, ${r.title}`, onchange: e => setStatus(r, e.target.value).catch(err => toast(err.message)) },
   ...STAGES.map(s => el("option", { value: s, selected: s === r.status ? "" : null }, s)));
 
-/* The board: one column per stage. The Applied column shows the newest 6 until asked for the rest. */
+/* The board: one column per stage. Cards drag between columns (the drop calls setStatus, so Undo works); the select
+   stays for keyboard and touch. The Applied column shows the newest 6 until asked for the rest. */
+const DRAG = { r: null };
 function board(rows) {
   const cols = STAGES.map(s => {
     const all = rows.filter(r => r.status === s), cap = s === "applied" && !A.showAll ? 6 : all.length;
-    const cards = all.slice(0, cap).map(r => el("article", { class: "kcard", title: r.title },
-      el("span", { class: "kh" }, el("span", { class: "kc" }, r.company), el("span", { class: "kd" }, shortDay(dayOf(r)))),
-      postingTitle(r.title, r.url), statusSelect(r)));
+    const cards = all.slice(0, cap).map(r => {
+      const card = el("article", { class: "kcard", title: r.title, draggable: "true" },
+        el("span", { class: "kh" }, el("span", { class: "kc" }, r.company), el("span", { class: "kd" }, shortDay(dayOf(r)))),
+        postingTitle(r.title, r.url), statusSelect(r));
+      card.addEventListener("dragstart", e => { DRAG.r = r; card.classList.add("ghost"); e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", `${r.company}|${r.req_id}`); });
+      card.addEventListener("dragend", () => { card.classList.remove("ghost"); DRAG.r = null; document.querySelectorAll(".kcol.over").forEach(c => c.classList.remove("over")); });
+      return card;
+    });
     const more = all.length > cap ? el("button", { type: "button", class: "quiet", onclick: () => { A.showAll = true; renderApplied(); } }, `Show all ${all.length}`) : null;
-    return el("div", { class: "kcol" }, el("h4", {}, s[0].toUpperCase() + s.slice(1), el("span", { class: "n" }, String(all.length))),
+    const col = el("div", { class: "kcol", "data-stage": s }, el("h4", {}, s[0].toUpperCase() + s.slice(1), el("span", { class: "n" }, String(all.length))),
       ...(cards.length ? cards : [el("p", { class: "kempty" }, "None yet")]), more);
+    col.addEventListener("dragover", e => { if (!DRAG.r || DRAG.r.status === s) return; e.preventDefault(); e.dataTransfer.dropEffect = "move"; col.classList.add("over"); });
+    col.addEventListener("dragleave", e => { if (!col.contains(e.relatedTarget)) col.classList.remove("over"); });
+    col.addEventListener("drop", e => { e.preventDefault(); col.classList.remove("over"); const r = DRAG.r; DRAG.r = null; if (r && r.status !== s) setStatus(r, s).catch(err => toast(err.message)); });
+    return col;
   });
-  return el("section", { class: "card wide" }, el("h3", {}, "Board"), el("p", { class: "sub" }, "Change a status to move a card"), el("div", { class: "kboard" }, ...cols));
+  return el("section", { class: "card wide" }, el("h3", {}, "Board"), el("p", { class: "sub" }, "Drag a card to another column, or change its status"), el("div", { class: "kboard" }, ...cols));
 }
 function table(rows) {
   const tr = r => el("tr", {}, el("td", {}, r.date), el("td", {}, r.company), el("td", {}, postingTitle(r.title, r.url)), el("td", {}, statusSelect(r)),

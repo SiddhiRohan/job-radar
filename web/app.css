@@ -316,6 +316,14 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .kcard .kt, .kcard .title { color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .kcard { min-width: 0; } .kcard select { margin-top: 4px; padding: 2px 4px; font-size: var(--fs-xs); width: 100%; min-width: 0; }
 .kempty { color: var(--ink-3); font-size: var(--fs-xs); margin: 4px; }
+/* Drag between board columns: the card lifts, the target column shows a dashed ring and a wash. */
+.kcard[draggable] { cursor: grab; transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease; }
+.kcard[draggable]:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.kcard[draggable]:active { cursor: grabbing; }
+.kcard.ghost { opacity: .4; }
+.kcol { transition: background-color .15s ease, outline-color .15s ease; outline: 2px dashed transparent; outline-offset: -2px; }
+.kcol.over { outline-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--surface-2)); }
+@media (prefers-reduced-motion: reduce) { .kcard[draggable], .kcol { transition: none; } }
 .tableview { margin-top: 14px; } .tableview > summary { color: var(--ink-2); padding: 8px 0; }
 .vtip { position: absolute; z-index: 20; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--rule-strong);
   border-radius: var(--radius-sm); box-shadow: var(--shadow); padding: 6px 10px; display: grid; font-size: var(--fs-sm); }
