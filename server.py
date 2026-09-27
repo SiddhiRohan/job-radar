@@ -203,6 +203,11 @@ def mail_sync():
     return background(mail.sync)
 
 
+@app.post("/api/mail/unresolve")
+def mail_unresolve(body: dict):
+    return mail.unresolve(body["message_id"])
+
+
 @app.post("/api/mail/resolve")
 def mail_resolve(body: dict):
     return mail.resolve(body["message_id"], body.get("company"), body.get("req_id"), body.get("status"))

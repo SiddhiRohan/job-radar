@@ -38,9 +38,13 @@ function reviewItem(r, apps) {
     el("optgroup", { label: first.length ? "All applications" : "Applications" }, ...rest.map(opt)));
   const status = el("select", { "aria-label": "Status this email means" },
     ...STAGES.map(s => el("option", { value: s, selected: s === (r.status || "applied") ? "" : null }, s)));
+  /* Settling an email can be taken back from the toast: it returns to Needs review and any status change reverts. */
   const settle = async body => {
-    try { await api("/api/mail/resolve", { message_id: r.message_id, ...body }); loadApplied(); }
-    catch (e) { toast(e.message); }
+    try {
+      await api("/api/mail/resolve", { message_id: r.message_id, ...body }); loadApplied();
+      toast(body.status ? `Set ${body.company} to ${body.status} from this email` : "Email dismissed",
+        { label: "Undo", run: () => api("/api/mail/unresolve", { message_id: r.message_id }).then(loadApplied).catch(e => toast(e.message)) });
+    } catch (e) { toast(e.message); }
   };
   const apply = el("button", { type: "button", class: "primary", onclick: () => {
     if (!pick.value) return toast("Choose the application first");

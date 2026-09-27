@@ -113,3 +113,19 @@ def test_app_password_is_used_without_display_spaces(tmp_path, monkeypatch):
     monkeypatch.setattr(mail, "fetch", lambda address, password, since, seen: used.update(password=password) or [])
     assert mail.sync()["configured"] is True
     assert used["password"] == "abcdefghijklmnop"
+
+
+def test_unresolve_returns_the_email_and_the_old_status(tmp_path, monkeypatch):
+    setup(tmp_path, monkeypatch)
+    mail.sync(
+        [
+            msg("<c@x>", "Capital One update", "We regret to inform you."),
+            msg("<d@x>", "Capital One news", "The position has been filled."),
+        ]
+    )
+    mail.resolve("<c@x>", "Capital One", "R1001740", "rejected")
+    mail.resolve("<d@x>")
+    assert mail.unresolve("<c@x>")["ok"] and mail.unresolve("<d@x>")["ok"]
+    assert [r["message_id"] for r in mail.load()["review"]] == ["<d@x>", "<c@x>"]
+    assert applications.rows()[0]["status"] == "applied" and mail.load()["events"] == []
+    assert mail.unresolve("<zz@x>") == {"ok": False}

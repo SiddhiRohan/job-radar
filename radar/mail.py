@@ -40,6 +40,7 @@ def load():
         "seen": s.get("seen", []),
         "events": s.get("events", []),
         "review": s.get("review", []),
+        "undo": s.get("undo", []),
         "last_sync": s.get("last_sync"),
     }
 
@@ -137,6 +138,7 @@ def resolve(message_id, company=None, req_id=None, status=None):
     state = load()
     item = next((r for r in state["review"] if r["message_id"] == message_id), None)
     state["review"] = [r for r in state["review"] if r["message_id"] != message_id]
+    change = None
     if item and company and req_id and status:
         change = applications.set_status(company, req_id, status)
         if change:
@@ -150,6 +152,27 @@ def resolve(message_id, company=None, req_id=None, status=None):
                     "reason": "reviewed",
                 }
             )
+    if item:  # keep what is needed to take this back; the last ten settlements only
+        undo = {"item": item, "company": company, "req_id": req_id, "from_status": change[0] if change else None}
+        state["undo"] = (state.get("undo") or [])[-9:] + [undo]
+    save(state)
+    return {"ok": True}
+
+
+def unresolve(message_id):
+    """Take a settlement back: the email returns to Needs review and a status it changed goes back to what it was."""
+    state = load()
+    rec = next((u for u in state.get("undo") or [] if u["item"]["message_id"] == message_id), None)
+    if rec is None:
+        return {"ok": False}
+    state["undo"] = [u for u in state["undo"] if u is not rec]
+    if rec["from_status"]:
+        applications.set_status(rec["company"], rec["req_id"], rec["from_status"])
+        state["events"] = [
+            e for e in state["events"] if not (e.get("message_id") == message_id and e.get("reason") == "reviewed")
+        ]
+    if not any(r["message_id"] == message_id for r in state["review"]):
+        state["review"].insert(0, rec["item"])
     save(state)
     return {"ok": True}
 
