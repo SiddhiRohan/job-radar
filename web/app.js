@@ -455,6 +455,9 @@ $("#chatdel").addEventListener("click", async () => {
 });
 setChat(C.open);
 
+/* The glass header shows its rule only once the page has scrolled. */
+addEventListener("scroll", () => $(".top").classList.toggle("scrolled", scrollY > 4), { passive: true });
+
 /* ---------- routing ---------- */
 function show() {
   const v = (location.hash || "#today").slice(1);
