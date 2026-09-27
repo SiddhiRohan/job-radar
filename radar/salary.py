@@ -79,3 +79,13 @@ def label(lo, hi, period):
         return f"{f(lo)}/hr" if lo == hi else f"{f(lo)} to {f(hi)}/hr"
     k = lambda v: f"${round(v / 1000):,}k"  # noqa: E731
     return k(lo) if lo == hi else f"{k(lo)} to {k(hi)}"
+
+
+def sentence(text):
+    """The sentence (or line) holding the first pay figure, so a page can highlight it. None when there is none."""
+    if not text or not ranges(text):
+        return None
+    for part in re.split(r"(?<=[.!?])\s+|\n+", text):
+        if ranges(part):
+            return part.strip()[:300]
+    return None

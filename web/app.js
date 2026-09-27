@@ -103,6 +103,7 @@ function rowEl(r) {
         el("div", { class: "acts" }, applyBtn)),
       r.why ? el("p", { class: "why" }, r.why) : null));
   setDone(done); row.classList.remove("settle");  /* no animation on first paint */
+  row.__row = r;  /* the drawer reads the row data from the element */
   return row;
 }
 function sectionEl(name, cls, rows, collapsed) {
@@ -493,7 +494,7 @@ function moveCur(step) {
 document.addEventListener("keydown", e => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   const t = e.target, typing = t.matches?.("input, textarea, select, [contenteditable]") || $("#keys").open;
-  if (e.key === "Escape") { if ($("#keys").open) $("#keys").close(); else if (C.open) setChat(false); return; }
+  if (e.key === "Escape") { if ($("#keys").open) $("#keys").close(); else if (typeof drawerOpen === "function" && drawerOpen()) closeDrawer(); else if (C.open) setChat(false); return; }
   if (typing) return;
   const today = (location.hash || "#today") === "#today";
   const acts = {
