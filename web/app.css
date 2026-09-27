@@ -139,6 +139,14 @@ table { border-collapse: collapse; width: 100%; margin-top: 12px; }
 th { text-align: left; font-weight: 600; color: var(--ash); padding: 6px 10px 6px 0; border-bottom: 1px solid var(--rule); }
 td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
 td select { padding: 2px 4px; }
+/* Keyboard: the current row on Today and the shortcut list. */
+.row.cur { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 18%, transparent); }
+.keys { border: 1px solid var(--rule); border-radius: 12px; padding: 20px 24px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); max-width: 34ch; }
+.keys::backdrop { background: rgb(0 0 0 / .25); }
+.keys h2 { margin: 0 0 12px; font-size: var(--fs-md); }
+.keys dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0 0 14px; align-items: baseline; }
+.keys dt { display: flex; gap: 4px; } .keys dd { margin: 0; color: var(--ink-2); }
+kbd { font: inherit; font-size: var(--fs-sm); padding: 1px 7px; border: 1px solid var(--rule-strong); border-bottom-width: 2px; border-radius: 6px; background: var(--surface-2); }
 .toast { position: fixed; left: 28px; bottom: 24px; background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: var(--radius); box-shadow: var(--shadow); max-width: 60ch; display: flex; gap: 14px; align-items: center; }
 .toast-act { background: none; border: 0; color: var(--bg); font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0; }
 .row.done .apply { color: var(--ink-3); }
