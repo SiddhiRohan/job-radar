@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Rejections move on their own by role.** A rejection email without a requisition id now moves the one application
+whose role it names ("applying for the Data Engineer II position"); a rejection for a role not on the list is kept
+apart on the Email card instead of waiting for review. `radar/rolematch.py`; `python -m radar.mail --recheck`
+re-decides the emails already waiting.
+
 **Posting drawer.** Click a row on Today, press Enter on the keyboard cursor, or pick a posting in the palette:
 the stored description opens in a sheet on the right with the pay sentence and the sponsorship phrase highlighted,
 the fit note on top, and Mark applied, Tailor and Open on Workday in the footer. `GET /api/posting`,

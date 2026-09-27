@@ -119,7 +119,9 @@ skipped.
 | The email | What happens |
 | --- | --- |
 | Contains the requisition id of exactly one application, and the wording is clear | The status moves on its own, forward only: applied, screen, interview, rejected, offer. An older email never moves a status back. |
-| Could change a status (a rejection, an offer, an invitation to a screen or interview) but has no requisition id, ids of several applications, or mixes an invitation with a plain confirmation | Needs review, with likely applications listed first |
+| A rejection with no requisition id that names the role of exactly one application at that employer ("applying for the Data Engineer II position") | Moves to rejected on its own. A title inside a longer one does not count: "Data Scientist" is not "Senior Data Scientist" or "Data Scientist I". Only the subject and the first 1,500 characters are read, so job suggestions in a footer never match. |
+| A rejection for a role that is not on your list, or from an employer where nothing is open | Kept under "Rejections for roles not on your list" on the Email card. Nothing to do. |
+| Could change a status (an offer, an invitation to a screen or interview, or a rejection that names no role or a title several applications share) but has no requisition id, ids of several applications, or mixes an invitation with a plain confirmation | Needs review, with likely applications listed first |
 | A plain confirmation, or account, password and task mail | Ignored: it cannot move anything past applied |
 | Anything else | Ignored |
 
@@ -130,6 +132,9 @@ invitation wording, such as "we would like to invite you to interview" or "sched
 "interview" is not enough, because confirmations mention interviews as a possible next step. Any phrase shortly after
 "if", "may", "might" or "should" is ignored, so "if you are selected for an interview" and "if you are not selected"
 change nothing.
+
+After a rule change, `python -m radar.mail --recheck` reads every email in Needs review again and decides it with the
+current rules.
 
 Each update and review item links to the email in Gmail. Seen message ids, recent updates and the review list are
 kept in `.cache/ui/mail.json`, with a short snippet of each email; the full text is never stored.

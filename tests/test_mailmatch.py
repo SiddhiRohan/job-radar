@@ -136,6 +136,79 @@ def test_workday_sender_address_names_the_employer():
     apps = APPS + [{"company": "Workday", "req_id": "JR-0109848", "title": "Data Engineer"}]
     body = "We regret to inform you that we will not be proceeding. Powered by Workday."
     not_tracked = mailmatch.decide(mail("Job application: update", body, "pwc@myworkday.com"), apps, tenants)
-    assert not_tracked["company"] is None and not_tracked["candidates"] == []  # never applied to PwC: no guess
+    assert not_tracked["action"] == "untracked" and not_tracked["company"] == "PwC"  # never applied to PwC
     tracked = mailmatch.decide(mail("Job application: update", body, "capitalone@myworkday.com"), apps, tenants)
     assert tracked["company"] == "Capital One"
+
+
+# Rejections without a requisition id, worded like the owner's real ones (2026-09-27): matched by the role they name.
+TRACKED = [
+    {"company": "Mastercard", "req_id": "R-288332", "title": "Senior Data Engineer", "status": "applied"},
+    {"company": "Mastercard", "req_id": "R-289305", "title": "Data Engineer II", "status": "applied"},
+    {"company": "Mastercard", "req_id": "R-291128", "title": "Data Scientist", "status": "applied"},
+    {"company": "Expedia", "req_id": "R-109347", "title": "Machine Learning Scientist II", "status": "applied"},
+    {
+        "company": "Expedia",
+        "req_id": "R-109446",
+        "title": "Machine Learning Scientist II - Agentic Experiences",
+        "status": "applied",
+    },
+    {"company": "Walmart", "req_id": "R-2648464", "title": "(USA) Senior, Data Scientist", "status": "applied"},
+    {"company": "Walmart", "req_id": "R-2641183", "title": "Senior Data Scientist", "status": "applied"},
+    {"company": "Cisco", "req_id": "2020310", "title": "Forward Deployed Engineer- Splunk", "status": "rejected"},
+    {"company": "LexisNexis", "req_id": "R118426", "title": "Fraud Data Analyst", "status": "applied"},
+]
+TENANTS = {"mastercard": "Mastercard", "expedia": "Expedia", "cisco": "Cisco", "relx": "LexisNexis", "truist": "Truist"}
+NO = " After careful consideration, we have decided to move forward with other candidates."
+
+
+def reject(sender, body, subject="An update on your application"):
+    return mailmatch.decide(mail(subject, body + NO, sender), TRACKED, TENANTS)
+
+
+def test_rejection_names_the_role_and_moves_that_application():
+    d = reject(
+        "MasterCard People Services <mastercard@myworkday.com>",
+        "Thank you for applying to the Senior Data Engineer position.",
+    )
+    assert (d["action"], d["req_id"], d["reason"]) == ("update", "R-288332", "title")
+    d = reject("mastercard@myworkday.com", "Thank you for applying to the Data Engineer II position.")
+    assert d["req_id"] == "R-289305"
+
+
+def test_a_shorter_title_inside_a_longer_one_is_not_a_match():
+    # "Data Scientist" is a Mastercard application; "Senior Data Scientist" is not, so nothing matches by title.
+    d = reject("mastercard@myworkday.com", "Thank you for applying to the Senior Data Scientist position.")
+    assert d["action"] == "untracked" and d["role"] == "Senior Data Scientist"
+    d = reject("expedia@myworkday.com", "Thank you for applying for the Machine Learning Scientist II position.")
+    assert d["req_id"] == "R-109347"  # not the "II - Agentic Experiences" one
+
+
+def test_role_not_on_the_list_is_filed_apart():
+    d = reject("relx@myworkday.com", "We appreciate the time you invested in applying for the Data Scientist opening.")
+    assert (d["action"], d["company"], d["role"]) == ("untracked", "LexisNexis", "Data Scientist")
+    d = reject(
+        "Truist@myworkday.com", "Thank you for applying for the Data Scientist I - Card Fraud position at Truist."
+    )
+    assert d["action"] == "untracked" and d["company"] == "Truist"
+    d = reject(
+        "Recruiting @ Perplexity <no-reply@ashbyhq.com>",
+        "Thank you for your interest in the Member of Technical Staff (Data Scientist, Evals) role.",
+    )
+    assert d["action"] == "untracked"
+
+
+def test_rejection_for_an_application_already_rejected_is_ignored():
+    d = reject("Cisco@myworkday.com", "Thank you for applying to the Forward Deployed Engineer- Splunk position.")
+    assert d == {"action": "ignore"}
+
+
+def test_same_title_twice_still_asks():
+    d = reject("noreply@walmart.com", "Thank you for applying to the Senior Data Scientist position at Walmart.")
+    assert d["action"] == "review" and {c["req_id"] for c in d["candidates"]} == {"R-2648464", "R-2641183"}
+
+
+def test_footer_job_suggestions_do_not_count():
+    body = "Thank you for your interest in Mastercard." + " " * 1600 + "Jobs you may like: Data Scientist, New York."
+    d = reject("mastercard@myworkday.com", body)
+    assert d["action"] == "review"  # three open Mastercard applications, no role named up top

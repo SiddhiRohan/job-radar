@@ -231,3 +231,18 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     rest, so the abbreviation was removing matches for no reason. Estimated run time goes from about 32 to about
     an hour. Google is not on Workday (own careers site), so it cannot appear until a non-Workday adapter exists
     (issue #1); the same holds for every name in `companies/not_on_workday.json`.
+
+## 2026-09-27: rejections by the role they name
+
+48. **A rejection names its role, so the role is enough.** All 19 emails waiting in Needs review were rejections and
+    none carried a requisition id the rule could match, but every one named the role. The owner asked for "not moving
+    forward" and similar to go straight to rejected. Rejections only: an offer or an interview invitation without an
+    id still waits for a person, since a wrong one of those costs more. The match is the employer (sender address,
+    then sender and subject) plus the application's whole title as words in the subject or the first 1,500
+    characters, so footers listing other openings never match; a title directly after "Senior", "Associate" and the
+    like, or before a level such as "II", belongs to a longer title and does not count. Two applications with the
+    same title still go to review. A rejection for a role not on the list, or from an employer with nothing open,
+    is filed under "Rejections for roles not on your list" rather than added as an application: the radar records
+    what the owner applied to through it, and guessing a company and title from free text would put wrong rows in
+    the table. Dry run on the 19: seven would move (each checked by title against its requisition), eleven are
+    roles not on the list, one (Walmart) needs the full email to name its role.

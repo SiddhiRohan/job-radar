@@ -209,6 +209,7 @@ def mail_state():
         "last_sync": s["last_sync"],
         "review": s["review"],
         "events": s["events"][-8:][::-1],
+        "untracked": s["untracked"][::-1],
     }
 
 

@@ -40,6 +40,7 @@ def load():
         "seen": s.get("seen", []),
         "events": s.get("events", []),
         "review": s.get("review", []),
+        "untracked": s.get("untracked", []),
         "undo": s.get("undo", []),
         "last_sync": s.get("last_sync"),
     }
@@ -48,6 +49,7 @@ def load():
 def save(state):
     STATE.parent.mkdir(parents=True, exist_ok=True)
     state["events"] = state["events"][-200:]
+    state["untracked"] = state.get("untracked", [])[-100:]
     STATE.write_text(json.dumps(state, indent=1), encoding="utf-8")
 
 
@@ -108,11 +110,11 @@ def sync(messages=None):
         messages = fetch(
             address, password, datetime.strptime(first, "%Y-%m-%d") - timedelta(days=1), set(state["seen"])
         )
-    updated = review = 0
+    updated = review = untracked = 0
     for m in messages:
         state["seen"].append(m["message_id"])
         d = mailmatch.decide(m, apps, tenants)
-        if not d:
+        if not d or d["action"] == "ignore":
             continue
         item = {k: m[k] for k in ("message_id", "date", "sender", "subject")} | {
             "snippet": m["body"][:240],
@@ -125,12 +127,26 @@ def sync(messages=None):
                 state["events"].append(item | {"from_status": change[0]})
                 updated += 1
                 apps = applications.rows()
+        elif d["action"] == "untracked":  # a rejection for a role not on the list: kept for the record, no review
+            state["untracked"].append(item)
+            untracked += 1
         else:
             state["review"].append(item)
             review += 1
     state["last_sync"] = datetime.now().strftime("%Y-%m-%d %H:%M")
     save(state)
-    return {"configured": True, "updated": updated, "review": review}
+    return {"configured": True, "updated": updated, "review": review, "untracked": untracked}
+
+
+def recheck():
+    """Run the current rules again on every email waiting in Needs review: they are fetched once more and decided
+    afresh. Used after a rule change, so older emails get the new treatment."""
+    state = load()
+    waiting = {r["message_id"] for r in state["review"]}
+    state["seen"] = [s for s in state["seen"] if s not in waiting]
+    state["review"] = []
+    save(state)
+    return sync()
 
 
 def resolve(message_id, company=None, req_id=None, status=None):
@@ -178,11 +194,14 @@ def unresolve(message_id):
 
 
 def main():
-    result = sync()
+    result = recheck() if "--recheck" in sys.argv else sync()
     if not result["configured"]:
         print("mail: off (add GMAIL_ADDRESS and GMAIL_APP_PASSWORD to .env to turn it on)")
         return
-    print(f"mail: {result['updated']} status updates, {result['review']} emails need review")
+    print(
+        f"mail: {result['updated']} status updates, {result['review']} emails need review, "
+        f"{result.get('untracked', 0)} rejections for roles not on the list"
+    )
 
 
 if __name__ == "__main__":

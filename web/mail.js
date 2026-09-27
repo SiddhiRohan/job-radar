@@ -1,5 +1,6 @@
 /* Email card on Applied: Check mail, the needs-review list, and the latest automatic updates.
-   Statuses move on their own only for emails that carry a matching req id; everything else waits here for a person.
+   Statuses move on their own for emails that carry a matching req id, and for rejections that name the role of exactly
+   one application. Rejections for roles not on the list are kept apart; everything else waits here for a person.
    Uses el, api, waitJob and toast from app.js, and STAGES and postingTitle defined alongside it. */
 function mailCard(apps) {
   const card = el("section", { class: "card wide mailcard" }, el("h3", {}, "Email"), el("p", { class: "sub" }, "Loading"));
@@ -21,10 +22,17 @@ function fillMail(card, s, apps) {
     : [el("p", { class: "kempty" }, "Nothing needs review.")];
   const updates = s.events.length
     ? [el("h4", {}, "Recent updates"), el("ul", { class: "mailevents" }, ...s.events.map(e => el("li", {},
-        el("b", {}, e.company), ` moved from ${e.from_status} to ${e.status}`, e.reason === "reviewed" ? " by you" : "", ", from ",
+        el("b", {}, e.company), ` moved from ${e.from_status} to ${e.status}`, e.reason === "reviewed" ? " by you" : e.reason === "title" ? " (role named in the email)" : "", ", from ",
         el("a", { href: e.link, target: "_blank", rel: "noopener" }, e.subject || "an email"))))]
     : [];
-  card.replaceChildren(head, ...review, ...updates);
+  const other = (s.untracked || []).length
+    ? [el("details", { class: "untracked" }, el("summary", {}, el("h4", {}, "Rejections for roles not on your list", el("span", { class: "n" }, String(s.untracked.length)))),
+        el("p", { class: "sub" }, "Applications made outside the radar. Kept for the record; nothing to do."),
+        el("ul", { class: "mailevents" }, ...s.untracked.map(u => el("li", {},
+          el("b", {}, u.company || u.sender.replace(/<[^>]*>/, "").replace(/"/g, "").trim()), u.role ? `, ${u.role}` : "", `, ${(u.date || "").slice(0, 10)}, `,
+          el("a", { href: u.link, target: "_blank", rel: "noopener" }, u.subject || "the email")))))]
+    : [];
+  card.replaceChildren(head, ...review, ...updates, ...other);
 }
 
 function reviewItem(r, apps) {
@@ -63,7 +71,7 @@ async function checkMail(btn) {
   btn.disabled = true; btn.textContent = "Checking";
   try {
     const r = await waitJob((await api("/api/mail/sync", {})).job_id);
-    toast(`Email checked: ${r.updated} status update${r.updated === 1 ? "" : "s"}, ${r.review} to review`);
+    toast(`Email checked: ${r.updated} status update${r.updated === 1 ? "" : "s"}, ${r.review} to review` + (r.untracked ? `, ${r.untracked} for roles not on your list` : ""));
     loadApplied();
   } catch (e) { toast(`Could not check email: ${e.message}`); btn.disabled = false; btn.textContent = "Check mail"; }
 }
