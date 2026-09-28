@@ -2,6 +2,8 @@
 each with a verdict and short evidence from the posting and the resume. Verdicts stored before factors existed have
 none; model_factors() reads them back as [] and drops malformed entries, so nothing downstream needs a guard."""
 
+import re
+
 MODEL_FACTORS = ("experience", "level", "skills", "domain")
 VERDICTS = ("meets", "partial", "gap")
 FIELDS = ("factor", "verdict", "posting", "resume", "note")
@@ -63,3 +65,22 @@ def model_factors(verdict):
         if isinstance(f, dict) and f.get("factor") in MODEL_FACTORS and f.get("verdict") in VERDICTS:
             found.setdefault(f["factor"], {k: str(f.get(k) or "") for k in FIELDS})
     return [found[name] for name in MODEL_FACTORS if name in found]
+
+
+def missing_skill(note):
+    """The skill a skills note names, "Missing: Databricks." -> "Databricks": the first one if it lists several, and
+    periods inside a name (Node.js) kept. None when the note names none."""
+    m = re.search(r"missing:?\s*([.\w].*)", note or "", re.I)
+    name = re.split(r"[;,]|\.(?:\s|$)", m.group(1))[0].strip() if m else ""
+    return name[:40] or None
+
+
+def gap_line(verdict):
+    """'gaps: skills (Databricks), domain' for the digest: every factor that is partial or a gap, with the missing
+    skill when the skills note names one. None when all four meet, or the verdict has no factors."""
+    out = []
+    for f in model_factors(verdict):
+        if f["verdict"] != "meets":
+            skill = missing_skill(f["note"]) if f["factor"] == "skills" else None
+            out.append(f"{f['factor']} ({skill})" if skill else f["factor"])
+    return "gaps: " + ", ".join(out) if out else None
