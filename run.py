@@ -40,10 +40,8 @@ def steps(poll_args):
     step("radar.digest", [])
     step("radar.prepare", [])  # plans the Apply rows so Tailor opens instantly; failures do not block
     step("radar.mail", [])  # reads hiring emails and moves application statuses; off until Gmail is set up
-    step("radar.watch", [])
-    step(
-        "radar.brief", []
-    )  # the morning brief: what to apply to first, what changed, what went quiet  # re-reads the posting behind every open application: closed, retitled, repriced
+    step("radar.watch", [])  # re-reads the posting behind every open application: closed, retitled, repriced
+    step("radar.brief", [])  # what to apply to first, what changed, what went quiet
 
 
 if __name__ == "__main__":
