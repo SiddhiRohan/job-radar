@@ -37,12 +37,15 @@ def prepare():
     """Create .venv and install requirements when they changed. Returns the Python to run the app with."""
     if not PY.exists():
         say("First start: making a private Python environment in .venv (about a minute)...")
-        subprocess.check_call([sys.executable, "-m", "venv", str(VENV)])
+        if subprocess.call([sys.executable, "-m", "venv", str(VENV)]):
+            shutil.rmtree(VENV, ignore_errors=True)  # a half-made .venv would pass for a ready one next time
+            raise OSError("could not make .venv. On Debian or Ubuntu, install python3-venv first, then start again")
     want = hashlib.sha256((ROOT / "requirements.txt").read_bytes()).hexdigest()
     if not STAMP.exists() or STAMP.read_text(encoding="utf-8").strip() != want:
         say("Installing the packages the app needs...")
         pip = [str(PY), "-m", "pip", "install", "--disable-pip-version-check", "-q", "-r", "requirements.txt"]
-        subprocess.check_call(pip, cwd=ROOT)
+        if subprocess.call(pip, cwd=ROOT):
+            raise OSError("installing the packages failed. Check the internet connection and start again")
         STAMP.write_text(want, encoding="utf-8")
     return PY
 
@@ -60,8 +63,8 @@ def main():
         return 0
     try:
         py = prepare()
-    except (subprocess.CalledProcessError, OSError) as e:
-        say(f"Setup stopped: {e}\nCheck the internet connection and start again.")
+    except OSError as e:
+        say(f"Setup stopped: {e}.")
         return 1
     if not (ROOT / ".env").exists() and (ROOT / ".env.example").exists():
         shutil.copy(ROOT / ".env.example", ROOT / ".env")
