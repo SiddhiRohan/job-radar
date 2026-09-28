@@ -45,10 +45,11 @@ and Northwind.
 
 - `start.py`, `run.py`, `server.py` at the root are the entry points; `config.json` and `companies.json` are the two
   files people edit.
-- `radar/`: the daily pipeline (wd, poll, filters, sponsor, store, score, digest, prepare, mail, watch) plus `llm`,
-  `chat`, `salary`, `mailmatch`, `rolematch`, `applications`, `evaluate`, `doctor`, `autorun`, `runlock`.
+- `radar/`: the daily pipeline (wd and boards, poll, filters, sponsor, store, score and batch, digest, prepare,
+  mail, watch, brief) plus `llm`, `fit`, `factors`, `chat`, `salary`, `mailmatch`, `rolematch`, `applications`,
+  `evaluate`, `doctor`, `firstrun`, `autorun`, `schedule`, `runlock`.
 - `tailoring/`: apply, plan, tailor, letters, finalize, skills, resumes, skills_extract.
-- `companies/`: finding and verifying employers, with their data files.
+- `companies/`: finding and verifying employers, with their data files; `add` adds one from a link.
 - `web/` the UI, `tests/` pytest, `scripts/` the privacy guard, `.claude/commands/` the assistant commands,
   `docs/` configuration, decisions, status and changelog.
 - Modules import each other as `from radar import wd`; run everything from the repo root.
@@ -58,6 +59,8 @@ and Northwind.
 - Workday: `total` is only on the first page of a search (0 after). Tenant roots return 406 for valid and invalid
   tenants alike, so tenant slugs come only from URLs actually seen. A taken-down posting answers 403 with Workday's
   JSON error body.
+- Greenhouse, Lever and Ashby: one request returns a board's every posting with its description, so a board costs
+  one request a run. A posting's id there is the board's own; Greenhouse also gives the employer's requisition id.
 - Sponsorship is decided per posting from its wording (`radar/sponsor.py`) plus the employer's default; the model's
   own "no" also sends a posting to Skipped.
 - Tailoring may use only words from the base resume and `skills_confirmed.md`. Numbers, dates, titles and employers
