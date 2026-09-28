@@ -145,11 +145,11 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/applied-dark.png">
-  <img src="docs/img/applied.png" alt="The Applied view: headline tiles for applications, last 7 days, companies and replies, a column chart of applications per day, and bar charts of where applications stand and which companies were applied to most.">
+  <img src="docs/img/applied.png" alt="The Applied view: headline tiles for applications, last 7 days, companies and replies, the Email card with an application a hiring email moved to interview, a column chart of applications per day, and bar charts of where applications stand and which companies were applied to most.">
 </picture>
 
 <sub>The Applied view: how many you have sent, how fast, where they stand and where they went. A board below
-lets you move each application between stages. Demo data.</sub>
+lets you move each application between stages. Demo data and fictional employers.</sub>
 
 ## Configuration
 
