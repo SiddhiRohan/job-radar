@@ -98,7 +98,7 @@ details > summary { margin-bottom: 8px; }
 h2 .n { color: var(--ink-2); font-weight: 400; font-size: var(--fs-sm); }
 h2.apply { color: var(--apply); } h2.entry { color: var(--accent); } h2.maybe { color: var(--maybe); } h2.lower, h2.contract { color: var(--ink-2); }
 details summary { cursor: pointer; list-style: none; } details summary::-webkit-details-marker { display: none; }
-details > summary h2::before { content: "B8"; font-size: var(--fs-sm); color: var(--ink-3); transition: transform .15s ease; }
+details > summary h2::before { content: "\25B8"; font-size: var(--fs-sm); color: var(--ink-3); transition: transform .15s ease; }
 details[open] > summary h2::before { transform: rotate(90deg); }
 
 /* Rows are cards. The border and a shadow on hover carry the separation; no shadow at rest keeps long lists cheap. */
