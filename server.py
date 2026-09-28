@@ -7,7 +7,6 @@ import shutil
 import threading
 import uuid
 import webbrowser
-from datetime import datetime
 from pathlib import Path
 
 import uvicorn
@@ -22,15 +21,13 @@ from radar import (
     chat,
     digest,
     doctor,
+    evaluate,
     mail,
     owner,
     patterns,
-    poll,
     prepare,
     salary,
-    score,
     watch,
-    wd,
 )
 from tailoring import apply as applier
 from tailoring import finalize, letters, resumes, skills, tailor
@@ -158,21 +155,8 @@ def applied():
 
 @app.post("/api/applied")
 def mark_applied(body: dict):
-    rows = applied_rows()
-    key = (body["req_id"], body["company"])
-    if any((r["req_id"], r["company"]) == key for r in rows):
+    if not applications.add(body["company"], body["req_id"], body["title"], body.get("folder", "")):
         return {"ok": True, "already": True}
-    rows.append(
-        {
-            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "company": body["company"],
-            "title": body["title"],
-            "status": "applied",
-            "folder": body.get("folder", ""),
-            "req_id": body["req_id"],
-        }
-    )
-    write_applied(rows)
     return {"ok": True}
 
 
@@ -277,45 +261,12 @@ def open_path(body: dict):
     return {"ok": True}
 
 
-def ingest_url(url):
-    """Parse a pasted Workday job URL, fetch and score it if jobs.jsonl does not have it, return the record."""
-    parsed = wd.parse_job_url(url)
-    if not parsed:
-        raise ValueError(
-            "that is not a Workday job URL; it should look like https://<tenant>.<wd5>.myworkdayjobs.com/<site>/job/..."
-        )
-    tenant, shard, site, ext, req_id = parsed
-    comps = {c["tenant"]: c for c in json.load(open("companies.json", encoding="utf-8"))}
-    c = comps.get(tenant) or {"name": tenant, "tenant": tenant, "shard": shard, "site": site, "sponsors_h1b": None}
-    for j in jobs_all():
-        if j["req_id"] == req_id and j["company"] == c["name"]:
-            return j
-    d = wd.fetch_detail(tenant, shard, f"/wday/cxs/{tenant}/{site}{ext}")
-    j = {
-        "company": c["name"],
-        "title": d.get("title") or req_id,
-        "location": d["location"] or "",
-        "posted_on": "pasted",
-        "posted_days_ago": 0,
-        "req_id": req_id,
-        "url": url,
-        "detail_path": f"/wday/cxs/{tenant}/{site}{ext}",
-        "search_term": "pasted",
-        "first_seen": datetime.now().astimezone().isoformat(timespec="seconds"),
-    }
-    poll.enrich(j, c, json.load(open("config.json", encoding="utf-8")))
-    j["verdict"] = score.rule_verdict(j) or score.ask_claude(score.load_api_key(), score.system_blocks(), j)[0]
-    with open("jobs.jsonl", "a", encoding="utf-8") as f:
-        f.write(json.dumps(j) + "\n")
-    return j
-
-
 @app.post("/api/tailor")
 def start_tailor(body: dict):
     """Cached plan comes back at once; pass fresh=true to re-plan (also used after confirming a JD skill)."""
 
     def work():
-        j = ingest_url(body["url"]) if body.get("url") else applier.find_job(body["company"], body["req_id"])
+        j = evaluate.ingest_url(body["url"]) if body.get("url") else applier.find_job(body["company"], body["req_id"])
         cache = prepare.plan_cache_path(j)
         if cache.exists() and not body.get("fresh"):
             return dict(json.loads(cache.read_text(encoding="utf-8")), cached=True)
