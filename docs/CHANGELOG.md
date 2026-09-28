@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**A morning brief.** The last step of each run writes a short note: the three postings to apply to first with one
+line on why, status changes from email and postings that closed since the last brief, applications quiet for ten
+days, and one pattern in the rejections. It sits at the top of Today, answers `python -m radar.brief`, and is a chat
+tool. No model call.
+
 **Runs itself every morning.** While the web app is open the radar runs at `run_time` each day, and catches up as
 soon as the app opens if the computer was off. A lock makes sure the app, the operating system's scheduler and a
 terminal never run it twice at once.

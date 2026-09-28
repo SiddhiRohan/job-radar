@@ -116,6 +116,7 @@ function sectionEl(name, cls, rows, collapsed) {
   return [d];
 }
 async function loadToday() {
+  loadBrief();
   const body = $("#today-body");
   /* Same day already on screen: keep it while refreshing. A new day or a first load gets placeholders. */
   const sk = body.dataset.date === T.date && body.querySelector("article") ? 0 : laterSkeleton(body, 4);

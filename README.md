@@ -127,6 +127,7 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 | Judge any posting | `python -m radar.evaluate <workday link>` |
 | Record an application | `python -m radar.applications add <company> <req_id> <title>` |
 | Check the setup | `python -m radar.doctor` |
+| The morning brief | Top of Today, or `python -m radar.brief` |
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/applied-dark.png">

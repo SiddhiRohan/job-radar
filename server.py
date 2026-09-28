@@ -19,6 +19,7 @@ from fastapi.staticfiles import StaticFiles
 from radar import (
     applications,
     autorun,
+    brief,
     chat,
     digest,
     doctor,
@@ -463,6 +464,7 @@ def chat_message(body: dict):
         "check_mail": check_mail_for,
         "rejection_patterns": lambda args: {"lines": patterns.summary(patterns.analyse())},
         "posting_status": lambda args: watch.report(),
+        "morning_brief": lambda args: {"text": brief.text(brief.load() or brief.build())},
     }
     return background(chat.message, body.get("session", "default"), body["text"], body.get("context", {}), hooks)
 
@@ -484,6 +486,12 @@ def chat_reset(body: dict):
     if p.exists():
         p.unlink()
     return {"ok": True}
+
+
+@app.get("/api/brief")
+def morning_brief():
+    """The brief the last run wrote, or one built now when no run has written it yet."""
+    return brief.load() or brief.build()
 
 
 @app.get("/api/setup")

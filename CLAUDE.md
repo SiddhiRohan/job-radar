@@ -33,7 +33,7 @@ whether they need visa sponsorship, a pay floor, and anything they never want to
 
 | They say | Command | Do this |
 | --- | --- | --- |
-| What's new today? | `/radar-today` | Read the newest file in `digests/`. Summarise Apply and Entry level: company, title, fit scores, pay, sponsorship. Recommend the three to apply to first and say why in one line each. |
+| What's new today? | `/radar-today` | `python -m radar.brief` gives the three to apply to first, what changed and what went quiet. The newest file in `digests/` has the full list. Lead with the brief. |
 | Run it now | `/radar-run` | `python run.py`. It can take up to an hour; only one run happens at a time, so a second start just says so. |
 | Is this job right for me? | `/radar-evaluate <link>` | `python -m radar.evaluate <workday link>`, or `<company> <req_id>` for one already stored. Explain the verdict plainly, including gaps. |
 | Tailor my resume for it | `/radar-tailor <company> <req_id>` | `python -m tailoring.apply "<company>" <req_id> --no-prompt --yes` writes a draft to review. Report the folder and the questions in its notes.md. If it says the fit is a skip, ask before adding `--force`. |

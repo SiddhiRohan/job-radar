@@ -386,3 +386,16 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .check .badge { display: inline-block; min-width: 38px; margin-right: 8px; padding: 0 6px; border-radius: 999px; font-size: var(--fs-xs);
   text-align: center; border: 1px solid currentColor; }
 .check.ok .badge { color: var(--apply); } .check.info .badge { color: var(--ink-3); } .check.fix .badge { color: var(--danger); font-weight: 600; }
+
+/* Morning brief: a compact card above the day's list. */
+.card.brief { margin: 14px 0 6px; }
+.card.brief > summary { display: flex; align-items: baseline; gap: 10px; cursor: pointer; list-style: none; position: static; background: none; margin: 0; }
+.card.brief > summary::-webkit-details-marker { display: none; }
+.card.brief h4 { font-size: var(--fs-sm); color: var(--ink-2); margin: 12px 0 4px; font-weight: 600; }
+.brief-picks { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.brief-picks li { font-size: var(--fs-sm); }
+.brief-picks .bp-head { display: flex; flex-wrap: wrap; gap: 0 6px; align-items: baseline; }
+.brief-picks .bp-why { display: block; color: var(--ink-2); }
+.brief-list { margin: 0; padding-left: 18px; font-size: var(--fs-sm); color: var(--ink-2); }
+.brief-pattern { margin: 12px 0 0; font-size: var(--fs-sm); color: var(--ink); border-left: 3px solid var(--maybe); padding-left: 10px; }
+.brief-foot { display: flex; justify-content: flex-end; margin-top: 6px; }

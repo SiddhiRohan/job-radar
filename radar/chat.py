@@ -16,7 +16,8 @@ docx and its download link, then save_resume. Summarise a plan as the fit line p
 whole resume. open_tailor only when they ask to see or edit the full side-by-side.
 When they ask about replies, rejections or interviews, use check_mail, say what moved and what needs review, then
 navigate to applied so they can settle the review items. When they ask whether a posting is still up, or why an
-application is quiet, use posting_status: a closed posting with no reply is usually the answer.
+application is quiet, use posting_status: a closed posting with no reply is usually the answer. For "what should I
+do today" or "what changed", use morning_brief and lead with its picks.
 CONTEXT (what the page shows now) follows; the Today rows are ranked by score, E = entry base, X = experienced base."""
 
 PAGE_TOOLS = {"navigate", "refresh", "open_tailor", "edit_section", "rebuild"}
@@ -136,6 +137,13 @@ TOOLS.append(
 )
 TOOLS.append(
     {
+        "name": "morning_brief",
+        "description": "The morning brief: the postings to apply to first with one line on why, status changes from email, postings that closed, applications that went quiet, and one pattern in the rejections. Use it for 'what should I do today' or 'what changed'.",
+        "input_schema": {"type": "object", "properties": {}},
+    }
+)
+TOOLS.append(
+    {
         "name": "posting_status",
         "description": "Which open applications' postings have closed, been retitled, repriced or rewritten since applying, from the daily watch. A closed posting with no reply is the quiet rejection nobody emails about.",
         "input_schema": {"type": "object", "properties": {}},
@@ -250,7 +258,15 @@ def server_tool(name, args, hooks):
         return hooks["set_status"](args)
     if name == "remember":
         return remember(args.get("note", ""))
-    if name in ("tailor_posting", "build_resume", "save_resume", "check_mail", "rejection_patterns", "posting_status"):
+    if name in (
+        "tailor_posting",
+        "build_resume",
+        "save_resume",
+        "check_mail",
+        "rejection_patterns",
+        "posting_status",
+        "morning_brief",
+    ):
         return hooks[name](args)
     return {"error": f"unknown tool {name}"}
 
