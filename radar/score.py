@@ -165,9 +165,7 @@ def main():
             except Exception as e:  # record the failure on the posting; retried next run
                 verdict = {"error": str(e)[:300]}
         settle(j, verdict)
-    with open("jobs.jsonl", "w", encoding="utf-8") as f:
-        for j in jobs:
-            f.write(json.dumps(j) + "\n")
+    store.save(jobs)  # keeps rows added while scoring ran, such as a link pasted during a batch's wait
     print(f"done: {len(ask)} postings sent to the model, {len(batched or {})} of them in a batch")
 
 

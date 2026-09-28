@@ -125,3 +125,29 @@ def test_the_run_asks_directly_about_what_the_batch_left(tmp_path, monkeypatch):
 def test_without_the_setting_no_batch_is_sent(tmp_path, monkeypatch):
     send, direct, stored = run_score(tmp_path, monkeypatch, {}, {})
     assert send.call_count == 0 and direct.call_count == 2
+
+
+def test_a_posting_stored_during_the_wait_survives_the_save(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "config.json").write_text(json.dumps({"score_batch": True}), encoding="utf-8")
+    first = {
+        "company": "Contoso",
+        "title": "Data Engineer",
+        "location": "Austin, TX",
+        "posted_days_ago": 0,
+        "req_id": "R1",
+    }
+    score.store.JOBS.write_text(json.dumps(first) + "\n", encoding="utf-8")
+    pasted = first | {"company": "Northwind", "req_id": "R2", "verdict": VERDICT}
+
+    def slow_batch(api_key, bodies):
+        score.store.append_new([pasted])  # someone pastes a link in the app while the batch runs
+        return {}
+
+    monkeypatch.setattr(score, "load_api_key", lambda: "test-key")
+    monkeypatch.setattr(score, "system_blocks", lambda: [{"type": "text", "text": "rules"}])
+    monkeypatch.setattr(score.batch, "score", slow_batch)
+    monkeypatch.setattr(score, "ask_claude", lambda api_key, system, job: (VERDICT, "claude-sonnet-5"))
+    score.main()
+    rows = {j["req_id"]: j for j in score.store.load()}
+    assert set(rows) == {"R1", "R2"} and rows["R1"]["verdict"] == VERDICT
