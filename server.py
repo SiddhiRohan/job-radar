@@ -31,6 +31,7 @@ from radar import (
     patterns,
     prepare,
     salary,
+    schedule,
     watch,
 )
 from tailoring import apply as applier
@@ -514,6 +515,14 @@ def setup_key(body: dict):
         return {"ok": True, "checked": firstrun.save_key(body.get("key"))}
     except ValueError as e:
         raise HTTPException(400, str(e)) from e
+
+
+@app.post("/api/schedule")
+def daily_schedule(body: dict):
+    """Turn the operating system's daily run on or off, at run_time from config.json."""
+    at = json.loads(Path("config.json").read_text(encoding="utf-8")).get("run_time", "07:30")
+    ok = schedule.install(at) if body.get("on") else schedule.remove()
+    return {"ok": ok, "scheduled": schedule.status()}
 
 
 @app.post("/api/setup/profile")

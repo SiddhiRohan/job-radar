@@ -78,7 +78,16 @@ def checks():
         else item("info", "Email statuses off", "optional: see Email in docs/CONFIG.md")
     )
     out.append(last_run())
+    out.append(daily())
     return out
+
+
+def daily():
+    from radar import schedule
+
+    if schedule.status():
+        return item("ok", "Runs every morning, even with the app closed")
+    return item("info", "Runs only while the app is open", "Setup page, or: python -m radar.schedule install")
 
 
 def last_run(path=Path("last_run.json")):

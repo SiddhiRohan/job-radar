@@ -21,7 +21,10 @@ def state():
     paths = resumes.base_paths()
     names = sorted({p.name for p in paths.values()}) if paths else []
     profile = Path("profile.md").read_text(encoding="utf-8") if Path("profile.md").exists() else ""
+    from radar import schedule
+
     return {
+        "scheduled": schedule.status(),
         "resume": names,
         "original_layout": resumes.legacy(),
         "key_set": bool(read_env().get("ANTHROPIC_API_KEY")),

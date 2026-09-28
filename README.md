@@ -85,7 +85,7 @@ takes about a minute to set itself up, then the app opens at http://localhost:80
 4. Press **Run the radar**.
 
 From then on it runs every morning at 7:30 while the app is open, and catches up when you open it after the
-computer was off. `python -m radar.doctor` says what is missing whenever something does not work.
+computer was off. To run even when the app is closed, turn on **Every morning** on the Setup page. `python -m radar.doctor` says what is missing whenever something does not work.
 
 ### With a coding assistant
 

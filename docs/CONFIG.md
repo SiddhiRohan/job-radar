@@ -30,6 +30,11 @@ it the resume alone is used.
 | `auto_run` | true | While the web app is open it runs the radar once a day at `run_time`. If the computer was off or asleep then, it runs as soon as the app opens. A failed start waits two hours before trying again. |
 | `run_time` | 07:30 | Local time of the daily run. |
 
+To run even when the app is closed, turn on **Every morning** on the Setup page, or run
+`python -m radar.schedule install` (and `remove` or `status`). It uses the computer's own scheduler: a Task
+Scheduler task named JobRadar on Windows, a launchd agent on macOS, a cron line on Linux, each starting `run.py` at
+`run_time` and appending to `logs/run.log`.
+
 Only one run happens at a time, whoever starts it: the web app, the operating system's scheduler or a terminal.
 A second one sees the lock in `.cache/run.lock` and steps aside. A lock older than four hours is treated as left
 behind by a machine that shut down mid-run.

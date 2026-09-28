@@ -13,7 +13,7 @@ async function loadSetup() {
   const body = $("#setup-body");
   try {
     const s = await api("/api/setup");
-    body.replaceChildren(checksCard(s.checks), resumeCard(s), keyCard(s), profileCard(s), nextCard(s.checks));
+    body.replaceChildren(checksCard(s.checks), resumeCard(s), keyCard(s), profileCard(s), dailyCard(s), nextCard(s.checks));
   } catch (e) { body.replaceChildren(el("p", { class: "error" }, e.message)); }
 }
 
@@ -69,6 +69,22 @@ function profileCard(s) {
   return el("section", { class: "card setup" }, el("h3", {}, "3. What you are looking for"),
     el("p", { class: "sub" }, "A few plain lines make the scores sharper. Optional, and you can change it any time."),
     text, save);
+}
+
+function dailyCard(s) {
+  const flip = el("button", { type: "button", onclick: async () => {
+    flip.disabled = true;
+    try {
+      const r = await api("/api/schedule", { on: !s.scheduled });
+      toast(r.ok ? (r.scheduled ? "It will run every morning, even with the app closed" : "System schedule removed") : "Could not change the system schedule");
+      loadSetup();
+    } catch (e) { toast(e.message); flip.disabled = false; }
+  } }, s.scheduled ? "Stop the system schedule" : "Run every morning, even when the app is closed");
+  return el("section", { class: "card setup" }, el("h3", {}, "4. Every morning"),
+    el("p", { class: "sub" }, s.scheduled
+      ? "Your computer's scheduler starts the run each morning, whether or not this app is open."
+      : "While this app is open it runs every morning by itself. To run even when it is closed, let your computer's scheduler start it."),
+    flip);
 }
 
 function nextCard(checks) {
