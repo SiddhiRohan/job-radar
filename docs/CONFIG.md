@@ -7,6 +7,20 @@ needs a restart for either file.
 
 Current values below are as of 2026-09-24.
 
+## Your resume and profile
+
+Put your resume in the `Resume/` folder. Any of these works:
+
+| Layout | Files | What the radar does |
+| --- | --- | --- |
+| One resume | `Resume/resume.docx` | Scores every posting against it, framed once as early-career and once as experienced |
+| Two resumes | `Resume/entry.docx` and `Resume/experienced.docx`, or any names starting with those words | Scores each posting against both and recommends one |
+| Folder tree | `Resume/Entry/1 Page/<file>` and `Resume/Experienced/V1/<role>/<1 Page or 2 Page>/<file>`, with the file name set as `RESUME_FILENAME` in `.env` | Also recommends a role folder and a length, and tailors from that variant |
+
+Word files (`.docx`) are needed for tailoring; a `.txt` or `.md` resume is enough for scoring. `profile.md` is
+optional: a few lines on your target roles, strengths and tools you do not have make the scores sharper. Without
+it the resume alone is used.
+
 ## config.json
 
 ### What gets searched

@@ -74,7 +74,7 @@ def load_api_key():
 
 def system_blocks():
     """Stable prefix (rules, profile, both resumes) with a cache breakpoint so 100+ calls reuse it."""
-    profile = Path("profile.md").read_text(encoding="utf-8")
+    profile = resumes.profile_text()
     roles = ", ".join(
         f"{r} ({', '.join(v for v, ok in s.items() if ok) or 'EMPTY'})" for r, s in resumes.role_status().items()
     )

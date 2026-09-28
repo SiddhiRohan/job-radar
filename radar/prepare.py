@@ -13,7 +13,7 @@ from docx import Document
 from radar import digest
 from tailoring import apply as applier
 from tailoring import plan as planner
-from tailoring import skills, tailor
+from tailoring import resumes, skills, tailor
 
 sys.stdout.reconfigure(encoding="utf-8")
 PLANS = Path(".cache/ui/plans")
@@ -46,11 +46,7 @@ def row(j):
 
 def make_tailor(j):
     """Plan with --no-prompt semantics; return the base/tailored text per section for the editor."""
-    profile = (
-        Path("profile.md").read_text(encoding="utf-8")
-        + "\n\nRULES:\n"
-        + Path("docs/RESUME_RULES.md").read_text(encoding="utf-8")
-    )
+    profile = resumes.profile_text() + "\n\nRULES:\n" + Path("docs/RESUME_RULES.md").read_text(encoding="utf-8")
     base, base_label = applier.pick_base(j)
     doc = Document(base)
     info = tailor.parse(doc)
