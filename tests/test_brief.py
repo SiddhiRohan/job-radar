@@ -96,3 +96,39 @@ def test_quiet_applications_after_ten_days(tmp_path, monkeypatch):
     b = brief.build(now=datetime(2026, 9, 28, 9, 0), jobs=[])
     assert b["quiet"] == [{"company": "Contoso", "title": "Data Engineer", "applied": "2026-09-10", "posting": "open"}]
     assert "Quiet since 2026-09-10: Contoso" in brief.text(b)
+
+
+def test_an_incomplete_stored_brief_is_rebuilt(tmp_path, monkeypatch):
+    isolate(tmp_path, monkeypatch)
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "brief.json").write_text(json.dumps({"made_at": "2026-09-27 09:00"}), encoding="utf-8")
+    b = brief.current()
+    assert "picks" in b and b["day"]
+
+
+def test_ties_go_to_the_posting_whose_factors_meet_more(tmp_path, monkeypatch):
+    isolate(tmp_path, monkeypatch)
+    two = [
+        {"factor": n, "verdict": "meets" if n in ("experience", "level") else "partial"}
+        for n in ("experience", "level", "skills", "domain")
+    ]
+    three = [dict(f, verdict="meets") if f["factor"] == "skills" else f for f in two]
+    jobs = [job("Contoso", "R1", 4, factors=two), job("Northwind", "R2", 4, factors=three)]
+    b = brief.build(now=datetime(2026, 9, 28, 9, 0), jobs=jobs)
+    assert [p["company"] for p in b["picks"]] == ["Northwind", "Contoso"]
+
+
+def test_a_closed_posting_is_not_called_quiet(tmp_path, monkeypatch):
+    isolate(tmp_path, monkeypatch)
+    row = {
+        "company": "Contoso",
+        "title": "Data Engineer",
+        "status": "applied",
+        "folder": "",
+        "date": "2026-09-01 10:00",
+    }
+    applications.write([row | {"req_id": "R1"}, row | {"req_id": "R2"}])
+    postings = {"Contoso|R1": {"status": "closed"}, "Contoso|R2": {"status": "open"}}
+    (tmp_path / "watch.json").write_text(json.dumps({"postings": postings}), encoding="utf-8")
+    b = brief.build(now=datetime(2026, 9, 28, 9, 0), jobs=[])
+    assert [x["posting"] for x in b["quiet"]] == ["open"]

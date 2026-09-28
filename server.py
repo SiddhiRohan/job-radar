@@ -465,7 +465,7 @@ def chat_message(body: dict):
         "check_mail": check_mail_for,
         "rejection_patterns": lambda args: {"lines": patterns.summary(patterns.analyse())},
         "posting_status": lambda args: watch.report(),
-        "morning_brief": lambda args: {"text": brief.text(brief.load() or brief.build())},
+        "morning_brief": lambda args: {"text": brief.text(brief.current())},
     }
     return background(chat.message, body.get("session", "default"), body["text"], body.get("context", {}), hooks)
 
@@ -491,8 +491,8 @@ def chat_reset(body: dict):
 
 @app.get("/api/brief")
 def morning_brief():
-    """The brief the last run wrote, or one built now when no run has written it yet."""
-    return brief.load() or brief.build()
+    """The brief the last run wrote, or one built now when no run has written a complete one yet."""
+    return brief.current()
 
 
 @app.get("/api/setup")

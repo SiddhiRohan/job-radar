@@ -19,7 +19,7 @@ async function loadBrief() {
     ...b.moved.map(x => item(x.company, `moved from ${x.from} to ${x.status}`)),
     ...b.closed.map(x => item(x.company, `closed: ${x.title}`)),
   ];
-  const quiet = b.quiet.map(x => item(x.company, `${x.title}, applied ${x.applied}, posting ${x.posting}: a short follow-up may help`));
+  const quiet = b.quiet.map(x => item(x.company, `${x.title}, applied ${x.applied}: ${x.posting === "open" ? "still posted, so a short follow-up may help" : "no reply yet"}`));
   const hide = el("button", { type: "button", class: "quiet", onclick: () => {
     try { localStorage.setItem(hideKey, "1"); } catch (e) {}
     box.replaceChildren();

@@ -16,9 +16,11 @@ QUIET_DAYS = 10
 
 
 def rank(j):
-    """Best fit first; then postings that can sponsor, state their pay, and are newest."""
+    """Best fit first; then postings that can sponsor, then the one whose factors meet more of the posting, then
+    stated pay, then newest."""
     pay = 1 if salary.extract(j.get("description", "")) else 0
-    return (digest.best(j), 1 if digest.sponsors(j) else 0, pay, -(j.get("posted_days_ago") or 0))
+    meets = sum(f.get("verdict") == "meets" for f in (j.get("verdict") or {}).get("factors") or [])
+    return (digest.best(j), 1 if digest.sponsors(j) else 0, meets, pay, -(j.get("posted_days_ago") or 0))
 
 
 def reason(j):
@@ -52,14 +54,17 @@ def picks(jobs, day, n=3):
 
 
 def quiet(apps, watched, today, n=3):
-    """Applications still at applied after QUIET_DAYS, oldest first, with whether the posting is still up."""
+    """Applications still at applied after QUIET_DAYS, oldest first, whose posting is not known to be closed: a
+    closed one is reported once under closures, and a follow-up to a filled role is wasted."""
     cutoff = (today - timedelta(days=QUIET_DAYS)).strftime("%Y-%m-%d")
-    rows = sorted((a for a in apps if a["status"] == "applied" and a["date"][:10] <= cutoff), key=lambda a: a["date"])
     out = []
-    for a in rows[:n]:
+    for a in sorted(
+        (a for a in apps if a["status"] == "applied" and a["date"][:10] <= cutoff), key=lambda a: a["date"]
+    ):
         status = (watched.get(f"{a['company']}|{a['req_id']}") or {}).get("status", "unknown")
-        out.append({"company": a["company"], "title": a["title"], "applied": a["date"][:10], "posting": status})
-    return out
+        if status != "closed":
+            out.append({"company": a["company"], "title": a["title"], "applied": a["date"][:10], "posting": status})
+    return out[:n]
 
 
 def build(now=None, jobs=None):
@@ -119,6 +124,12 @@ def load():
         return json.loads(STATE.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return {}
+
+
+def current():
+    """The brief the last run wrote, or one built now when there is none or it is incomplete (an older version)."""
+    b = load()
+    return b if b.get("day") and "picks" in b else build()
 
 
 def main():
