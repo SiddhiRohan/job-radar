@@ -1,0 +1,40 @@
+[
+  {
+    "id": "1a2b3c4d-0001-4000-8000-00000000a001",
+    "text": "Data Scientist",
+    "categories": {
+      "commitment": "Full-time",
+      "location": "London, United Kingdom",
+      "team": "Data",
+      "allLocations": ["London, United Kingdom", "New York, NY"]
+    },
+    "country": "GB",
+    "createdAt": 1790434800000,
+    "workplaceType": "hybrid",
+    "descriptionPlain": "A World-Changing Company\n\nWe build software for data-driven decisions.",
+    "description": "<div>A World-Changing Company</div>",
+    "lists": [
+      {"text": "What You'll Do", "content": "\n<li>Model demand with Python &amp; SQL.</li>\n<li>Ship experiments.</li>"}
+    ],
+    "additionalPlain": "Life at Example\n\nWe welcome every applicant.",
+    "salaryRange": {"currency": "USD", "interval": "per-year-salary", "min": 130000, "max": 170000},
+    "hostedUrl": "https://jobs.lever.co/example/1a2b3c4d-0001-4000-8000-00000000a001",
+    "applyUrl": "https://jobs.lever.co/example/1a2b3c4d-0001-4000-8000-00000000a001/apply"
+  },
+  {
+    "id": "1a2b3c4d-0002-4000-8000-00000000a002",
+    "text": "Analytics Engineer",
+    "categories": {"commitment": "Contractor", "location": "Singapore, Singapore", "allLocations": ["Singapore, Singapore"]},
+    "country": "SG",
+    "createdAt": 1789891200000,
+    "descriptionPlain": "Own the metrics layer.",
+    "lists": [],
+    "additionalPlain": "Salary: the estimated salary range for this position is $60,000 - $97,000/year.",
+    "salaryRange": {"currency": "USD", "interval": "per-year-salary", "min": 60000, "max": 97000},
+    "hostedUrl": "https://jobs.lever.co/example/1a2b3c4d-0002-4000-8000-00000000a002"
+  },
+  {
+    "id": "1a2b3c4d-0003-4000-8000-00000000a003",
+    "text": "AI Engineer"
+  }
+]

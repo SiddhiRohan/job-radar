@@ -1,0 +1,58 @@
+{
+  "apiVersion": "1",
+  "jobs": [
+    {
+      "id": "5e6f7a8b-0001-4000-8000-00000000b001",
+      "title": "Machine Learning Engineer",
+      "department": "Engineering",
+      "team": "Ranking",
+      "employmentType": "FullTime",
+      "location": "GB-London",
+      "secondaryLocations": [
+        {
+          "location": "US-NY-New York",
+          "address": {"postalAddress": {"addressRegion": "New York", "addressCountry": "United States", "addressLocality": "New York"}}
+        }
+      ],
+      "publishedAt": "2026-09-27T09:30:00.503+00:00",
+      "isListed": true,
+      "isRemote": null,
+      "workplaceType": "Hybrid",
+      "address": {"postalAddress": {"addressCountry": "United Kingdom", "addressLocality": "London"}},
+      "jobUrl": "https://jobs.ashbyhq.com/example/5e6f7a8b-0001-4000-8000-00000000b001",
+      "applyUrl": "https://jobs.ashbyhq.com/example/5e6f7a8b-0001-4000-8000-00000000b001/application",
+      "descriptionHtml": "<p>Ship ranking models.</p>",
+      "descriptionPlain": "Ship ranking models. Visa sponsorship is available for this role.",
+      "shouldDisplayCompensationOnJobPostings": true,
+      "compensation": {
+        "compensationTierSummary": "$160K – $230K",
+        "scrapeableCompensationSalarySummary": "$160K - $230K",
+        "compensationTiers": [],
+        "summaryComponents": []
+      }
+    },
+    {
+      "id": "5e6f7a8b-0002-4000-8000-00000000b002",
+      "title": "Data Analyst",
+      "employmentType": "FullTime",
+      "location": "Remote",
+      "secondaryLocations": [],
+      "publishedAt": "2026-09-01T00:00:00+00:00",
+      "isListed": true,
+      "isRemote": true,
+      "address": {"postalAddress": {"addressCountry": "Canada"}},
+      "jobUrl": "https://jobs.ashbyhq.com/example/5e6f7a8b-0002-4000-8000-00000000b002",
+      "descriptionHtml": "<p>Dashboards &amp; SQL.</p>",
+      "descriptionPlain": "",
+      "compensation": {"compensationTierSummary": null, "scrapeableCompensationSalarySummary": null}
+    },
+    {
+      "id": "5e6f7a8b-0003-4000-8000-00000000b003",
+      "title": "Unlisted role",
+      "location": "US-CA-Menlo Park",
+      "publishedAt": "2026-09-27T00:00:00+00:00",
+      "isListed": false,
+      "descriptionPlain": "Not on the public board."
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "jobs": [
+    {
+      "id": 8805001002,
+      "internal_job_id": 7000001002,
+      "title": "Data Engineer, New Grad ",
+      "updated_at": "2026-09-26T13:22:12-04:00",
+      "requisition_id": "R-10042",
+      "location": {"name": "San Francisco, California; London, United Kingdom"},
+      "absolute_url": "https://example.com/careers/job?gh_jid=8805001002",
+      "company_name": "Example",
+      "first_published": "2026-09-20T09:11:57-04:00",
+      "language": "en",
+      "content": "&lt;p&gt;Build pipelines with Spark &amp;amp; SQL.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;2+ years of experience with Python&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The base salary range is $120,000 - $150,000.&lt;/p&gt;",
+      "departments": [{"id": 4000000102, "name": "Data", "child_ids": [], "parent_id": null}],
+      "offices": [{"id": 4000000202, "name": "San Francisco", "location": "San Francisco, California, United States", "child_ids": [], "parent_id": null}]
+    },
+    {
+      "id": 8805002002,
+      "title": "Machine Learning Engineer",
+      "updated_at": "2026-09-27T08:00:00-04:00",
+      "location": {"name": "London, United Kingdom"},
+      "absolute_url": "https://example.com/careers/job?gh_jid=8805002002",
+      "content": "&lt;p&gt;Train ranking models.&lt;/p&gt;",
+      "departments": [],
+      "offices": []
+    },
+    {
+      "id": null,
+      "title": "A posting without an id is skipped"
+    }
+  ],
+  "meta": {"total": 3}
+}
