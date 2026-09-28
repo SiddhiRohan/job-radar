@@ -74,3 +74,12 @@ def poll(cfg, company, max_days, found, removed, errors, now=None):
         return
     fresh = screen(cfg, company, jobs, max_days, found, removed)
     print(f"  {company['name']:<12} {ats + ' board':<22} {len(jobs):>4} results, {fresh:>3} recent", flush=True)
+
+
+def find(company, req_id, fetch_board=None):
+    """The open posting with this id, or None once the board no longer lists it. Raises when the board cannot be
+    read or lists nothing at all: an empty answer says more about the board than about one posting."""
+    postings = (fetch_board or fetch)(company)
+    if not postings:
+        raise ValueError("the board listed no postings")
+    return next((p for p in postings if p["req_id"] == str(req_id)), None)
