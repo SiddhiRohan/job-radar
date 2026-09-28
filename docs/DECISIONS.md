@@ -389,15 +389,15 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     "assistant"`, so their share can be compared with the API's later. The app's own morning run still waits for a
     key; `python run.py` without one finds and filters, and the assistant scores when asked.
 
-66. **The intro video.** Fifty-one seconds, 1080p, built from real screens of the app on demo data with fictional
-    employers, so every claim in it can be checked against the code: 180 employers, the four hiring systems,
-    sponsorship read per posting with filing history as the fallback, the fit by factor, the brief, email statuses
-    that move or wait for review. Three short live-action shots (the late-night search, the morning brief over
-    coffee, a walk out onto campus) were generated with Seedance 2.5 for 60 credits each; the first two were
-    generated again with a South Asian protagonist because the first cast did not look like the students the
-    radar is for, and the laptop lid was asked to be plain so no brand shows. The music is composed in code, a
-    short numpy and scipy synthesis (120 BPM, F major, I-V-vi-IV), because the generation service offers speech
-    but not music, and an original track avoids any licence question. GitHub does not play video files
-    from a repository inline, so the README shows a half-megabyte animated preview that links to the file; a copy
-    uploaded through GitHub's editor would give an inline player with sound. The file is 6.5 MB, under the 10 MB
-    upload limit for that.
+66. **The intro video.** About 47 seconds, cut like a TV spot at the owner's request: four students in a
+    sunny apartment kitchen react as the radar's morning brief spreads between them, with hard cuts on the beat,
+    full-screen close-ups of the real app on demo data with fictional employers, questions typed the way the in-app
+    chat takes them, and a white end card with the line "Apply where you're wanted." Every claim in it can be checked
+    against the code. The live-action shots were generated with Seedance 2.5, 4 seconds each at 48 credits: one shot
+    of the four friends came first and every later shot used it as a reference, so the same people appear throughout,
+    and the lead is the student from the earlier morning shot. The music is “Funky Martian” by Michael Ramir C.,
+    from Mixkit, under its free stock music license: use in videos on any web platform, no attribution required, no
+    redistribution on its own, so only the finished video is in the repo, and the README credits it anyway. A first
+    cut with music synthesized in code sounded wrong to the owner and was dropped. GitHub does not play video files
+    from a repository inline, so the README shows a small animated preview that links to the file; a copy uploaded
+    through GitHub's editor gives an inline player with sound, and the file is under the 10 MB limit for that.

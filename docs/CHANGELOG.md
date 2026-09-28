@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-**An intro video, and a README for going public.** A 51-second video with sound, `docs/media/job-radar-intro.mp4`,
+**An intro video, and a README for going public.** A 47-second video with sound, `docs/media/job-radar-intro.mp4`,
 opens the README through a silent preview. The README now starts with why the radar helps on a student visa and
 what a morning with it looks like, and adds what leaves your machine and a short FAQ.
 
