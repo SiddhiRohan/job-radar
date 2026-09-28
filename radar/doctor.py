@@ -87,6 +87,8 @@ def daily():
 
     if schedule.status():
         return item("ok", "Runs every morning, even with the app closed")
+    if schedule.elsewhere():
+        return item("info", "Runs only while the app is open", "the daily task starts another copy of the radar")
     return item("info", "Runs only while the app is open", "Setup page, or: python -m radar.schedule install")
 
 

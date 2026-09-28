@@ -76,7 +76,7 @@ function dailyCard(s) {
     flip.disabled = true;
     try {
       const r = await api("/api/schedule", { on: !s.scheduled });
-      toast(r.ok ? (r.scheduled ? "It will run every morning, even with the app closed" : "System schedule removed") : "Could not change the system schedule");
+      toast(r.ok ? (r.scheduled ? "It will run every morning, even with the app closed" : "System schedule removed") : (r.why || "Could not change the system schedule"));
       loadSetup();
     } catch (e) { toast(e.message); flip.disabled = false; }
   } }, s.scheduled ? "Stop the system schedule" : "Run every morning, even when the app is closed");

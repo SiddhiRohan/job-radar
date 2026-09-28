@@ -521,6 +521,8 @@ def setup_key(body: dict):
 def daily_schedule(body: dict):
     """Turn the operating system's daily run on or off, at run_time from config.json."""
     at = json.loads(Path("config.json").read_text(encoding="utf-8")).get("run_time", "07:30")
+    if body.get("on") and schedule.elsewhere():
+        return {"ok": False, "scheduled": False, "why": "The daily task already starts another copy of the radar"}
     ok = schedule.install(at) if body.get("on") else schedule.remove()
     return {"ok": ok, "scheduled": schedule.status()}
 
