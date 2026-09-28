@@ -8,8 +8,11 @@ from pathlib import Path
 
 import requests
 
+from radar import owner
+
 API_URL = "https://api.anthropic.com/v1/messages"
-MODELS = [os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"), "claude-sonnet-5", "claude-opus-5"]
+# ANTHROPIC_MODEL in the environment or in .env picks the model; the others are fallbacks when it is not available.
+MODELS = [owner.env("ANTHROPIC_MODEL", "claude-sonnet-4-6"), "claude-sonnet-5", "claude-opus-5"]
 
 
 def load_api_key():

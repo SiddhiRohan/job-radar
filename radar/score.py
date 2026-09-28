@@ -9,13 +9,13 @@ from pathlib import Path
 
 import requests
 
-from radar import filters, fit, store
+from radar import filters, fit, llm, store
 from tailoring import resumes
 
 sys.stdout.reconfigure(encoding="utf-8")
 
 API_URL = "https://api.anthropic.com/v1/messages"
-MODELS = [os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"), "claude-sonnet-5", "claude-opus-5"]
+MODELS = llm.MODELS  # one place picks the model: ANTHROPIC_MODEL in the environment or .env
 MAX_DESC_CHARS = 12000
 
 
