@@ -175,6 +175,44 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 <sub>The Applied view: how many you have sent, how fast, where they stand and where they went. A board below
 lets you move each application between stages. Demo data and fictional employers.</sub>
 
+## Privacy
+
+Everything the radar knows about you lives in files on your laptop, and git ignores all of them: your resume,
+profile, applications, email statuses and chat history. There is no account, no server run by anyone else, and no
+analytics.
+
+What leaves your machine, only to do the job:
+
+- **Anthropic's API**, when scoring or tailoring: the posting text and your resume, under your own key. If you
+  score with a coding assistant instead, the same text goes to that assistant.
+- **Employers' career sites**: their public job listings only, one request at a time, with a pause between
+  requests. It never logs in.
+- **Gmail**, only if you connect it: read over IMAP in read-only mode. Nothing is sent, moved or deleted.
+- **Google Fonts**, for the web app's two typefaces.
+
+## FAQ
+
+**Does it apply for me?** No. It finds, ranks, tailors and tracks; you press submit. It never sends an
+application or an email on your behalf.
+
+**Is the sponsorship call always right?** No. It reads the posting's own wording and the employer's public
+filing history, which is guidance, not legal advice. A posting that says nothing is marked likely, unlikely or
+unknown from that history, never yes, so check with the employer when it matters.
+
+**What jobs does it look for?** Data Engineer, Data Scientist, ML Engineer and AI Engineer roles, entry to mid
+level, in the US. Change `search_terms` and `title_patterns` in `config.json`, or ask a coding assistant with
+`/radar-tune`.
+
+**Can I add an employer?** Yes: `python -m companies.add "Name" <link>` with its careers site or any posting on
+Workday, Greenhouse, Lever or Ashby, or `/radar-add` in Claude Code. Employers on other hiring systems are not
+read yet.
+
+**Do I have to pay for anything?** The radar is free. Scoring uses your own Anthropic API key, roughly a cent a
+posting, or your Claude Code plan if you score there with `/radar-score`. See [What it costs](#what-it-costs).
+
+**Does it work outside the US, or for other visas?** Not yet. It keeps US postings only, and its sponsorship
+reading is written for US work visas.
+
 ## Configuration
 
 `config.json` holds the rules. The ones you are most likely to change:
