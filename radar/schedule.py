@@ -5,7 +5,8 @@ Linux. The task runs run.py from this folder with this Python and appends to log
 overlaps a run the app starts. Only the person using the radar installs it, from the setup page or this command.
 
 Every check looks at the folder the scheduled run starts in, so a second copy of the radar on the same computer never
-takes the first one's schedule for its own, and never replaces or removes it."""
+takes the first one's schedule for its own, and never replaces or removes it. A task whose folder is gone (the copy
+was moved or deleted) can only fail, so any copy may replace or remove it."""
 
 import html
 import platform
@@ -23,6 +24,11 @@ PLIST = Path.home() / "Library" / "LaunchAgents" / f"{LABEL}.plist"
 # What follows the folder in an entry the radar makes, or in one made by hand as `cd /d <folder> && ...`. Anything
 # else means another folder: job-radar-2, "job-radar - Copy", or a copy nested inside this one.
 AFTER_PATH = r"""(?=[\\/]\.cache[\\/]run-daily\.cmd|["']|\s*&&|\s*$)"""
+FOLDER_IN = [
+    re.compile(r'cd\s+(?:/d\s+)?"([^"]+)"'),  # cd "<folder>": launchd, cron
+    re.compile(r"cd\s+/d\s+([^\"&<>]+?)\s*&&"),  # cd /d <folder> &&: a task made by hand
+    re.compile(r'([A-Za-z]:\\[^"<>]*?)\\\.cache\\run-daily\.cmd'),  # <folder>\.cache\run-daily.cmd: our task
+]
 
 
 def command(root=ROOT, python=sys.executable):
@@ -43,6 +49,12 @@ def here(text, root=ROOT):
     return re.search(re.escape(str(root).lower()) + AFTER_PATH, html.unescape(text).lower()) is not None
 
 
+def stale(text):
+    """True when every folder a scheduler entry starts the radar in is gone, so the entry can only fail."""
+    found = [m.group(1).strip() for rx in FOLDER_IN for m in rx.finditer(html.unescape(text))]
+    return bool(found) and not any((Path(f) / "run.py").exists() for f in found)
+
+
 def entry(system, run=subprocess.run):
     """The scheduler's record of the daily run as text, '' when there is none. Cron may hold one line per copy."""
     if system == "Windows":
@@ -54,12 +66,12 @@ def entry(system, run=subprocess.run):
 
 
 def elsewhere(system=None, run=subprocess.run, root=ROOT):
-    """True when the one Windows task or macOS agent the radar uses already starts another copy of it."""
+    """True when the one Windows task or macOS agent the radar uses already starts another copy that still exists."""
     system = system or platform.system()
     if system not in ("Windows", "Darwin"):
         return False  # cron keeps a line per copy
     text = entry(system, run)
-    return bool(text) and not here(text, root)
+    return bool(text) and not here(text, root) and not stale(text)
 
 
 def install(at="07:30", system=None, run=subprocess.run, root=ROOT):
@@ -83,7 +95,7 @@ def install(at="07:30", system=None, run=subprocess.run, root=ROOT):
         run(["launchctl", "unload", str(PLIST)], capture_output=True)
         return run(["launchctl", "load", "-w", str(PLIST)], capture_output=True).returncode == 0
     (root / "logs").mkdir(exist_ok=True)
-    lines = [ln for ln in crontab(run) if not (MARK in ln and here(ln, root))]
+    lines = [ln for ln in crontab(run) if not mine_or_gone(ln, root)]
     lines.append(f"{mm} {hh} * * * {command(root)} {MARK}")
     return run(["crontab", "-"], input="\n".join(lines) + "\n", capture_output=True, text=True).returncode == 0
 
@@ -93,19 +105,32 @@ def crontab(run=subprocess.run):
     return r.stdout.splitlines() if r.returncode == 0 else []
 
 
+def mine_or_gone(line, root=ROOT):
+    """A cron line of the radar's that starts this folder, or a folder that no longer exists."""
+    return MARK in line and (here(line, root) or stale(line))
+
+
 def remove(system=None, run=subprocess.run, root=ROOT):
-    """Take this folder's daily run off the scheduler; another copy's schedule stays as it is."""
+    """Take this folder's daily run off the scheduler, and one left by a copy that is gone; another copy's schedule
+    stays as it is."""
     system = system or platform.system()
-    if not status(system, run, root):
-        return True
+    if system not in ("Windows", "Darwin"):
+        try:
+            have = crontab(run)
+        except OSError:  # no cron on this machine, so nothing to remove
+            return True
+        keep = [ln for ln in have if not mine_or_gone(ln, root)]
+        if len(keep) == len(have):
+            return True
+        return run(["crontab", "-"], input="\n".join(keep) + "\n", capture_output=True, text=True).returncode == 0
+    text = entry(system, run)
+    if not (here(text, root) or stale(text)):
+        return True  # none, or another copy's: nothing of this folder's to remove
     if system == "Windows":
         return run(["schtasks", "/Delete", "/TN", TASK, "/F"], capture_output=True, text=True).returncode == 0
-    if system == "Darwin":
-        run(["launchctl", "unload", "-w", str(PLIST)], capture_output=True)
-        PLIST.unlink(missing_ok=True)
-        return True
-    lines = [ln for ln in crontab(run) if not (MARK in ln and here(ln, root))]
-    return run(["crontab", "-"], input="\n".join(lines) + "\n", capture_output=True, text=True).returncode == 0
+    run(["launchctl", "unload", "-w", str(PLIST)], capture_output=True)
+    PLIST.unlink(missing_ok=True)
+    return True
 
 
 def status(system=None, run=subprocess.run, root=ROOT):

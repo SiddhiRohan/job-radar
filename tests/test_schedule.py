@@ -54,7 +54,15 @@ def test_mac_writes_a_launch_agent(tmp_path, monkeypatch):
     assert not schedule.status(system="Darwin", root=tmp_path / "other")
 
 
+def copy_at(folder):
+    """Another copy of the radar that still exists."""
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "run.py").write_text("", encoding="utf-8")
+    return folder
+
+
 def test_linux_replaces_its_own_cron_line_and_keeps_others(tmp_path):
+    copy_at(Path(f"{tmp_path}-2"))
     mine = f'30 7 * * * cd "{tmp_path}" && python run.py {schedule.MARK}'
     other = f'0 6 * * * cd "{tmp_path}-2" && python run.py {schedule.MARK}'
     run, calls = recorder("\n".join(["0 1 * * * backup.sh", mine, other]) + "\n")
@@ -65,7 +73,7 @@ def test_linux_replaces_its_own_cron_line_and_keeps_others(tmp_path):
 
 
 def test_a_task_that_starts_another_copy_is_not_this_ones(tmp_path):
-    run, calls = recorder(task_xml=task_for(tmp_path.parent / f"{tmp_path.name}-2"))
+    run, calls = recorder(task_xml=task_for(copy_at(tmp_path.parent / f"{tmp_path.name}-2")))
     assert not schedule.status(system="Windows", run=run, root=tmp_path)
     assert schedule.remove(system="Windows", run=run, root=tmp_path)  # nothing of this folder's to remove
     assert not schedule.install("07:30", system="Windows", run=run, root=tmp_path)  # would replace the other's
@@ -108,6 +116,23 @@ def test_lookalike_and_nested_folders_are_other_copies(folder):
     assert not schedule.here(f'"{folder}\\.cache\\run-daily.cmd"', ROOT)
     assert not schedule.here(f'cd "{folder}" && "python" run.py', ROOT)
     assert not schedule.here(f"/c cd /d {folder} &amp;&amp; python run.py", ROOT)
+
+
+def test_a_task_whose_folder_is_gone_can_be_replaced_or_removed(tmp_path):
+    gone = tmp_path.parent / f"{tmp_path.name}-moved"  # never created: the copy was moved or deleted
+    run, calls = recorder(task_xml=task_for(gone))
+    assert not schedule.elsewhere(system="Windows", run=run, root=tmp_path)
+    assert schedule.install("07:30", system="Windows", run=run, root=tmp_path)
+    assert calls[-1][0][:2] == ["schtasks", "/Create"]
+    assert schedule.remove(system="Windows", run=run, root=tmp_path)
+    assert calls[-1][0][:2] == ["schtasks", "/Delete"]
+
+
+def test_cron_lines_for_folders_that_are_gone_are_cleared(tmp_path):
+    gone = f'0 6 * * * cd "{tmp_path}-gone" && python run.py {schedule.MARK}'
+    run, calls = recorder("0 1 * * * backup.sh\n" + gone + "\n")
+    assert schedule.remove(system="Linux", run=run, root=tmp_path)
+    assert calls[-1][1] == "0 1 * * * backup.sh\n"
 
 
 def test_status_is_false_without_a_scheduler_command():
