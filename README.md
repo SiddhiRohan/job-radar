@@ -18,10 +18,10 @@ personal stays on your machine in files git ignores.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/today-dark.png">
-  <img src="docs/img/today-light.png" alt="The Today view: an Apply section of five postings, each a card with a fit score, the recommended resume, a sponsorship tag and a Mark applied button.">
+  <img src="docs/img/today-light.png" alt="The Today view: the morning brief with three postings to apply to first, what changed and what went quiet, then the Apply section of cards with a fit score, pay, a sponsorship tag and a Mark applied button.">
 </picture>
 
-<sub>The Today view. Screenshots use demo data.</sub>
+<sub>The Today view, opening with the morning brief. Screenshots use demo data and fictional employers.</sub>
 
 ## What it does
 
@@ -32,8 +32,11 @@ personal stays on your machine in files git ignores.
   surface a posting that does.
 - **Filters on what matters.** Titles must name a target role. Seniority titles, six or more years of
   required experience, contract wording and non-US locations are handled before any scoring.
-- **Scores with a reason.** Claude rates each survivor 1 to 5 against an entry-level and an experienced
-  resume, picks the better base, and writes one line on fit and one on the gap.
+- **Scores with evidence.** Claude rates each survivor 1 to 5 against an entry-level and an experienced
+  resume and shows why, factor by factor: experience, level, skills and domain, each with what the posting asks
+  and what the resume shows. Sponsorship, location and pay are read from the posting itself.
+- **Tells you what to do first.** Each morning's brief names the three postings to apply to first, what changed
+  since yesterday, and which applications have gone quiet.
 - **Keeps junior roles visible.** New-grad and early-career postings get their own Entry level section,
   so a 3 out of 5 on a junior role is not buried under senior roles.
 - **Tailors without inventing.** On request it rewrites a resume for one posting. Any skill outside the
@@ -42,6 +45,10 @@ personal stays on your machine in files git ignores.
   to screen, interview, rejected or offer when an email carries its requisition id and says so plainly. Replies
   without one wait in a needs-review list for you to settle; plain confirmations are skipped.
 - **Stays on your machine.** Resumes, applications and chat history are local files, ignored by git.
+
+<img src="docs/img/drawer.png" alt="A posting opened in the side drawer: the fit by factor, with experience, level, skills, domain, sponsorship, location and pay each marked meets, partial or gap next to what the posting asks and what the resume shows, above the description with the pay sentence highlighted.">
+
+<sub>Any posting opens in a drawer with its fit, factor by factor. Demo data.</sub>
 
 ## How it works
 
@@ -83,6 +90,8 @@ takes about a minute to set itself up, then the app opens at http://localhost:80
 2. Paste your API key. It is checked, then saved only in `.env` on your computer.
 3. Write a few lines on what you are looking for.
 4. Press **Run the radar**.
+
+<img src="docs/img/setup.png" alt="The Setup page: a list of checks, then steps for the resume, the API key, what you are looking for, and running every morning." width="720">
 
 From then on it runs every morning at 7:30 while the app is open, and catches up when you open it after the
 computer was off. To run even when the app is closed, turn on **Every morning** on the Setup page. `python -m radar.doctor` says what is missing whenever something does not work.
