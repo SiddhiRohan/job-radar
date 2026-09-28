@@ -374,3 +374,13 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     message saying another copy holds the task. Cron keeps a line per copy, told apart the same way. Found by
     starting a fresh clone next to the author's install: its setup page said it ran every morning and offered to
     stop a task that belonged to the other folder.
+
+65. **A coding assistant can score instead of an API key.** Someone using the radar through Claude Code already pays
+    for a model, so asking them for a second, metered key is a reason to leave. `radar.handscore` hands the
+    assistant exactly what the scorer sends the API (the rules and schema from `radar/fit.py`, the profile and both
+    bases) and takes back verdicts only after checking them against the same schema, plus the factor order the
+    schema cannot state, so a verdict from either path reads the same in the digest, the drawer and the brief. The
+    check is a small reader for the part of JSON Schema that `fit.py` uses rather than a new dependency. Postings a
+    rule settles are left to the run, which settles them without a model. Verdicts are marked `scored_with:
+    "assistant"`, so their share can be compared with the API's later. The app's own morning run still waits for a
+    key; `python run.py` without one finds and filters, and the assistant scores when asked.

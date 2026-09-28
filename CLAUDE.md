@@ -15,7 +15,8 @@ Run `python -m radar.doctor`. For each line marked FIX:
   or download it as Word. If they point you at a file, copy it there. Two files named `entry...` and `experienced...`
   also work.
 - **No Anthropic API key**: ask them to open `.env` and set `ANTHROPIC_API_KEY=` themselves; keys come from
-  console.anthropic.com. Never ask them to paste a key into the chat, and never print `.env`.
+  console.anthropic.com. Never ask them to paste a key into the chat, and never print `.env`. If they would rather
+  not use a key, the radar still finds and filters postings, and you score them with `/radar-score`.
 - **Packages missing**: run `python start.py` once, or `pip install -r requirements.txt`.
 
 ## The first time: learn what they want
@@ -39,6 +40,7 @@ whether they need visa sponsorship, a pay floor, and anything they never want to
 | Tailor my resume for it | `/radar-tailor <company> <req_id>` | `python -m tailoring.apply "<company>" <req_id> --no-prompt --yes` writes a draft to review. Report the folder and the questions in its notes.md. If it says the fit is a skip, ask before adding `--force`. |
 | I applied / I heard back | `/radar-applied ...` | `python -m radar.applications add "<company>" <req_id> "<title>"`, or `status "<company>" <req_id> interview`, or `list`. |
 | Any replies? | `/radar-mail` | `python -m radar.mail`, then say what moved and what waits for review on the Applied page. |
+| Score without an API key | `/radar-score [how many]` | `python -m radar.handscore next`, judge the postings in `.cache/to_score.json` as its rules say, write the verdicts, then `python -m radar.handscore save <file>` and `python -m radar.digest`. |
 | Add an employer | `/radar-add <employer> [link]` | `python -m companies.add "<employer>" <link>` with its Workday careers site or a posting on it, or its Greenhouse, Lever or Ashby board. Find the link if they did not give one. |
 | Show me different jobs | `/radar-tune <what to change>` | Edit `config.json` or `profile.md` to match, shown as a before and after, applied after they agree. |
 | Run even when the app is closed | | `python -m radar.schedule install` (or `status`, `remove`) asks the computer's own scheduler to start the run at `run_time`. |

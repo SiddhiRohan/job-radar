@@ -112,6 +112,7 @@ the setup, asks what you are looking for, and tunes the search with you. After t
 | `/radar-applied` | Record an application or a reply |
 | `/radar-mail` | Read hiring emails and update statuses |
 | `/radar-add <employer> [link]` | Add an employer to the daily search |
+| `/radar-score` | Score new postings with the assistant itself, no API key needed |
 | `/radar-tune <what>` | Change what it looks for, in plain words |
 
 Both ways use the same files, so you can set up in one and use the other.
@@ -120,7 +121,9 @@ Both ways use the same files, so you can set up in one and use the other.
 
 The radar is free. Scoring and tailoring use your own API key: roughly a cent per scored posting, which is
 typically $10 to $20 a month at the default settings. `score_cap` in `config.json` caps a run, and
-`"score_batch": true` halves the scoring cost in exchange for results that take up to an hour.
+`"score_batch": true` halves the scoring cost in exchange for results that take up to an hour. With a coding
+assistant you can skip the key: the radar finds and filters postings, and `/radar-score` has the assistant judge
+them against the same rules, on your assistant plan.
 
 ### Email statuses, optional
 

@@ -27,7 +27,10 @@ def load_api_key():
             name, _, value = raw.strip().partition("=")
             if name == "ANTHROPIC_API_KEY":
                 key = value.strip().strip('"').strip("'")
-    return key or sys.exit("ANTHROPIC_API_KEY is not set (put it in .env as ANTHROPIC_API_KEY=sk-ant-...)")
+    return key or sys.exit(
+        "ANTHROPIC_API_KEY is not set: put it in .env as ANTHROPIC_API_KEY=sk-ant-..., "
+        "or score in a coding assistant with /radar-score (python -m radar.handscore)"
+    )
 
 
 def system_blocks():
@@ -125,22 +128,25 @@ def settle(j, verdict):
     print(f"  [{s}] {j['company']:<12} {j['title'][:55]:<55} {why}", flush=True)
 
 
+def early(j):
+    """Entry-level titles and postings asking two years or fewer go first, so the cap never starves them."""
+    years = j.get("years_required")
+    return filters.is_entry_title(j["title"]) or (years is not None and years <= 2)
+
+
+def queue(jobs):
+    """Unscored postings in the order they are scored: early ones first, then the newest. A run and a coding
+    assistant (radar/handscore.py) take them in this order."""
+    return sorted((j for j in jobs if unscored(j)), key=lambda j: (0 if early(j) else 1, j["posted_days_ago"]))
+
+
 def main():
     api_key = load_api_key()
     print("ANTHROPIC_API_KEY set:", bool(api_key))
     cfg = json.load(open("config.json", encoding="utf-8"))
     cap = cfg.get("score_cap", 40)
     jobs = store.load()
-    # Entry-level and low-years postings first, so the cap never starves them; then newest.
-    todo = sorted(
-        (j for j in jobs if unscored(j)),
-        key=lambda j: (
-            0
-            if filters.is_entry_title(j["title"]) or (j.get("years_required") is not None and j["years_required"] <= 2)
-            else 1,
-            j["posted_days_ago"],
-        ),
-    )
+    todo = queue(jobs)
     print(f"{len(todo)} unscored postings; API cap {cap}")
     system, ask = system_blocks(), []
     for j in todo:

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Score with a coding assistant, no API key needed.** `python -m radar.handscore next` writes the postings waiting
+for a score, with the rules, the verdict schema, the resumes and the profile, to `.cache/to_score.json`; the
+assistant judges them and `python -m radar.handscore save <file>` checks every verdict against the schema before
+storing it, naming what is wrong with any it refuses. `/radar-score` runs the whole loop in Claude Code.
+
 **Add an employer from a link.** `python -m companies.add "Name" <link>` takes a Workday careers site or posting,
 or a Greenhouse, Lever or Ashby board, checks it with one request, and adds the employer to `companies.json`. A
 coding assistant does the same with `/radar-add`, finding the link when it is not given. The chat in the web app
