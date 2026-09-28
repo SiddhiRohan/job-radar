@@ -417,8 +417,8 @@ async function loadHistory() {
 }
 function context() {
   const v = (location.hash || "#today").slice(1);
-  const ctx = { view: v, date: T.date, sections_hint: "Today rows: {section, company, req_id, title, score_entry, score_experienced, sponsorship, applied}" };
-  if (T.last) ctx.today = Object.fromEntries(Object.entries(T.last.sections).map(([k, rows]) => [k, rows.slice(0, 25).map(r => ({ company: r.company, req_id: r.req_id, title: r.title, E: r.score_entry, X: r.score_experienced, sponsorship: r.sponsorship, applied: r.applied }))]));
+  const ctx = { view: v, date: T.date, sections_hint: "Today rows: {section, company, req_id, title, score_entry, score_experienced, sponsorship, why (the fit in one line), applied}" };
+  if (T.last) ctx.today = Object.fromEntries(Object.entries(T.last.sections).map(([k, rows]) => [k, rows.slice(0, 25).map(r => ({ company: r.company, req_id: r.req_id, title: r.title, E: r.score_entry, X: r.score_experienced, sponsorship: r.sponsorship, why: (r.why || "").slice(0, 140), applied: r.applied }))]));
   if (S.state) ctx.tailor = { job: S.state.job, sections: S.state.sections.map(s => ({ id: s.id, label: s.label, text: s.text })), jd_skills: S.state.jd_skills, built: !!S.build };
   return ctx;
 }
