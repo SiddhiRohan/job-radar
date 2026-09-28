@@ -75,3 +75,14 @@ def test_last_ran_reads_utc_and_tolerates_a_missing_file(tmp_path):
     assert autorun.last_ran(p) is None
     p.write_text(json.dumps({"ran_at": "2026-09-28T11:30:00+00:00"}), encoding="utf-8")
     assert autorun.last_ran(p).tzinfo is None
+
+
+def test_nothing_runs_until_setup_is_complete(tmp_path):
+    cfg = tmp_path / "config.json"
+    cfg.write_text(json.dumps(CFG), encoding="utf-8")
+    state, now, calls = {}, datetime(2026, 9, 28, 9, 0), []
+    args = {"now": now, "cfg_path": cfg, "last": lambda: None}
+    assert autorun.check(lambda: calls.append(1), state, ready=lambda: False, **args) is None
+    assert calls == [] and "tried" not in state  # not setting up yet is not a failed try
+    autorun.check(lambda: calls.append(1) or "started", state, ready=lambda: True, **args)
+    assert calls == [1]

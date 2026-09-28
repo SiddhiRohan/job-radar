@@ -571,7 +571,8 @@ def favicon():
 
 if __name__ == "__main__":
     UI_DIR.mkdir(parents=True, exist_ok=True)
-    autorun.start(lambda: chat.run_radar(1, False))  # the daily run while the app is open, with catch-up
+    ready = lambda: not any(c["level"] == "fix" for c in doctor.checks())  # noqa: E731
+    autorun.start(lambda: chat.run_radar(1, False), ready)  # the daily run while the app is open, with catch-up
     port = int(os.environ.get("RADAR_PORT", "8000"))  # another port when 8000 is taken
     threading.Timer(1.0, lambda: webbrowser.open(f"http://localhost:{port}")).start()
     uvicorn.run(app, host="127.0.0.1", port=port, log_level="warning")
