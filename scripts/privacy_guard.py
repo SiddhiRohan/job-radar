@@ -42,13 +42,25 @@ def req_ids(path=Path("applications.md")):
     return ids
 
 
-def terms(root=Path(".")):
+def roots():
+    """This folder, plus the main checkout when this is a linked worktree: the private files live only there."""
+    out = [Path(".").resolve()]
+    common = subprocess.run(["git", "rev-parse", "--git-common-dir"], capture_output=True, text=True).stdout.strip()
+    if common:
+        main = Path(common).resolve().parent
+        if main not in out:
+            out.append(main)
+    return out
+
+
+def terms(root=None):
     """Every blocked term, longest first so a full name is reported before its first name."""
-    listed = []
-    tf = root / ".privacy-terms"
-    if tf.exists():
-        listed = [t.strip() for t in tf.read_text(encoding="utf-8").splitlines() if t.strip() and not t.startswith("#")]
-    found = listed + env_values(root / ".env") + req_ids(root / "applications.md")
+    found = []
+    for r in [Path(root)] if root else roots():
+        tf = r / ".privacy-terms"
+        if tf.exists():
+            found += [t.strip() for t in tf.read_text(encoding="utf-8").splitlines() if t.strip() and t[0] != "#"]
+        found += env_values(r / ".env") + req_ids(r / "applications.md")
     return sorted({t for t in found if len(t) >= 3}, key=len, reverse=True)
 
 
