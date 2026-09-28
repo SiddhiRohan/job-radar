@@ -1,4 +1,5 @@
-"""Score new postings against both resume bases with Claude; write verdicts back into jobs.jsonl."""
+"""Score new postings against both resume bases with Claude; write verdicts back into jobs.jsonl.
+The prompt and the verdict schema, fit factors included, live in radar/fit.py."""
 
 import json
 import os
@@ -8,7 +9,7 @@ from pathlib import Path
 
 import requests
 
-from radar import filters, store
+from radar import filters, fit, store
 from tailoring import resumes
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -16,49 +17,6 @@ sys.stdout.reconfigure(encoding="utf-8")
 API_URL = "https://api.anthropic.com/v1/messages"
 MODELS = [os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"), "claude-sonnet-5", "claude-opus-5"]
 MAX_DESC_CHARS = 12000
-
-RULES = """You are a blunt technical recruiter screening one candidate against one job posting.
-Score each resume base 1-5: 5 = clearly meets every must-have; 4 = meets must-haves with minor gaps;
-3 = plausible with a tailored resume; 2 = significant gaps; 1 = don't bother. No flattery.
-recommended_resume: entry for New College Grad, junior, I-level, 0-2 years, or associate roles;
-experienced for 3+ years, II/mid, or senior roles. recommended_variant is "<role folder>/<one-page|two-page>"
-using only the role folders listed. years_required: the minimum years the posting demands, or null.
-platform_tools_missing: only tools from the profile's NOT-have list that the posting requires.
-sponsorship: from the posting text only (no/yes/perm_ad/unknown); sponsorship_evidence quotes the phrase or is null.
-cover_letter_required: true only if the posting asks for one. why: two sentences max."""
-
-SCHEMA = {
-    "type": "object",
-    "additionalProperties": False,
-    "properties": {
-        "score_entry": {"type": "integer", "enum": [1, 2, 3, 4, 5]},
-        "score_experienced": {"type": "integer", "enum": [1, 2, 3, 4, 5]},
-        "recommended_resume": {"type": "string", "enum": ["entry", "experienced"]},
-        "recommended_variant": {"type": "string"},
-        "years_required": {"type": ["integer", "null"]},
-        "hard_requirements_missing": {"type": "array", "items": {"type": "string"}},
-        "platform_tools_missing": {"type": "array", "items": {"type": "string"}},
-        "sponsorship": {"type": "string", "enum": ["yes", "likely", "unknown", "unlikely", "no", "perm_ad"]},
-        "sponsorship_evidence": {"type": ["string", "null"]},
-        "cover_letter_required": {"type": "boolean"},
-        "why": {"type": "string"},
-        "apply": {"type": "boolean"},
-    },
-    "required": [
-        "score_entry",
-        "score_experienced",
-        "recommended_resume",
-        "recommended_variant",
-        "years_required",
-        "hard_requirements_missing",
-        "platform_tools_missing",
-        "sponsorship",
-        "sponsorship_evidence",
-        "cover_letter_required",
-        "why",
-        "apply",
-    ],
-}
 
 
 def load_api_key():
@@ -80,7 +38,7 @@ def system_blocks():
     )
     b = resumes.bases()
     return [
-        {"type": "text", "text": f"{RULES}\n\nCANDIDATE PROFILE:\n{profile}\nROLE FOLDERS AVAILABLE: {roles}"},
+        {"type": "text", "text": f"{fit.RULES}\n\nCANDIDATE PROFILE:\n{profile}\nROLE FOLDERS AVAILABLE: {roles}"},
         {"type": "text", "text": "ENTRY-LEVEL BASE RESUME (framed as about 2 years):\n" + b["entry"]},
         {
             "type": "text",
@@ -101,10 +59,10 @@ def ask_claude(api_key, system, job):
     for model in MODELS:
         body = {
             "model": model,
-            "max_tokens": 1024,
+            "max_tokens": 1536,
             "system": system,
             "messages": [{"role": "user", "content": user}],
-            "output_config": {"format": {"type": "json_schema", "schema": SCHEMA}},
+            "output_config": {"format": {"type": "json_schema", "schema": fit.SCHEMA}},
         }
         for attempt in range(3):
             r = requests.post(API_URL, headers=headers, json=body, timeout=120)
@@ -125,7 +83,9 @@ def ask_claude(api_key, system, job):
 
 
 def rule_verdict(j):
-    """Skip the API when a hard rule already decides: years gate, sponsorship no, PERM ad."""
+    """Skip the API when a hard rule already decides: years gate, sponsorship no, PERM ad. Its factors list is empty:
+    no model read the posting, so there is no experience, level, skills or domain judgment to show; the drawer
+    still shows sponsorship, location and pay (radar/factors.py), and why names the rule."""
     if j.get("years_gate"):
         why = f"years gate: {j['years_required']}+ years required"
     elif j.get("sponsorship") in ("no", "perm_ad"):
@@ -133,6 +93,7 @@ def rule_verdict(j):
     else:
         return None
     return {
+        "factors": [],
         "score_entry": 1,
         "score_experienced": 1,
         "recommended_resume": None,
