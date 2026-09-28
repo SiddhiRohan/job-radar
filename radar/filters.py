@@ -18,6 +18,10 @@ NON_US = [
     "calgary", "munich", "berlin", "madrid", "barcelona", "milan", "rome", "krakow", "sao paulo", "bogota",
     "buenos aires", "mexico city", "monterrey", "guadalajara", "luxembourg", "copenhagen", "oslo", "helsinki",
     "athens", "edinburgh",
+    # Seen on Greenhouse boards, which give no country to check a place against (2026-09-27)
+    "serbia", "belgrade", "ukraine", "estonia", "cyprus", "slovenia", "ljubljana", "lithuania", "vilnius", "uruguay",
+    "great britain", "british columbia", "alberta", "quebec", "manitoba", "nova scotia", "auckland", "frankfurt",
+    "stuttgart", "cologne", "cork", "são paulo", "cdmx", "abu dhabi", "emea", "apac", "latam",
 ]
 # fmt: on
 
