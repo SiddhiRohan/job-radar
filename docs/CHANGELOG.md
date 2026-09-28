@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**US cities that share a name with a city abroad are kept.** Vancouver, WA; Dublin, OH and CA; Vienna, VA;
+Melbourne, FL; Warsaw, IN; and a few more were dropped by the US-only rule because the city name alone is on the
+list of places abroad. The pairs are listed one by one: a bare state code would also keep "Bengaluru, IN" and
+"Munich, DE", whose country codes are state codes too.
+
 **Half-price scoring, if you can wait.** With `"score_batch": true` in `config.json` the run sends its postings
 to Claude as one batch through the Message Batches API, at half the price. The run waits up to an hour, then asks
 directly about anything the batch did not answer, so every posting under the cap still gets a score. Off by

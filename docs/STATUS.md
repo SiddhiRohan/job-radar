@@ -36,7 +36,6 @@ tailoring and tracking. The dated history of the author's own runs is kept in a 
 - Record H-1B filings for the six board employers with no sponsorship data, so recomputing tiers keeps them in
   tier 2.
 - Keep Greenhouse requisition ids, so email statuses can match board postings by id.
-- Read two-part places such as "Vancouver, WA" as US.
 
 **Known gaps**
 
