@@ -16,7 +16,22 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from radar import applications, autorun, chat, digest, mail, owner, patterns, poll, prepare, salary, score, watch, wd
+from radar import (
+    applications,
+    autorun,
+    chat,
+    digest,
+    doctor,
+    mail,
+    owner,
+    patterns,
+    poll,
+    prepare,
+    salary,
+    score,
+    watch,
+    wd,
+)
 from tailoring import apply as applier
 from tailoring import finalize, letters, resumes, skills, tailor
 
@@ -516,6 +531,12 @@ def chat_reset(body: dict):
     return {"ok": True}
 
 
+@app.get("/api/doctor")
+def doctor_report():
+    """The same checks as python -m radar.doctor, for the setup page."""
+    return {"checks": doctor.checks()}
+
+
 @app.post("/api/run")
 def run_radar(body: dict):
     return chat.run_radar(int(body.get("days", 1)), bool(body.get("all_tiers")))
@@ -551,5 +572,6 @@ def favicon():
 if __name__ == "__main__":
     UI_DIR.mkdir(parents=True, exist_ok=True)
     autorun.start(lambda: chat.run_radar(1, False))  # the daily run while the app is open, with catch-up
-    threading.Timer(1.0, lambda: webbrowser.open("http://localhost:8000")).start()
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
+    port = int(os.environ.get("RADAR_PORT", "8000"))  # another port when 8000 is taken
+    threading.Timer(1.0, lambda: webbrowser.open(f"http://localhost:{port}")).start()
+    uvicorn.run(app, host="127.0.0.1", port=port, log_level="warning")
