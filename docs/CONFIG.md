@@ -85,6 +85,7 @@ The title rules run in this order, before any detail is fetched.
 | Key | Current | What it does |
 | --- | --- | --- |
 | `score_cap` | 120 | The most postings sent to Claude in one run. Entry-level titles and postings asking two years or fewer go first, then the newest. Unscored postings wait for the next run. |
+| `score_batch` | false | true sends the run's postings to Claude as one batch, at half the price of asking one at a time. The answers take minutes to an hour instead of seconds, so the digest and brief come later; the radar waits up to an hour, then asks directly about whatever the batch did not answer. |
 | `prepare_cap` | 0 | How many Apply postings get a tailoring plan made in advance after the run. 0 turns it off; plans are made on demand from the chat or Tailor. |
 
 ### How a fit is judged

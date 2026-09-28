@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Half-price scoring, if you can wait.** With `"score_batch": true` in `config.json` the run sends its postings
+to Claude as one batch through the Message Batches API, at half the price. The run waits up to an hour, then asks
+directly about anything the batch did not answer, so every posting under the cap still gets a score. Off by
+default. `radar/batch.py`.
+
 **Job-board postings watched and judged.** The posting watcher checks Greenhouse, Lever and Ashby postings by whether
 the board still lists them, and `python -m radar.evaluate` takes a link from any of the three as well as Workday.
 

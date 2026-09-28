@@ -116,7 +116,8 @@ Both ways use the same files, so you can set up in one and use the other.
 ### What it costs
 
 The radar is free. Scoring and tailoring use your own API key: roughly a cent per scored posting, which is
-typically $10 to $20 a month at the default settings. `score_cap` in `config.json` caps a run.
+typically $10 to $20 a month at the default settings. `score_cap` in `config.json` caps a run, and
+`"score_batch": true` halves the scoring cost in exchange for results that take up to an hour.
 
 ### Email statuses, optional
 

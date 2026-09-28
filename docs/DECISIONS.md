@@ -353,3 +353,15 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     sponsorship and would move those six to tier 3, so recording their filings in `companies/h1b_check.json` is the
     durable fix and a good next task. Screened offline with the current config, the saved responses give 2 postings
     in a 3-day window (a weekend) and 27 over 14 days across 11 of the 18 employers.
+
+63. **Batch scoring is a setting, off by default.** Batches cost half as much but answer in minutes to an hour, and
+    the digest, brief and email all wait on scoring, so turning it on is the person's call, not a default. One
+    batch per run, each request named by its position (`p0`, `p1`, ...) because custom ids allow only letters,
+    digits, `_` and `-`, which company names do not keep to. The run waits up to 60 minutes, polling every 30
+    seconds; a batch still running then is cancelled and whatever finished is read before the rest is asked
+    directly, so nothing is paid for twice. A request that errored, expired or came back cut off is asked directly
+    too, which also covers a model the key cannot use. Pasted links stay direct: someone is waiting on the answer.
+    If the machine sleeps mid-wait, the batch still finishes and is billed, but its answers are not collected and
+    the next run scores those postings again; keeping the batch id to collect them later is left for when it
+    happens in practice. In a live check, a one-posting batch with the structured-output schema answered in 94
+    seconds with all four factors.

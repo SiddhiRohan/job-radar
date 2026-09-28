@@ -9,7 +9,7 @@ from pathlib import Path
 
 import requests
 
-from radar import filters, fit, llm, store
+from radar import batch, filters, fit, llm, store
 from tailoring import resumes
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -48,24 +48,28 @@ def system_blocks():
     ]
 
 
-def ask_claude(api_key, system, job):
-    """Return (verdict dict, model used). Falls back through MODELS on not_found."""
+def body(model, system, job):
+    """The Messages API request for one posting; a direct call and a batch send the same one."""
     user = (
         f"JOB POSTING: {job['title']} at {job['company']} ({job['location']})\n"
         f"Regex sponsorship read: {job.get('sponsorship')} ({job.get('sponsorship_evidence') or 'no phrase found'})\n\n"
         f"{job.get('description', '')[:MAX_DESC_CHARS]}\n\nReturn the JSON verdict."
     )
+    return {
+        "model": model,
+        "max_tokens": 1536,
+        "system": system,
+        "messages": [{"role": "user", "content": user}],
+        "output_config": {"format": {"type": "json_schema", "schema": fit.SCHEMA}},
+    }
+
+
+def ask_claude(api_key, system, job):
+    """Return (verdict dict, model used). Falls back through MODELS on not_found."""
     headers = {"x-api-key": api_key, "anthropic-version": "2023-06-01", "content-type": "application/json"}
     for model in MODELS:
-        body = {
-            "model": model,
-            "max_tokens": 1536,
-            "system": system,
-            "messages": [{"role": "user", "content": user}],
-            "output_config": {"format": {"type": "json_schema", "schema": fit.SCHEMA}},
-        }
         for attempt in range(3):
-            r = requests.post(API_URL, headers=headers, json=body, timeout=120)
+            r = requests.post(API_URL, headers=headers, json=body(model, system, job), timeout=120)
             if r.status_code in (429, 529) or r.status_code >= 500:
                 time.sleep(5 * (attempt + 1))
                 continue
@@ -114,6 +118,13 @@ def unscored(j):
     return "score_entry" not in (j.get("verdict") or {})
 
 
+def settle(j, verdict):
+    j["verdict"] = verdict
+    s = f"E{verdict.get('score_entry', '-')}/X{verdict.get('score_experienced', '-')}"
+    why = (verdict.get("why") or verdict.get("error", ""))[:70]
+    print(f"  [{s}] {j['company']:<12} {j['title'][:55]:<55} {why}", flush=True)
+
+
 def main():
     api_key = load_api_key()
     print("ANTHROPIC_API_KEY set:", bool(api_key))
@@ -131,27 +142,27 @@ def main():
         ),
     )
     print(f"{len(todo)} unscored postings; API cap {cap}")
-    system, calls = system_blocks(), 0
+    system, ask = system_blocks(), []
     for j in todo:
         verdict = rule_verdict(j)
-        if verdict is None:
-            if calls >= cap:
-                continue
-            calls += 1
+        if verdict:
+            settle(j, verdict)
+        elif len(ask) < cap:
+            ask.append(j)
+    batched = cfg.get("score_batch") and ask and batch.score(api_key, [body(MODELS[0], system, j) for j in ask])
+    for i, j in enumerate(ask):
+        if batched and i in batched:
+            verdict, j["scored_with"] = batched[i]
+        else:
             try:
                 verdict, j["scored_with"] = ask_claude(api_key, system, j)
             except Exception as e:  # record the failure on the posting; retried next run
                 verdict = {"error": str(e)[:300]}
-        j["verdict"] = verdict
-        s = f"E{verdict.get('score_entry', '-')}/X{verdict.get('score_experienced', '-')}"
-        print(
-            f"  [{s}] {j['company']:<12} {j['title'][:55]:<55} {(verdict.get('why') or verdict.get('error', ''))[:70]}",
-            flush=True,
-        )
+        settle(j, verdict)
     with open("jobs.jsonl", "w", encoding="utf-8") as f:
         for j in jobs:
             f.write(json.dumps(j) + "\n")
-    print(f"done: {calls} API calls")
+    print(f"done: {len(ask)} postings sent to the model, {len(batched or {})} of them in a batch")
 
 
 if __name__ == "__main__":
