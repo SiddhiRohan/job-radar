@@ -103,7 +103,7 @@ def run_score(tmp_path, monkeypatch, cfg, batched):
         for c in ("Contoso", "Northwind")
     ]
     monkeypatch.setattr(score.store, "load", lambda: jobs)
-    monkeypatch.setattr(score, "load_api_key", lambda: "test-key")
+    monkeypatch.setattr(score, "load_api_key", lambda required=True: "test-key")
     monkeypatch.setattr(score, "system_blocks", lambda: [{"type": "text", "text": "rules"}])
     send = Mock(return_value=batched)
     monkeypatch.setattr(score.batch, "score", send)
@@ -144,10 +144,25 @@ def test_a_posting_stored_during_the_wait_survives_the_save(tmp_path, monkeypatc
         score.store.append_new([pasted])  # someone pastes a link in the app while the batch runs
         return {}
 
-    monkeypatch.setattr(score, "load_api_key", lambda: "test-key")
+    monkeypatch.setattr(score, "load_api_key", lambda required=True: "test-key")
     monkeypatch.setattr(score, "system_blocks", lambda: [{"type": "text", "text": "rules"}])
     monkeypatch.setattr(score.batch, "score", slow_batch)
     monkeypatch.setattr(score, "ask_claude", lambda api_key, system, job: (VERDICT, "claude-sonnet-5"))
     score.main()
     rows = {j["req_id"]: j for j in score.store.load()}
     assert set(rows) == {"R1", "R2"} and rows["R1"]["verdict"] == VERDICT
+
+
+def test_without_a_key_rule_decided_postings_are_still_settled(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    (tmp_path / "config.json").write_text("{}", encoding="utf-8")
+    base = {"title": "Data Engineer", "location": "Austin, TX", "posted_days_ago": 0}
+    gated = base | {"company": "Contoso", "req_id": "R1", "years_gate": True, "years_required": 8}
+    open_one = base | {"company": "Northwind", "req_id": "R2"}
+    score.store.JOBS.write_text("".join(json.dumps(j) + "\n" for j in (gated, open_one)), encoding="utf-8")
+    monkeypatch.setattr(score, "system_blocks", lambda: pytest.fail("no model call without a key"))
+    score.main()
+    rows = {j["req_id"]: j for j in score.store.load()}
+    assert rows["R1"]["verdict"]["rule"] and "verdict" not in rows["R2"]  # the second waits for a key or /radar-score
+    assert "/radar-score" in capsys.readouterr().out

@@ -19,18 +19,24 @@ MODELS = llm.MODELS  # one place picks the model: ANTHROPIC_MODEL in the environ
 MAX_DESC_CHARS = 12000
 
 
-def load_api_key():
-    """ANTHROPIC_API_KEY from the environment, else from a KEY=VALUE line in .env."""
+NO_KEY = (
+    "ANTHROPIC_API_KEY is not set: put it in .env as ANTHROPIC_API_KEY=sk-ant-..., "
+    "or score in a coding assistant with /radar-score (python -m radar.handscore)"
+)
+
+
+def load_api_key(required=True):
+    """ANTHROPIC_API_KEY from the environment, else from a KEY=VALUE line in .env. Without one: exit, or None when
+    the caller can do without."""
     key = os.environ.get("ANTHROPIC_API_KEY")
     if not key and Path(".env").exists():
         for raw in Path(".env").read_text(encoding="utf-8").splitlines():
             name, _, value = raw.strip().partition("=")
             if name == "ANTHROPIC_API_KEY":
                 key = value.strip().strip('"').strip("'")
-    return key or sys.exit(
-        "ANTHROPIC_API_KEY is not set: put it in .env as ANTHROPIC_API_KEY=sk-ant-..., "
-        "or score in a coding assistant with /radar-score (python -m radar.handscore)"
-    )
+    if key or not required:
+        return key or None
+    sys.exit(NO_KEY)
 
 
 def system_blocks():
@@ -141,20 +147,22 @@ def queue(jobs):
 
 
 def main():
-    api_key = load_api_key()
-    print("ANTHROPIC_API_KEY set:", bool(api_key))
     cfg = json.load(open("config.json", encoding="utf-8"))
     cap = cfg.get("score_cap", 40)
     jobs = store.load()
-    todo = queue(jobs)
-    print(f"{len(todo)} unscored postings; API cap {cap}")
-    system, ask = system_blocks(), []
-    for j in todo:
+    todo, ask = queue(jobs), []
+    for j in todo:  # a hard rule settles a posting with no model, so with no key as well
         verdict = rule_verdict(j)
         if verdict:
             settle(j, verdict)
         elif len(ask) < cap:
             ask.append(j)
+    api_key = load_api_key(required=False) if ask else None
+    print(f"{len(todo)} unscored postings, {len(ask)} for the model (cap {cap}); API key set: {bool(api_key)}")
+    if ask and not api_key:
+        print(NO_KEY, flush=True)
+        ask = []
+    system = system_blocks() if ask else None
     batched = cfg.get("score_batch") and ask and batch.score(api_key, [body(MODELS[0], system, j) for j in ask])
     for i, j in enumerate(ask):
         if batched and i in batched:
