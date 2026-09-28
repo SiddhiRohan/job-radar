@@ -388,3 +388,16 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     rule settles are left to the run, which settles them without a model. Verdicts are marked `scored_with:
     "assistant"`, so their share can be compared with the API's later. The app's own morning run still waits for a
     key; `python run.py` without one finds and filters, and the assistant scores when asked.
+
+66. **The intro video.** Fifty-one seconds, 1080p, built from real screens of the app on demo data with fictional
+    employers, so every claim in it can be checked against the code: 180 employers, the four hiring systems,
+    sponsorship read per posting with filing history as the fallback, the fit by factor, the brief, email statuses
+    that move or wait for review. Three short live-action shots (the late-night search, the morning brief over
+    coffee, a walk out onto campus) were generated with Seedance 2.5 for 60 credits each; the first two were
+    generated again with a South Asian protagonist because the first cast did not look like the students the
+    radar is for, and the laptop lid was asked to be plain so no brand shows. The music is composed in code, a
+    short numpy and scipy synthesis (120 BPM, F major, I-V-vi-IV), because the generation service offers speech
+    but not music, and an original track avoids any licence question. GitHub does not play video files
+    from a repository inline, so the README shows a half-megabyte animated preview that links to the file; a copy
+    uploaded through GitHub's editor would give an inline player with sound. The file is 6.5 MB, under the 10 MB
+    upload limit for that.

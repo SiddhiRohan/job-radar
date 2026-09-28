@@ -1,50 +1,71 @@
-<p align="center"><img src="docs/img/logo.png" alt="Job radar logo: a teal radar disc with a mint sweep and one blip" width="160"></p>
+<p align="center"><img src="docs/img/logo.png" alt="Job radar logo: a teal radar disc with a mint sweep and one blip" width="140"></p>
 
 <h1 align="center">Job radar</h1>
 
-<p align="center"><img src="docs/img/ident.webp" alt="The Job radar mark, its sweep turning and a blip appearing" width="720"></p>
+<p align="center"><b>A morning shortlist of data and ML jobs, checked for visa sponsorship one posting at a time.</b><br>
+It runs on your laptop, reads employers' own career sites, and tells you what to apply to first.</p>
 
-A morning shortlist of data and ML jobs, pulled straight from company career sites and filtered for
-H-1B sponsorship one posting at a time.
+<p align="center"><a href="docs/media/job-radar-intro.mp4"><img src="docs/img/intro-preview.webp" alt="The intro video: a student searching job postings late at night, then Job radar's morning brief, a posting read for visa wording, the fit judged factor by factor, the Applied board, and the same student smiling over morning coffee." width="820"></a><br>
+<sub><a href="docs/media/job-radar-intro.mp4">Watch the 50-second intro, with sound</a></sub></p>
 
-Every day at 7:30 it polls 180 employers that hire through Workday, Greenhouse, Lever or Ashby. It keeps the
-Data Engineer, Data Scientist, ML Engineer and AI Engineer roles that fit an entry-to-mid profile, and drops anything that
-says it will not sponsor. The rest are scored against two versions of a resume. A small local web app
-shows the result, tracks applications, and can tailor a resume for one posting when asked.
+## Why it helps on a student visa
 
-It started as one person's job search, so the defaults are opinionated: data and ML roles, entry to mid
-level, US postings that can sponsor a visa. Every one of them lives in `config.json`, and everything
-personal stays on your machine in files git ignores.
+Searching on a student visa is a second job. Every posting has to be read to the end, because the line that
+decides it ("we are unable to sponsor", "U.S. citizens only", "active clearance required") is usually near the
+bottom. When your OPT clock is running, a wasted application costs days you do not have.
+
+Job radar does that reading for you, every morning:
+
+- **Sponsorship is read per posting, not guessed per company.** Visa, citizenship and clearance wording sends a
+  posting to Skipped, and so do the ads employers run for green card paperwork. When a posting says nothing,
+  the employer's public H-1B filing history fills the gap. A company that rarely sponsors can still surface a
+  posting that says it will.
+- **You see roles the day they are posted.** It reads each employer's own hiring system (Workday, Greenhouse,
+  Lever or Ashby) through the same public JSON its careers page uses.
+- **Entry-level roles stay visible.** New-grad and early-career postings get their own section, and postings
+  that ask for six or more years are dropped before anything is scored.
+- **The fit is judged on experience, not keywords.** Each posting is scored against your resume factor by
+  factor, experience, level, skills and domain, with what the posting asks next to what your resume shows, so
+  you know the gaps before you apply.
+- **It never makes things up.** Tailoring a resume for one posting may only reword what is already on it;
+  anything new becomes a question for you.
+
+### What a morning looks like
+
+1. At 7:30 the radar reads 180 employers' career sites, one polite request at a time.
+2. It keeps the roles you target, sets aside senior, non-US, over-experienced and won't-sponsor postings, and
+   scores what is left.
+3. You open the app to a short brief: the three postings to apply to first and why, what changed overnight,
+   and which applications have gone quiet.
+4. You apply and mark it applied. With Gmail connected, hiring emails move it to screen, interview or offer.
+
+The hour of tab-hopping becomes one page you read with your coffee.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/today-dark.png">
   <img src="docs/img/today-light.png" alt="The Today view: the morning brief with three postings to apply to first, what changed and what went quiet, then the Apply section of cards with a fit score, pay, a sponsorship tag and a Mark applied button.">
 </picture>
 
-<sub>The Today view, opening with the morning brief. Screenshots use demo data and fictional employers.</sub>
+<sub>The Today view, opening with the morning brief. Screenshots and video use demo data and fictional employers.</sub>
 
 ## What it does
 
-- **Reads the source, not a scrape.** It reads each employer's own hiring system through its public JSON
-  (Workday, Greenhouse, Lever or Ashby) the same day a role is posted, with the real location and the full
-  description.
-- **Checks sponsorship per posting.** Phrases like "will not sponsor" or a PERM-style ad send a posting
-  to Skipped, whatever the company's usual policy. A company that usually does not sponsor can still
-  surface a posting that does.
-- **Filters on what matters.** Titles must name a target role. Seniority titles, six or more years of
-  required experience, contract wording and non-US locations are handled before any scoring.
-- **Scores with evidence.** Claude rates each survivor 1 to 5 against an entry-level and an experienced
-  resume and shows why, factor by factor: experience, level, skills and domain, each with what the posting asks
-  and what the resume shows. Sponsorship, location and pay are read from the posting itself.
-- **Tells you what to do first.** Each morning's brief names the three postings to apply to first, what changed
+- **Reads the source, not a scrape.** Each employer's own hiring system, the same day a role is posted, with the
+  real location and the full description.
+- **Checks sponsorship per posting**, as above, and keeps the phrase it found so you can see why.
+- **Filters on what matters.** Titles must name a target role. Seniority titles, six or more years of required
+  experience, contract wording and non-US locations are handled before any scoring.
+- **Scores with evidence.** Claude rates each posting 1 to 5 against your resume and shows why, factor by
+  factor. Sponsorship, location and pay are read from the posting itself.
+- **Tells you what to do first.** The morning brief names the three postings to apply to first, what changed
   since yesterday, and which applications have gone quiet.
-- **Keeps junior roles visible.** New-grad and early-career postings get their own Entry level section,
-  so a 3 out of 5 on a junior role is not buried under senior roles.
-- **Tailors without inventing.** On request it rewrites a resume for one posting. Any skill outside the
-  base resume and a confirmed skills list is turned into a question instead of added.
+- **Tailors without inventing.** On request it rewrites a resume for one posting. Any skill outside the base
+  resume and a confirmed skills list is turned into a question instead of added.
 - **Reads replies for you.** With a Gmail app password it checks your inbox, read-only, and moves an application
   to screen, interview, rejected or offer when an email carries its requisition id and says so plainly. Replies
   without one wait in a needs-review list for you to settle; plain confirmations are skipped.
+- **Watches what you applied to.** It re-checks each posting behind an open application and tells you when one
+  closes, which is often the only answer you get.
 - **Stays on your machine.** Resumes, applications and chat history are local files, ignored by git.
 
 <img src="docs/img/drawer.png" alt="A posting opened in the side drawer: the fit by factor, with experience, level, skills, domain, sponsorship, location and pay each marked meets, partial or gap next to what the posting asks and what the resume shows, above the description with the pay sentence highlighted.">
@@ -187,7 +208,7 @@ Every setting and field, with its current value and what changing it does, is in
 | `.claude/commands/`, `CLAUDE.md`, `AGENTS.md` | The coding-assistant commands and their guide |
 | `scripts/` | The privacy guard that keeps personal details out of commits |
 | `tests/` | Offline tests, no network access |
-| `docs/` | Status, design decisions, changelog, UI notes and the companies report |
+| `docs/` | Status, design decisions, changelog, UI notes, the companies report, and the intro video in `docs/media/` |
 
 ## Working on it
 
