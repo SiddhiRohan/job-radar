@@ -12,8 +12,9 @@ Scientist, ML Engineer and AI Engineer roles that fit an entry-to-mid profile, a
 says it will not sponsor. The rest are scored against two versions of a resume. A small local web app
 shows the result, tracks applications, and can tailor a resume for one posting when asked.
 
-It was built for one person, an international graduate who needs visa sponsorship, so the filters are
-opinionated. Every one of them lives in `config.json`, and everything personal lives in ignored files.
+It started as one person's job search, so the defaults are opinionated: data and ML roles, entry to mid
+level, US postings that can sponsor a visa. Every one of them lives in `config.json`, and everything
+personal stays on your machine in files git ignores.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/today-dark.png">
@@ -56,42 +57,62 @@ flowchart LR
 1. `radar.poll` searches every employer with four role terms, plus three entry-level terms for the
    daily tiers, and fetches the detail record for each new posting.
 2. `radar.filters` and `radar.sponsor` apply the title, seniority, location, years and sponsorship rules.
-3. `radar.score` asks Claude for a strict JSON verdict on up to 40 postings a run, entry-level ones first.
+3. `radar.score` asks Claude for a strict JSON verdict on each new posting, entry-level ones first, up to
+   `score_cap` a run.
 4. `radar.digest` writes `digests/<date>.md` and the sections the web app shows.
-5. `server.py` serves the app from `web/`. It only reads what the run wrote and never polls on its own.
+5. `radar.mail` and `radar.watch` then read hiring emails and re-check the postings behind open
+   applications.
+6. `server.py` serves the app from `web/` and starts the day's run at `run_time` while it is open.
 
-Employers are tiered. Tier 1 and 2 are polled daily and tier 3 on Mondays and Thursdays, which keeps
-a full run near half an hour at one request every 1.5 seconds.
+Employers are tiered, and how deep each tier is searched is set in `config.json`. At one request every 1.5
+seconds, a full run of every tier takes about an hour.
 
-## Quickstart
+## Get started
 
-Requirements: Python 3.11 or newer and an Anthropic API key.
+You need Python 3.11 or newer ([python.org](https://www.python.org/downloads/); on Windows, tick "Add
+python.exe to PATH" in the installer) and an Anthropic API key from
+[console.anthropic.com](https://console.anthropic.com). Then download this repository (Code, then Download
+ZIP) or clone it, and pick the way you like to work.
 
-```bash
-pip install -r requirements.txt
-```
+### In the browser
 
-Put the key in `.env` as `ANTHROPIC_API_KEY=...`, or export it. Then add the personal files, all
-ignored by git:
+Double-click `start.bat` on Windows or `start.command` on macOS, or run `./start.sh` on Linux. The first start
+takes about a minute to set itself up, then the app opens at http://localhost:8000 on its Setup page:
 
-- `profile.md`: who you are and what you are looking for, in plain prose.
-- Your name and resume file name in `.env` (`OWNER_NAME`, `OWNER_SHORT`, `RESUME_FILENAME`), see `radar/owner.py`.
-- `skills_confirmed.md`: skills the tailoring step may name even if the base resume does not.
-- Base resumes under `Resume/`, at the paths set in `tailoring/resumes.py`.
-- Optional: `GMAIL_ADDRESS` and `GMAIL_APP_PASSWORD` in `.env` to read hiring emails. See
-  [docs/CONFIG.md](docs/CONFIG.md#email-statuses-from-hiring-emails).
+1. Add your resume. A Word file works best, because it is also the template for tailored versions.
+2. Paste your API key. It is checked, then saved only in `.env` on your computer.
+3. Write a few lines on what you are looking for.
+4. Press **Run the radar**.
 
-Run the pipeline once, then open the app:
+From then on it runs every morning at 7:30 while the app is open, and catches up when you open it after the
+computer was off. `python -m radar.doctor` says what is missing whenever something does not work.
 
-```bash
-python run.py
-```
+### With a coding assistant
 
-```bash
-python server.py
-```
+Open the folder in Claude Code, or any assistant that reads `AGENTS.md`, and type `/radar-setup`. It checks
+the setup, asks what you are looking for, and tunes the search with you. After that:
 
-The app opens at http://localhost:8000.
+| Command | What it does |
+| --- | --- |
+| `/radar-today` | The day's shortlist, and the three to apply to first |
+| `/radar-run` | Run the radar now |
+| `/radar-evaluate <link>` | Judge one Workday posting against your resume |
+| `/radar-tailor <company> <req_id>` | A tailored resume draft for one posting |
+| `/radar-applied` | Record an application or a reply |
+| `/radar-mail` | Read hiring emails and update statuses |
+| `/radar-tune <what>` | Change what it looks for, in plain words |
+
+Both ways use the same files, so you can set up in one and use the other.
+
+### What it costs
+
+The radar is free. Scoring and tailoring use your own API key: roughly a cent per scored posting, which is
+typically $10 to $20 a month at the default settings. `score_cap` in `config.json` caps a run.
+
+### Email statuses, optional
+
+With a Gmail app password in `.env` it reads hiring emails, read-only, and moves applications forward. See
+[docs/CONFIG.md](docs/CONFIG.md#email-statuses-from-hiring-emails).
 
 ## Everyday use
 
@@ -101,8 +122,11 @@ The app opens at http://localhost:8000.
 | Wider window when the list is thin | `python run.py --days 3 --all-tiers` |
 | Start a run from the app | **Run the radar**, top right of Today |
 | Mark a posting applied | **Mark applied** on its card, then move it between stages on the Applied board |
-| Tailor a resume | Ask the chat ("tailor the Capital One one"), or paste a Workday job URL in Tailor |
+| Tailor a resume | Ask the chat ("tailor the second one"), or paste a Workday job URL in Tailor |
 | Tailor from the terminal | `python -m tailoring.apply <company> <req_id> --cover` |
+| Judge any posting | `python -m radar.evaluate <workday link>` |
+| Record an application | `python -m radar.applications add <company> <req_id> <title>` |
+| Check the setup | `python -m radar.doctor` |
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/applied-dark.png">
@@ -137,18 +161,25 @@ Every setting and field, with its current value and what changing it does, is in
 
 | Path | What is there |
 | --- | --- |
+| `start.py`, `start.bat`, `start.command`, `start.sh` | One-step start: sets up `.venv`, checks the setup, opens the app |
 | `run.py`, `radar/` | The daily pipeline, the Workday client, filters, scoring and the chat assistant |
 | `tailoring/` | Resume planning, rewriting, final cleanup, cover letters and outreach |
 | `companies/` | Discovery and verification of employers, and the H-1B filing check |
 | `server.py`, `web/` | The local web app: FastAPI and plain HTML, CSS and JavaScript |
+| `.claude/commands/`, `CLAUDE.md`, `AGENTS.md` | The coding-assistant commands and their guide |
+| `scripts/` | The privacy guard that keeps personal details out of commits |
 | `tests/` | Offline tests, no network access |
 | `docs/` | Status, design decisions, changelog, UI notes and the companies report |
 
 ## Working on it
 
 Every change goes through a branch and a pull request, and CI runs ruff and the test suite. Pre-commit
-runs the same checks plus a secrets scan before each commit. `CLAUDE.md` has the working rules, and
-`docs/DECISIONS.md` records why the bigger choices were made.
+runs the same checks, a secrets scan and a privacy guard before each commit. `CONTRIBUTING.md` has the
+working rules, and `docs/DECISIONS.md` records why the bigger choices were made.
+
+```bash
+pip install -r requirements-dev.txt
+```
 
 ```bash
 python -m pre_commit run --all-files
