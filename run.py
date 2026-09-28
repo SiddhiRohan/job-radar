@@ -4,6 +4,8 @@ import argparse
 import subprocess
 import sys
 
+from radar import runlock
+
 
 def step(name, args):
     print(f"\n===== {name} =====", flush=True)
@@ -21,6 +23,17 @@ def main():
     poll_args = (["--days", str(args.days)] if args.days is not None else []) + (
         ["--all-tiers"] if args.all_tiers else []
     )
+    # One run at a time: the web app's schedule, the OS scheduler and a manual run may all start at once.
+    if not runlock.acquire():
+        print(f"another run has been going since {runlock.since()}; not starting a second one", flush=True)
+        return
+    try:
+        steps(poll_args)
+    finally:
+        runlock.release()
+
+
+def steps(poll_args):
     if step("radar.poll", poll_args):
         sys.exit("poll failed; not scoring or digesting")
     step("radar.score", [])

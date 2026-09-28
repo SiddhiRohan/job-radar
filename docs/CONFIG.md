@@ -23,6 +23,17 @@ it the resume alone is used.
 
 ## config.json
 
+### When it runs
+
+| Key | Current | What it does |
+| --- | --- | --- |
+| `auto_run` | true | While the web app is open it runs the radar once a day at `run_time`. If the computer was off or asleep then, it runs as soon as the app opens. A failed start waits two hours before trying again. |
+| `run_time` | 07:30 | Local time of the daily run. |
+
+Only one run happens at a time, whoever starts it: the web app, the operating system's scheduler or a terminal.
+A second one sees the lock in `.cache/run.lock` and steps aside. A lock older than four hours is treated as left
+behind by a machine that shut down mid-run.
+
 ### What gets searched
 
 | Key | Current | What it does |

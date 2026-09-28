@@ -16,7 +16,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from radar import applications, chat, digest, mail, owner, patterns, poll, prepare, salary, score, watch, wd
+from radar import applications, autorun, chat, digest, mail, owner, patterns, poll, prepare, salary, score, watch, wd
 from tailoring import apply as applier
 from tailoring import finalize, letters, resumes, skills, tailor
 
@@ -550,5 +550,6 @@ def favicon():
 
 if __name__ == "__main__":
     UI_DIR.mkdir(parents=True, exist_ok=True)
+    autorun.start(lambda: chat.run_radar(1, False))  # the daily run while the app is open, with catch-up
     threading.Timer(1.0, lambda: webbrowser.open("http://localhost:8000")).start()
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")

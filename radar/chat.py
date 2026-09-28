@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from radar import llm, owner
+from radar import llm, owner, runlock
 
 SYSTEM = """You are the assistant inside a personal job-radar app. {name} is working through today's shortlist; the
 PROFILE section below says who they are and what they target. Be brief and plain; sentence case;
@@ -208,6 +208,8 @@ def remember(note):
 def run_radar(days, all_tiers=False):
     if RUN["proc"] and RUN["proc"].poll() is None:
         return {"started": False, "reason": "a run is already in progress"}
+    if runlock.held():  # started by the OS scheduler or a terminal, not by this app
+        return {"started": False, "reason": f"a run started at {runlock.since()} is still going"}
     RUN["log"].parent.mkdir(parents=True, exist_ok=True)
     args = [sys.executable, "run.py", "--days", str(days)] + (["--all-tiers"] if all_tiers else [])
     RUN["proc"] = subprocess.Popen(args, stdout=open(RUN["log"], "w", encoding="utf-8"), stderr=subprocess.STDOUT)
@@ -226,10 +228,14 @@ def run_status():
         if RUN["log"].exists()
         else []
     )
+    own = bool(p and p.poll() is None)
+    outside = not own and runlock.held()
     return {
-        "running": bool(p and p.poll() is None),
+        "running": own or outside,
         "exit_code": p.poll() if p else None,
-        "last_line": last[0][:160] if last else "",
+        "last_line": f"a scheduled run started at {runlock.since()} is still going"
+        if outside
+        else (last[0][:160] if last else ""),
     }
 
 

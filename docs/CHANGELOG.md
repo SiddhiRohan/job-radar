@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+**Runs itself every morning.** While the web app is open the radar runs at `run_time` each day, and catches up as
+soon as the app opens if the computer was off. A lock makes sure the app, the operating system's scheduler and a
+terminal never run it twice at once.
+
+**A single resume is enough.** `Resume/resume.docx`, or an entry and an experienced file, works next to the original
+folder tree; `profile.md` is optional.
+
 **Rejections move on their own by role.** A rejection email without a requisition id now moves the one application
 whose role it names ("applying for the Data Engineer II position"); a rejection for a role not on the list is kept
 apart on the Email card instead of waiting for review. `radar/rolematch.py`; `python -m radar.mail --recheck`
