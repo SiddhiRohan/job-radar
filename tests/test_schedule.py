@@ -2,6 +2,7 @@
 and never another copy's: a second copy of the radar on the same computer leaves the first one's schedule alone."""
 
 import plistlib
+from pathlib import Path
 
 import pytest
 
@@ -76,6 +77,37 @@ def test_this_folders_task_is_found_and_removed(tmp_path):
     assert schedule.status(system="Windows", run=run, root=tmp_path)
     assert schedule.remove(system="Windows", run=run, root=tmp_path)
     assert calls[-1][0][:2] == ["schtasks", "/Delete"]
+
+
+ROOT = Path("C:/Users/jane/Downloads/job-radar")
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        f'"{ROOT}\\.cache\\run-daily.cmd"',  # the task setup makes
+        f"/c cd /d {ROOT} &amp;&amp; python run.py &gt;&gt; logs\\run.log",  # one made by hand
+        f'cd "{ROOT}" && "python" run.py >> logs/run.log 2>&1',  # launchd and cron
+    ],
+)
+def test_this_folders_entries_are_recognized(text):
+    assert schedule.here(text, ROOT)
+
+
+@pytest.mark.parametrize(
+    "folder",
+    [
+        f"{ROOT} - Copy",  # Windows Explorer's copy
+        f"{ROOT} (1)",  # a zip downloaded twice
+        f"{ROOT} copy",  # Finder's copy
+        f"{ROOT}-2",
+        f"{ROOT}\\.claude\\worktrees\\fix",  # a copy nested inside this one
+    ],
+)
+def test_lookalike_and_nested_folders_are_other_copies(folder):
+    assert not schedule.here(f'"{folder}\\.cache\\run-daily.cmd"', ROOT)
+    assert not schedule.here(f'cd "{folder}" && "python" run.py', ROOT)
+    assert not schedule.here(f"/c cd /d {folder} &amp;&amp; python run.py", ROOT)
 
 
 def test_status_is_false_without_a_scheduler_command():

@@ -20,7 +20,9 @@ TASK = "JobRadar"
 LABEL = "com.jobradar.daily"
 MARK = "# job-radar daily run"
 PLIST = Path.home() / "Library" / "LaunchAgents" / f"{LABEL}.plist"
-AFTER_PATH = r"""(?=[\\/"'\s&;]|$)"""  # the folder name ends here, so job-radar does not match job-radar-2
+# What follows the folder in an entry the radar makes, or in one made by hand as `cd /d <folder> && ...`. Anything
+# else means another folder: job-radar-2, "job-radar - Copy", or a copy nested inside this one.
+AFTER_PATH = r"""(?=[\\/]\.cache[\\/]run-daily\.cmd|["']|\s*&&|\s*$)"""
 
 
 def command(root=ROOT, python=sys.executable):
