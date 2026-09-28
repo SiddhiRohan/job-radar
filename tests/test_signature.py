@@ -33,3 +33,28 @@ def test_a_letter_without_a_name_has_no_author(tmp_path, monkeypatch):
     Document().save(base)
     letters.write_docx("Dear team,\nThank you.", tmp_path / "letter.docx", base)
     assert Document(tmp_path / "letter.docx").core_properties.author == ""
+
+
+def test_letter_routes_run_without_a_profile(tmp_path, monkeypatch):
+    import importlib
+    import io
+    import sys
+
+    with monkeypatch.context() as patch:
+        patch.setattr(sys, "stdout", io.TextIOWrapper(io.BytesIO(), encoding="utf-8"))
+        server = importlib.import_module("server")
+    monkeypatch.chdir(tmp_path)  # no profile.md here
+    monkeypatch.setattr(server.applier, "find_job", lambda company, req_id: {"company": company, "req_id": req_id})
+    got = []
+    monkeypatch.setattr(server.letters, "outreach", lambda j, jd, profile, text: got.append(profile) or {"ok": 1})
+
+    class Inline:
+        def __init__(self, target, daemon):
+            self.target = target
+
+        def start(self):
+            self.target()
+
+    monkeypatch.setattr(server.threading, "Thread", Inline)
+    job = server.start_outreach({"company": "Contoso", "req_id": "R1", "sections": []})["job_id"]
+    assert server.job_status(job)["status"] == "done" and got == [server.resumes.NO_PROFILE]

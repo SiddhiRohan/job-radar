@@ -333,11 +333,7 @@ def start_cover(body: dict):
     def work():
         j = applier.find_job(body["company"], body["req_id"])
         text = "\n".join(t for s in body["sections"] for t in s["text"])
-        return {
-            "text": letters.cover_letter(
-                j, j.get("description", ""), Path("profile.md").read_text(encoding="utf-8"), text
-            )
-        }
+        return {"text": letters.cover_letter(j, j.get("description", ""), resumes.profile_text(), text)}
 
     return background(work)
 
@@ -347,7 +343,7 @@ def start_outreach(body: dict):
     def work():
         j = applier.find_job(body["company"], body["req_id"])
         text = "\n".join(t for s in body["sections"] for t in s["text"])
-        return letters.outreach(j, j.get("description", ""), Path("profile.md").read_text(encoding="utf-8"), text)
+        return letters.outreach(j, j.get("description", ""), resumes.profile_text(), text)
 
     return background(work)
 
