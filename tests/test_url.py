@@ -1,4 +1,4 @@
-"""Workday job URL parsing: five real URLs from jobs.jsonl, expected req IDs as Workday reports them."""
+"""Workday job URL parsing: five real-format URLs, expected req IDs as Workday reports them."""
 
 import pytest
 
@@ -22,8 +22,8 @@ CASES = [
         ("capitalone", "wd12", "Capital_One", "R1000592"),
     ),
     (
-        "https://walmart.wd504.myworkdayjobs.com/en-US/WalmartExternal/job/USA-Bentonville-Global-Tech-AR-BENTONVILLE-Home-Office/XMLNAME--USA--Senior--Data-Scientist_R-2628137-1",
-        ("walmart", "wd504", "WalmartExternal", "R-2628137"),
+        "https://walmart.wd504.myworkdayjobs.com/en-US/WalmartExternal/job/USA-Bentonville-Global-Tech-AR-BENTONVILLE-Home-Office/XMLNAME--USA--Senior--Data-Scientist_R-2600001-1",
+        ("walmart", "wd504", "WalmartExternal", "R-2600001"),
     ),
 ]
 

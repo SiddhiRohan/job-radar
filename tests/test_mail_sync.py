@@ -9,14 +9,14 @@ from radar import applications, mail
 def setup(tmp_path, monkeypatch, status="applied"):
     monkeypatch.setattr(applications, "PATH", tmp_path / "applications.md")
     monkeypatch.setattr(mail, "STATE", tmp_path / "mail.json")
-    row = {"date": "2026-09-20 10:00", "company": "Capital One", "title": "AI Engineer 3", "status": status}
-    applications.write([row | {"folder": "", "req_id": "R1001740"}])
+    row = {"date": "2026-09-20 10:00", "company": "Northwind", "title": "AI Engineer 3", "status": status}
+    applications.write([row | {"folder": "", "req_id": "R1000001"}])
 
 
 def msg(mid, subject, body):
     return {
         "message_id": mid,
-        "sender": "capitalone@myworkday.com",
+        "sender": "northwind@myworkday.com",
         "subject": subject,
         "date": "2026-09-24 09:00",
         "body": body,
@@ -25,7 +25,7 @@ def msg(mid, subject, body):
 
 def test_sync_moves_forward_and_records_the_email(tmp_path, monkeypatch):
     setup(tmp_path, monkeypatch)
-    r = mail.sync([msg("<a@x>", "Interview", "We would like to interview you for R1001740.")])
+    r = mail.sync([msg("<a@x>", "Interview", "We would like to interview you for R1000001.")])
     assert r == {"configured": True, "updated": 1, "review": 0, "untracked": 0}
     assert applications.rows()[0]["status"] == "interview"
     event = mail.load()["events"][0]
@@ -34,7 +34,7 @@ def test_sync_moves_forward_and_records_the_email(tmp_path, monkeypatch):
 
 def test_older_news_never_moves_a_status_back(tmp_path, monkeypatch):
     setup(tmp_path, monkeypatch, status="interview")
-    r = mail.sync([msg("<b@x>", "Thank you for applying", "We received your application R1001740.")])
+    r = mail.sync([msg("<b@x>", "Thank you for applying", "We received your application R1000001.")])
     assert r["updated"] == 0 and applications.rows()[0]["status"] == "interview"
 
 
@@ -42,12 +42,12 @@ def test_review_then_resolve_or_dismiss(tmp_path, monkeypatch):
     setup(tmp_path, monkeypatch)
     mail.sync(
         [
-            msg("<c@x>", "Capital One update", "We regret to inform you."),
-            msg("<d@x>", "Capital One news", "The position has been filled."),
+            msg("<c@x>", "Northwind update", "We regret to inform you."),
+            msg("<d@x>", "Northwind news", "The position has been filled."),
         ]
     )
     assert [r["message_id"] for r in mail.load()["review"]] == ["<c@x>", "<d@x>"]
-    mail.resolve("<c@x>", "Capital One", "R1001740", "rejected")
+    mail.resolve("<c@x>", "Northwind", "R1000001", "rejected")
     mail.resolve("<d@x>")
     assert mail.load()["review"] == [] and applications.rows()[0]["status"] == "rejected"
 
@@ -91,7 +91,7 @@ def raw(mid, sender, subject, html):
 def test_fetch_is_read_only_and_skips_seen_and_own_mail(monkeypatch):
     fake = FakeIMAP(
         [
-            raw("<new@x>", "HR <hr@myworkday.com>", "Interview", "<p>Interview for <b>R1001740</b></p>"),
+            raw("<new@x>", "HR <hr@myworkday.com>", "Interview", "<p>Interview for <b>R1000001</b></p>"),
             raw("<seen@x>", "HR <hr@myworkday.com>", "Old", "<p>old</p>"),
             raw("<mine@x>", "me@gmail.com", "Sent", "<p>mine</p>"),
         ]
@@ -99,7 +99,7 @@ def test_fetch_is_read_only_and_skips_seen_and_own_mail(monkeypatch):
     monkeypatch.setattr(mail.imaplib, "IMAP4_SSL", fake)
     got = list(mail.fetch("me@gmail.com", "app-password", datetime(2026, 9, 13), {"<seen@x>"}))
     assert [m["message_id"] for m in got] == ["<new@x>"]
-    assert "R1001740" in got[0]["body"] and "<b>" not in got[0]["body"]
+    assert "R1000001" in got[0]["body"] and "<b>" not in got[0]["body"]
     assert ("select", mail.FOLDER, True) in fake.calls
     fetches = [c[2] for c in fake.calls if c[0] == "FETCH"]
     assert fetches and all("PEEK" in f for f in fetches)
@@ -119,11 +119,11 @@ def test_unresolve_returns_the_email_and_the_old_status(tmp_path, monkeypatch):
     setup(tmp_path, monkeypatch)
     mail.sync(
         [
-            msg("<c@x>", "Capital One update", "We regret to inform you."),
-            msg("<d@x>", "Capital One news", "The position has been filled."),
+            msg("<c@x>", "Northwind update", "We regret to inform you."),
+            msg("<d@x>", "Northwind news", "The position has been filled."),
         ]
     )
-    mail.resolve("<c@x>", "Capital One", "R1001740", "rejected")
+    mail.resolve("<c@x>", "Northwind", "R1000001", "rejected")
     mail.resolve("<d@x>")
     assert mail.unresolve("<c@x>")["ok"] and mail.unresolve("<d@x>")["ok"]
     assert [r["message_id"] for r in mail.load()["review"]] == ["<d@x>", "<c@x>"]

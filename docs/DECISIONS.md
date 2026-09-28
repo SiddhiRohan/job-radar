@@ -180,12 +180,12 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 42. **The first real mail run was wrong, and the rules were recalibrated on it.** It moved 14 statuses; 8 were false
     interviews, because confirmation emails say things like "you will be contacted if you're selected for an
     interview" and the rule matched the bare word. All 14 were undone from a backup taken just before the run. Against
-    the 179 hiring emails from that run, read once into a temporary file and deleted after: interview and screen now
+    every hiring email from that run, read once into a temporary file and deleted after: interview and screen now
     need invitation wording, phrases after "if", "may", "might" or "should" are ignored, curly apostrophes read as
-    straight, and two missed rejection wordings were added. Result on the same emails: 6 rejections applied
-    automatically, 14 rejections without an id to review, no false interviews. Plain confirmations no longer go to
-    review, a deliberate change from the owner's first rule: they cannot move a status and filled the list with 35
-    items. Paraphrases of the misread boilerplate are now regression tests.
+    straight, and two missed rejection wordings were added. Result on the same emails: rejections carrying an id
+    applied automatically, the rest went to review, and no false interviews. Plain confirmations no longer go to
+    review, a deliberate change from the owner's first rule: they cannot move a status and filled the list with
+    noise. Paraphrases of the misread boilerplate are now regression tests.
 43. **The second rule set missed rejections, and one old-rule run slipped through.** The owner found one application at
     interview again. Reading both of its emails: a confirmation ("contact you to arrange an interview if the role is
     a good match") and a rejection ("have decided not to move forward for the ... role"). Two causes. The
@@ -194,7 +194,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     rejection as a confirmation, because "decided not to" was not covered. The first calibration only compared the
     old rules with the new ones, so a wording both missed went unnoticed. A fresh scan of every hiring email for
     rejection-style words found four more: "won't be able to move forward", "aren't moving forward", "does not align
-    ... with", "pursuing other applicants". All are covered now; every one of the 28 rejections the rules find was
+    ... with", "pursuing other applicants". All are covered now; every rejection the rules find was
     checked by its triggering phrase, and the only rejection-style words left unmatched are conditional ("if you are
     not selected", "if the position is filled"). Review guesses now come from the sender and subject before the body,
     because every Workday email names Workday in its footer. Lesson: restart the server as part of merging a rule
@@ -214,7 +214,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 
 ## 2026-09-25: the postings behind applications
 
-46. **A taken-down Workday posting answers 403, not 404.** Checked against a posting the owner was rejected from: the
+46. **A taken-down Workday posting answers 403, not 404.** Checked against a posting known to be taken down: the
     detail endpoint returns `403 {"errorCode":"S22","message":"permission denied"}`, while a path that never existed
     returns 404 `S21`. The watcher treats 403 as closed only when Workday's JSON error body is present, so a
     firewall block or an outage (usually HTML) stays "unknown" and never reads as a closure. Closures and changes
@@ -234,8 +234,8 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 
 ## 2026-09-27: rejections by the role they name
 
-48. **A rejection names its role, so the role is enough.** All 19 emails waiting in Needs review were rejections and
-    none carried a requisition id the rule could match, but every one named the role. The owner asked for "not moving
+48. **A rejection names its role, so the role is enough.** Every email waiting in Needs review at the time was a
+    rejection without a requisition id the rule could match, and every one named the role. The owner asked for "not moving
     forward" and similar to go straight to rejected. Rejections only: an offer or an interview invitation without an
     id still waits for a person, since a wrong one of those costs more. The match is the employer (sender address,
     then sender and subject) plus the application's whole title as words in the subject or the first 1,500
@@ -244,5 +244,5 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     same title still go to review. A rejection for a role not on the list, or from an employer with nothing open,
     is filed under "Rejections for roles not on your list" rather than added as an application: the radar records
     what the owner applied to through it, and guessing a company and title from free text would put wrong rows in
-    the table. Dry run on the 19: seven would move (each checked by title against its requisition), eleven are
-    roles not on the list, one (Walmart) needs the full email to name its role.
+    the table. In a dry run every moved application was checked by title against its requisition; one email needed its full
+    body, not the stored snippet, to name its role.

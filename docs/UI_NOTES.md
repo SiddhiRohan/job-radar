@@ -39,13 +39,13 @@ Today:
 Tailor:
 
     [paste a Workday job URL                      ] [Load]
-    Adobe  Machine Learning Engineer  R171718
+    Contoso  Machine Learning Engineer  R-12345
     Fit E3 / X4 (experienced, two-page)  likely: "no phrase found"  3+ years
     Platform tools missing: Databricks              cover letter: not required
     JD asks for: [ ] Databricks  [ ] Kubernetes
     Summary
     base text ..................... | tailored text with [changed words] .....
-    Job 0  University of Maryland (ENST)
+    Job 0  Northwind University (research)
     bullet ........................ | bullet (moved) ..........  note: hard to defend
     Skills  |  Coursework
     [Rebuild resume]  Save to folder  Mark applied
@@ -88,11 +88,11 @@ the only motion on the site.
   markers; it now renders them as bold like the tailored column.
 - Applied: one row, status select with the five values, folder opens through `/api/open`.
 
-## End-to-end run on the Adobe posting
+## End-to-end run on a real posting
 
 Today -> Tailor (plan in about 40 s) -> one bullet edited -> Rebuild (finalize humanized 14 of 38 paragraphs,
 properties cleared) -> download served (30.8 KB) -> Save to folder into a scratch path. The existing
-`Resume/For Adobe/R171718_Machine-Learning-Engineer/` was not touched. The test `applications.md` row was
+per-posting folder under `Resume/` was not touched. The test `applications.md` row was
 removed afterwards; the file is gitignored.
 
 ## What I would change next

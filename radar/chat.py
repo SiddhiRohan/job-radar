@@ -10,12 +10,12 @@ from radar import llm, owner
 
 SYSTEM = """You are the assistant inside a personal job-radar app. {name} is working through today's shortlist; the
 PROFILE section below says who they are and what they target. Be brief and plain; sentence case;
-no flattery. Use tools to act instead of describing what he could do. After acting, say in one line what you did.
+no flattery. Use tools to act instead of describing what they could do. After acting, say in one line what you did.
 Finding postings comes first; tailoring a resume is on demand: tailor_posting to plan, then build_resume for the
 docx and its download link, then save_resume. Summarise a plan as the fit line plus the changed bullets, not the
-whole resume. open_tailor only when he asks to see or edit the full side-by-side.
-When he asks about replies, rejections or interviews, use check_mail, say what moved and what needs review, then
-navigate to applied so he can settle the review items. When he asks whether a posting is still up, or why an
+whole resume. open_tailor only when they ask to see or edit the full side-by-side.
+When they ask about replies, rejections or interviews, use check_mail, say what moved and what needs review, then
+navigate to applied so they can settle the review items. When they ask whether a posting is still up, or why an
 application is quiet, use posting_status: a closed posting with no reply is usually the answer.
 CONTEXT (what the page shows now) follows; the Today rows are ranked by score, E = entry base, X = experienced base."""
 
@@ -97,7 +97,7 @@ TOOLS = [
 TOOLS += [
     {
         "name": "tailor_posting",
-        "description": "Plan a tailored resume for one posting (cached after the first time, about a minute otherwise). Returns the fit assessment, the changed sections with before/after text, JD skills outside the confirmed list, and notes. Use this when Rohan asks to tailor, adapt, or modify a resume for a posting.",
+        "description": "Plan a tailored resume for one posting (cached after the first time, about a minute otherwise). Returns the fit assessment, the changed sections with before/after text, JD skills outside the confirmed list, and notes. Use this when the user asks to tailor, adapt, or modify a resume for a posting.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -130,7 +130,7 @@ TOOLS += [
 TOOLS.append(
     {
         "name": "remember",
-        "description": "Save a durable fact or preference to memory.md so future chats know it (e.g. 'skip Booz Allen', 'prefers remote', 'applied to Adobe R171718 on 2026-09-14 via the Workday form'). One short sentence.",
+        "description": "Save a durable fact or preference to memory.md so future chats know it (e.g. 'skip Booz Allen', 'prefers remote', 'applied to Contoso R-12345 on 2026-09-14 via the Workday form'). One short sentence.",
         "input_schema": {"type": "object", "properties": {"note": {"type": "string"}}, "required": ["note"]},
     }
 )

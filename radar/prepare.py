@@ -71,7 +71,7 @@ def make_tailor(j):
     tailor.apply_plan(doc, info, plan, extra_allowed=skills.text())
     after = {i: tailor.marked_text(ps[i]) for i in before}
     notes = {}
-    for h in plan["hard_to_defend"] + plan.get("questions_for_owner", plan.get("questions_for_rohan", [])):
+    for h in plan["hard_to_defend"] + next((v for k, v in plan.items() if k.startswith("questions_for_")), []):
         m = re.search(r"job (\d+) bullet (\d+)", h, re.I)
         notes.setdefault((int(m.group(1)), int(m.group(2))) if m else "general", []).append(h)
     secs = [{"id": "summary", "label": "Summary", "base": [before[info["summary"]]], "text": [after[info["summary"]]]}]

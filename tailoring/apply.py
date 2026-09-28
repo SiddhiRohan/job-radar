@@ -138,7 +138,7 @@ def main():
     notes += ["## Hard to defend", ""] + ([f"- {x}" for x in plan["hard_to_defend"]] or ["- none"])
     notes += ["", "## JD skills outside skills_confirmed.md", ""] + ([f"- {s}" for s in skill_notes] or ["- none"])
     notes += ["", "## Questions for the owner (nothing below went into the resume)", ""]
-    notes += [f"- {q}" for q in plan.get("questions_for_owner", plan.get("questions_for_rohan", []))] or ["- none"]
+    notes += [f"- {q}" for q in next((v for k, v in plan.items() if k.startswith("questions_for_")), [])] or ["- none"]
     notes += ["", "## Date overlap explanations", ""] + [f"- {o}" for o in OVERLAPS]
     v = j.get("verdict") or {}
     if a.cover or v.get("cover_letter_required"):
