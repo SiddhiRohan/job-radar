@@ -8,11 +8,12 @@ import threading
 import uuid
 import webbrowser
 from pathlib import Path
+from urllib.parse import urlparse
 
 import uvicorn
 from docx import Document
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from radar import (
@@ -496,6 +497,24 @@ def run_radar(body: dict):
 @app.get("/api/run")
 def run_status():
     return chat.run_status()
+
+
+LOCAL_HOSTS = ("localhost", "127.0.0.1", "[::1]", "::1")
+
+
+def allowed(method, origin):
+    """Writes must come from this app's own page. A website open in another tab can send a request to localhost, and
+    the browser labels it with that site's origin; those are refused. Requests with no origin (a terminal) pass."""
+    if method in ("GET", "HEAD", "OPTIONS") or not origin:
+        return True
+    return urlparse(origin).hostname in LOCAL_HOSTS
+
+
+@app.middleware("http")
+async def same_origin_writes(request, call_next):
+    if not allowed(request.method, request.headers.get("origin")):
+        return JSONResponse({"detail": "requests from other websites are refused"}, status_code=403)
+    return await call_next(request)
 
 
 @app.middleware("http")
