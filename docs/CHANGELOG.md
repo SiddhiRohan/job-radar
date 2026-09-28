@@ -4,7 +4,8 @@
 
 **Add an employer from a link.** `python -m companies.add "Name" <link>` takes a Workday careers site or posting,
 or a Greenhouse, Lever or Ashby board, checks it with one request, and adds the employer to `companies.json`. A
-coding assistant does the same with `/radar-add`, finding the link when it is not given.
+coding assistant does the same with `/radar-add`, finding the link when it is not given. The chat in the web app
+can now do both: paste a job link to have it judged, or ask it to add an employer.
 
 **Email statuses for Greenhouse postings by id.** A Greenhouse posting is stored under the board's own number, which
 emails never quote. The board also gives the employer's requisition id when there is one; it is now kept on the

@@ -43,15 +43,11 @@ def add_workday(name, tenant, shard, site, roles, path="companies.json"):
     return c
 
 
-def main(argv):
-    if len(argv) != 2:
-        print('usage: python -m companies.add "Name" <link to its careers site, job board or one posting>')
-        return 2
-    name, url = argv
+def add(name, url):
+    """Check the link and add the employer. {"ok", "message"}; the terminal command and the chat both use this."""
     found, site = board.board_from_url(url), workday_from_url(url)
-    if not (found or site):
-        print("not a link the radar reads: use a Workday site or posting, or a Greenhouse, Lever or Ashby board")
-        return 1
+    if not (name.strip() and (found or site)):
+        return {"ok": False, "message": "not a link the radar reads: use a Workday site or posting, or a board link"}
     try:
         if found:
             roles = board.check(found["ats"], found["board"])
@@ -62,12 +58,21 @@ def main(argv):
             c = add_workday(name, *site, roles)
             where = f"Workday site {site[0]}.{site[1]}/{site[2]}"
     except (requests.RequestException, ValueError) as e:
-        print(f"{name} not added: {str(e)[:150]}")
-        return 1
-    print(f"{name}: {where}, {roles} open postings, tier {c['tier']}; the next run includes it")
-    if not roles:
-        print("  no open postings: check this is the employer's current careers site")
-    return 0
+        return {"ok": False, "message": f"{name} not added: {str(e)[:150]}"}
+    note = "" if roles else "; no open postings, so check this is the employer's current careers site"
+    return {
+        "ok": True,
+        "message": f"{name}: {where}, {roles} open postings, tier {c['tier']}; the next run includes it{note}",
+    }
+
+
+def main(argv):
+    if len(argv) != 2:
+        print('usage: python -m companies.add "Name" <link to its careers site, job board or one posting>')
+        return 2
+    result = add(*argv)
+    print(result["message"])
+    return 0 if result["ok"] else 1
 
 
 if __name__ == "__main__":

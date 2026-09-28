@@ -17,7 +17,9 @@ whole resume. open_tailor only when they ask to see or edit the full side-by-sid
 When they ask about replies, rejections or interviews, use check_mail, say what moved and what needs review, then
 navigate to applied so they can settle the review items. When they ask whether a posting is still up, or why an
 application is quiet, use posting_status: a closed posting with no reply is usually the answer. For "what should I
-do today" or "what changed", use morning_brief and lead with its picks.
+do today" or "what changed", use morning_brief and lead with its picks. When they paste a job link or ask whether a
+job suits them, use evaluate_link and explain the verdict plainly, gaps included. To follow a new employer, use
+add_employer with a link to its jobs; ask for the link if they did not give one.
 CONTEXT (what the page shows now) follows; the Today rows are ranked by score, E = entry base, X = experienced base."""
 
 PAGE_TOOLS = {"navigate", "refresh", "open_tailor", "edit_section", "rebuild"}
@@ -163,6 +165,22 @@ TOOLS.append(
         "input_schema": {"type": "object", "properties": {}},
     }
 )
+TOOLS += [
+    {
+        "name": "evaluate_link",
+        "description": "Judge one posting from its link (Workday, Greenhouse, Lever or Ashby): fetches it once, scores it against the resume, stores it, and returns the fit per base, sponsorship, years asked, pay, gaps and why. A posting already stored comes back without a new request.",
+        "input_schema": {"type": "object", "properties": {"url": {"type": "string"}}, "required": ["url"]},
+    },
+    {
+        "name": "add_employer",
+        "description": "Add an employer to the daily search from a link to its jobs: its Workday careers site or any posting on it, or its Greenhouse, Lever or Ashby board. Checks the link with one request and says how many postings are open; the next run includes it.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"name": {"type": "string"}, "url": {"type": "string"}},
+            "required": ["name", "url"],
+        },
+    },
+]
 RUN = {"proc": None, "log": Path(".cache/ui/run.log")}
 SESSIONS = {}
 CHAT_DIR = Path(".cache/ui/chat")
@@ -247,11 +265,27 @@ def run_status():
     }
 
 
+def evaluate_link(url):
+    """The verdict on one posting as the plain lines `python -m radar.evaluate` prints, or what went wrong."""
+    from radar import evaluate
+
+    try:
+        return {"posting": evaluate.summary(evaluate.ingest_url(url))}
+    except Exception as e:  # a bad link, a closed posting or a failed call: the model tells them in words
+        return {"error": str(e)[:300]}
+
+
 def server_tool(name, args, hooks):
     if name == "run_radar":
         return run_radar(args.get("days", 1), args.get("all_tiers", False))
     if name == "run_status":
         return run_status()
+    if name == "evaluate_link":
+        return evaluate_link(args.get("url", ""))
+    if name == "add_employer":
+        from companies import add  # reads the sponsorship lists from the repo root on import
+
+        return add.add(args.get("name", ""), args.get("url", ""))
     if name == "mark_applied":
         return hooks["mark_applied"](args)
     if name == "set_status":
