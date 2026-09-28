@@ -365,3 +365,12 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     the next run scores those postings again; keeping the batch id to collect them later is left for when it
     happens in practice. In a live check, a one-posting batch with the structured-output schema answered in 94
     seconds with all four factors.
+
+64. **One task name, checked by folder.** Windows Task Scheduler and launchd hold one daily entry named JobRadar
+    and `com.jobradar.daily`. A name per folder would let two copies each keep a schedule, but it would stop
+    recognizing a JobRadar task made by hand before the setup page existed, and the author's machine has exactly
+    that. So the name stays, and status, install and remove look at the folder the entry starts in: a copy
+    whose folder is not in the entry reports no schedule, removes nothing, and refuses to install over it with a
+    message saying another copy holds the task. Cron keeps a line per copy, told apart the same way. Found by
+    starting a fresh clone next to the author's install: its setup page said it ran every morning and offered to
+    stop a task that belonged to the other folder.

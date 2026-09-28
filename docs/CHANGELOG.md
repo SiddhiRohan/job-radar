@@ -12,7 +12,8 @@ the board still lists them, and `python -m radar.evaluate` takes a link from any
 
 **Every morning, even with the app closed.** One switch on the Setup page, or `python -m radar.schedule install`,
 asks the computer's own scheduler (Task Scheduler, launchd or cron) to start the run at `run_time`. The doctor says
-which of the two ways is in use.
+which of the two ways is in use. A second copy of the radar on the same computer leaves the first one's task
+alone.
 
 **A morning brief.** The last step of each run writes a short note: the three postings to apply to first with one
 line on why, status changes from email and postings that closed since the last brief, applications quiet for ten
