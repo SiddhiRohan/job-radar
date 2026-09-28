@@ -1,4 +1,5 @@
 """python -m radar.evaluate <workday job url> [--json]: fetch one posting, score it, store it, and print the verdict.
+   python -m radar.evaluate <company> <req_id> [--json]: print the verdict of a posting already stored.
 
 The web app's Tailor box and a coding assistant both use this, so a posting found anywhere can be judged the same way
 as the ones the daily run finds. A posting already stored is returned as it is, without a new request."""
@@ -64,16 +65,30 @@ def summary(j):
     return lines
 
 
+def find(company, req_id):
+    """A stored posting by company and requisition id, case-insensitive on the company, or None."""
+    for j in digest.load_jsonl("jobs.jsonl"):
+        if j["req_id"] == req_id and j["company"].lower() == company.lower():
+            return j
+    return None
+
+
 def main(argv):
-    urls = [a for a in argv if not a.startswith("--")]
-    if not urls:
-        print(__doc__.splitlines()[0])
+    args = [a for a in argv if not a.startswith("--")]
+    if not args:
+        print("\n".join(__doc__.splitlines()[:2]))
         return 2
-    try:
-        j = ingest_url(urls[0])
-    except (ValueError, RuntimeError) as e:
-        print(f"could not evaluate: {e}")
-        return 1
+    if len(args) == 2 and not args[0].startswith("http"):
+        j = find(*args)
+        if not j:
+            print(f"no stored posting for {args[0]} {args[1]}; paste its link instead")
+            return 1
+    else:
+        try:
+            j = ingest_url(args[0])
+        except (ValueError, RuntimeError) as e:
+            print(f"could not evaluate: {e}")
+            return 1
     print(json.dumps(j, indent=1) if "--json" in argv else "\n".join(summary(j)))
     return 0
 

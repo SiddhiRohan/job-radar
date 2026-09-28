@@ -45,3 +45,12 @@ def test_add_list_and_status_from_the_terminal(tmp_path, monkeypatch, capsys):
     applications.main(["list", "interview"])
     out = capsys.readouterr().out
     assert "interview  Contoso | Data Engineer | R-12345" in out and "1 application(s)" in out
+
+
+def test_a_stored_posting_is_found_by_company_and_id(tmp_path, monkeypatch, capsys):
+    import json
+
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "jobs.jsonl").write_text(json.dumps(JOB) + "\n", encoding="utf-8")
+    assert evaluate.main(["contoso", "R-12345"]) == 0 and "fit: entry 3" in capsys.readouterr().out
+    assert evaluate.main(["Contoso", "R-99999"]) == 1 and "paste its link" in capsys.readouterr().out
