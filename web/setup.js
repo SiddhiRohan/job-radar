@@ -56,7 +56,7 @@ function keyCard(s) {
     } catch (e) { toast(e.message); save.disabled = false; }
   } }, "Save key");
   return el("section", { class: "card setup" }, el("h3", {}, "2. Anthropic API key"),
-    el("p", { class: "sub" }, s.key_set ? "A key is saved in .env. Paste a new one to replace it." : "Scoring and tailoring use your own key. Create one at console.anthropic.com; it is saved only in .env on this computer."),
+    el("p", { class: "sub" }, s.key_set ? "A key is saved in .env. Paste a new one to replace it." : "Scoring and tailoring use your own key. Create one at console.anthropic.com; it is saved only in .env on this computer. Using Claude Code? /radar-score scores postings there without a key."),
     el("div", { class: "row-inline" }, input, save));
 }
 

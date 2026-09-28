@@ -62,7 +62,11 @@ def checks():
     out.append(
         item("ok", "Anthropic API key set")
         if env("ANTHROPIC_API_KEY")
-        else item("fix", "No Anthropic API key", "add ANTHROPIC_API_KEY=... to .env; keys: console.anthropic.com")
+        else item(
+            "fix",
+            "No Anthropic API key",
+            "get one at console.anthropic.com for the Setup page; in Claude Code, /radar-score works without one",
+        )
     )
     for name in ("config.json", "companies.json"):
         try:
