@@ -22,6 +22,3 @@ notes/
 # Claude Code: per-machine settings and helper worktrees
 .claude/settings.local.json
 .claude/worktrees/
-
-# Written by another tool outside this project; CLAUDE.md is the real copy
-AGENTS.md

@@ -1,51 +1,57 @@
-# Working rules for this repo
+# Job radar: guide for coding assistants
 
-Personal job radar: polls Workday career sites, scores postings against two resume bases, tailors resumes,
-and serves a small web UI. Plain Python 3.11+, `requests` plus the standard library where possible, files
-under about 150 lines, one request to Workday at a time with a 1.5 s gap, JSON endpoints only, never HTML scraping.
+You are helping one person run their own job search with this repository. It finds new postings at the employers
+in `companies.json` every morning, keeps the ones that fit their roles, scores each against their resume, tracks
+their applications, and reads replies from their email. Everything runs on their machine. Their files are private:
+treat them that way.
 
-## Git
+If you are asked to change the code itself, read `CONTRIBUTING.md` first and follow it.
 
-- Never commit to `main` directly. Branch from `main` (`feature/<name>`, `fix/<name>`, `chore/<name>`), open a
-  PR, let CI pass, and squash-merge. The owner merges.
-- Never stack PRs. Every PR is based on `main`; if a change needs another PR first, wait for that merge. A PR merged
-  into an already-merged branch never reaches `main` (this happened with #11).
-- One change per commit. Commit message: `area: what changed`, imperative, under 60 characters. The body says
-  why, not what. Examples: `sponsor: treat "no visa sponsorship" as no`, `ui: minimize chat to a pill`.
-- No attribution trailers of any kind (no Co-Authored-By, no tool names) in commits or PR text.
-- Never push without confirming the remote is private first: `gh repo view --json isPrivate`.
-- Pre-commit runs ruff (lint and format), gitleaks, end-of-file-fixer, trailing-whitespace. Run
-  `python -m pre_commit run --all-files` before opening a PR.
-- Tests are offline and fast: `python -m pytest -q`. Add a test for anything that broke once.
+## Start every session by checking the setup
 
-## Personal files: ignored, never re-add
+Run `python -m radar.doctor`. For each line marked FIX:
 
-These hold the owner's data and must stay out of git even if they appear in the working tree:
-`Resume/`, `profile.md`, `skills_confirmed.md`, `memory.md`, `applications.md`, `.env` (which also holds the
-owner's name and resume file name, see `radar/owner.py`),
-`jobs.jsonl`, `seen.json`, `last_run.json`, `digests/`, `.cache/`, `logs/`, `*.log`, and the root
-`Resume - *.docx` / `.pdf`. If one shows up in `git status`, fix `.gitignore`, do not commit it.
+- **No resume found**: ask them to put their resume in `Resume/` as `resume.docx`. From Google Docs or Pages, save
+  or download it as Word. If they point you at a file, copy it there. Two files named `entry...` and `experienced...`
+  also work.
+- **No Anthropic API key**: ask them to open `.env` and set `ANTHROPIC_API_KEY=` themselves; keys come from
+  console.anthropic.com. Never ask them to paste a key into the chat, and never print `.env`.
+- **Packages missing**: run `python start.py` once, or `pip install -r requirements.txt`.
 
-## Layout
+## The first time: learn what they want
 
-- `run.py`, `server.py` at the root are the entry points (`python run.py`, `python server.py`); `config.json` and
-  `companies.json` are the two files the owner edits.
-- `radar/` daily pipeline (wd, poll, filters, sponsor, store, score, digest, prepare, mail) plus `llm`, `chat`,
-  `salary`, `mailmatch` and `applications` (the applications.md table).
-- `tailoring/` apply, plan, tailor, letters, finalize, skills, resumes, skills_extract. CLI: `python -m tailoring.apply`.
-- `companies/` verify, ledger, resolve, expand, report_companies and their data (candidates, not_on_workday,
-  recheck_later). CLI: `python -m companies.<module>`.
-- `web/` the UI, `tests/` pytest, `docs/` STATUS, DECISIONS, UI_NOTES, COMPANIES_REPORT, RESUME_MAP, RESUME_RULES,
-  PHASE1_KICKOFF, CHANGELOG.
-- Modules import each other as `from radar import wd`; run everything from the repo root.
+Ask in one short message: the roles they want, their level (new grad, 2 to 4 years, senior), where they can work,
+whether they need visa sponsorship, a pay floor, and anything they never want to see. Then:
 
-## Conventions worth knowing
+1. Write `profile.md` in their words: target roles, strongest experience, tools they do not have. Five to ten lines.
+2. Propose changes to `config.json` so the search matches: `search_terms`, `title_patterns`,
+   `entry_title_patterns`, `exclude_seniority`, `exclude_domain`, `us_only`. `docs/CONFIG.md` explains each key.
+   Show the change as a before and after, and write it only after they agree.
+3. Offer a first run: `python run.py` (see below).
 
-- Workday quirks: `total` is only on the first page (0 after); Salesforce search is keyword-OR and date-sorted;
-  tenant roots return 406 for valid and invalid tenants alike, so slugs come only from URLs actually seen.
-- Sponsorship sections use the regex tag in `sponsor.py` plus the company default; the model's own "no" also
-  sends a posting to Skipped.
-- Tailoring vocabulary is the base resume text plus `skills_confirmed.md`. Numbers, dates, titles, and employers
-  are locked. Rewrites that add anything outside that vocabulary are reverted into a question in notes.md.
-- The UI (`server.py`, `web/`) imports the pipeline modules and adds no logic of its own.
-- Record unattended judgment calls in docs/DECISIONS.md; keep docs/STATUS.md current at the end of a round.
+## Everyday requests
+
+| They say | Command | Do this |
+| --- | --- | --- |
+| What's new today? | `/radar-today` | Read the newest file in `digests/`. Summarise Apply and Entry level: company, title, fit scores, pay, sponsorship. Recommend the three to apply to first and say why in one line each. |
+| Run it now | `/radar-run` | `python run.py`. It can take up to an hour; only one run happens at a time, so a second start just says so. |
+| Is this job right for me? | `/radar-evaluate <link>` | `python -m radar.evaluate <workday link>`, or `<company> <req_id>` for one already stored. Explain the verdict plainly, including gaps. |
+| Tailor my resume for it | `/radar-tailor <company> <req_id>` | `python -m tailoring.apply "<company>" <req_id> --no-prompt --yes` writes a draft to review. Report the folder and the questions in its notes.md. If it says the fit is a skip, ask before adding `--force`. |
+| I applied / I heard back | `/radar-applied ...` | `python -m radar.applications add "<company>" <req_id> "<title>"`, or `status "<company>" <req_id> interview`, or `list`. |
+| Any replies? | `/radar-mail` | `python -m radar.mail`, then say what moved and what waits for review on the Applied page. |
+| Show me different jobs | `/radar-tune <what to change>` | Edit `config.json` or `profile.md` to match, shown as a before and after, applied after they agree. |
+| Why am I getting rejected? | | `python -c "from radar import patterns; print(chr(10).join(patterns.summary(patterns.analyse())))"` |
+| Open the app | | `python start.py`, then http://localhost:8000 |
+
+## Rules
+
+- Their resume, profile, applications, email and API key never leave the machine, except the calls the radar itself
+  makes to Anthropic's API and to employers' career sites. Do not upload or paste them anywhere else.
+- Never commit `Resume/`, `profile.md`, `skills_confirmed.md`, `applications.md`, `jobs.jsonl`, `.env`, `digests/`,
+  `.cache/` or `notes/`.
+- A tailored resume may use only what the base resume and `skills_confirmed.md` already say. Numbers, dates, job
+  titles and employers never change. When a posting asks for something they have not shown, ask them; never invent
+  it (`docs/RESUME_RULES.md`).
+- Be gentle with employer sites: one request at a time with a 1.5 second gap, JSON endpoints only.
+- Never submit an application or send an email on their behalf. Drafts are fine.
+- Sponsorship information comes from posting wording and public filing data. It is guidance, not legal advice.
