@@ -26,6 +26,16 @@ line such as `gaps: skills (Databricks), domain`. Postings scored earlier show n
 output tokens per scored posting. `radar/fit.py`, `radar/factors.py`. The drawer also no longer prints "null" above
 a posting that has no fit note yet.
 
+**Employers on Greenhouse, Lever and Ashby.** Eighteen employers that are not on Workday are polled through their
+public job boards: Airbnb, Block, Chime, Coinbase, Databricks, Datadog, DoorDash, Dropbox, HubSpot, Lyft, MongoDB,
+Okta, Robinhood, Stripe and Twilio on Greenhouse, Palantir and Spotify on Lever, Snowflake on Ashby. A board is read
+whole in one request per run, and its postings go through the same title, date-window and US rules as Workday results,
+with no second request for the description. Ashby pay comes from its compensation field, so those postings show a
+range too. `radar/boards.py` and `radar/boardparse.py`; `python -m companies.board "Name" <URL>` adds another employer
+from a careers, board or posting address. Mail sync, pasted Workday URLs and the companies report skip board entries
+where they look for a Workday tenant, and a few more non-US places seen on Greenhouse (Serbia, Ukraine, EMEA and
+others) count as non-US.
+
 **Rejections move on their own by role.** A rejection email without a requisition id now moves the one application
 whose role it names ("applying for the Data Engineer II position"); a rejection for a role not on the list is kept
 apart on the Email card instead of waiting for review. `radar/rolematch.py`; `python -m radar.mail --recheck`

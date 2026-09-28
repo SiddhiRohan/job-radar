@@ -310,3 +310,46 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     why. Changes count since the previous brief, not since midnight, so a second run on one day repeats nothing.
 57. **The system schedule is the person's switch.** Changing a computer's scheduler is theirs to decide, so it is a
     button on the Setup page and a command, never done by a run. The doctor reports which way the radar runs.
+
+## 2026-09-27: job boards beyond Workday
+
+58. **A job board is read whole, once per run.** Greenhouse, Lever and Ashby publish every open posting of an
+    employer, with its full description, in one public JSON response, and none has a search that behaves like
+    Workday's. So the radar fetches the board once, through `wd.request_json` (the same 1.5 s gap, retries and
+    6-hour cache), and gives each posting the Workday path's rules: the title must pass `title_matches_term` for a
+    search or entry term whose date window the posting is in, then the seniority, domain and US rules, with keys
+    `company|id` as before. Entry terms stand in for Workday's relevance search, which a board lacks, so they count
+    only for titles with entry wording (the same `is_entry_title` that widens the title patterns); otherwise every
+    matching title up to 14 days old would pass as an entry find. The description that came with the listing is the
+    detail record, so years, sponsorship and contract flags are read from it without a second request. Board
+    postings have no Workday detail path, so the posting watcher and a pasted URL in Tailor still cover Workday only.
+59. **Dates.** Greenhouse's `first_published` is the posting date. `updated_at` moves whenever the employer edits the
+    board (on the Databricks board hundreds of postings shared one timestamp), so it is used only when
+    `first_published` is missing. Lever gives `createdAt` in epoch milliseconds, Ashby `publishedAt`. Age is counted
+    in UTC calendar days and written in Workday's words ("Posted Today", "Posted 3 Days Ago", "Posted 30+ Days
+    Ago"), so pages and digests read alike. A posting without a date counts as 999 days old, outside every window.
+60. **Places and the US rule.** One US place keeps a posting, as Workday's additional locations do. Lever gives the
+    first place's ISO country and Ashby a country for every place; where a country is given, it decides. Greenhouse
+    gives only free text, sometimes several places joined by ";" (split apart) or by commas (left alone, since "San
+    Francisco, California" is one place), so its places are judged by the words in `filters.NON_US`. Against 745
+    distinct Greenhouse places on 15 live boards the words missed Serbia, Ukraine, Estonia, Cyprus, Slovenia,
+    Lithuania, Canadian provinces, EMEA and "São Paulo" with its accent; those were added, none of them a US place
+    name. Still wrong and not new: "Vancouver, WA", "Dublin, CA" and lists such as "SF, NYC, Toronto" read as non-US,
+    because a non-US city name wins unless "US" or "United States" is in the text. Workday's listing check has the
+    same gap; its detail record's country code covers it there.
+61. **Pay and ids.** Ashby keeps pay out of the description, in `compensation`. When the description has no range,
+    its salary summary goes in front as "Pay range: ..." so `salary.py` reads it (223 of 349 Snowflake postings gain
+    a range). Lever's `salaryRange` is used the same way, but neither live Lever board carried one, so that branch
+    follows Lever's documented shape only. The requisition id is the board's posting id; Greenhouse's own
+    `requisition_id`, the one an employer's emails quote, is not stored, so their emails match by role name.
+62. **Seeding: 18 employers, one request each.** Every token was confirmed by one request to the board the poll
+    reads, 21 requests in all (the cap was 60): the seven employers `not_on_workday.json` notes as Greenhouse or
+    Lever, and eleven whose own careers site fronts a board. Greenhouse's `company_name` matched the employer every
+    time. DoorDash's board is `doordashusa`; HubSpot's `hubspot` board exists but is empty and `hubspotjobs` is the
+    live one. Wayfair and Rivian answered 404 on Greenhouse and stay in `recheck_later.json` with what was tried;
+    the employers now polled leave that file. Sponsorship comes from `expand.py`'s lists: 12 are on the H-1B list,
+    and Dropbox, Chime, Robinhood, Okta, HubSpot and Spotify are on none, so null. All 18 are tier 2, the six
+    unknowns included, because that was the default asked for; `python -m companies.expand` recomputes tier from
+    sponsorship and would move those six to tier 3, so recording their filings in `companies/h1b_check.json` is the
+    durable fix and a good next task. Screened offline with the current config, the saved responses give 2 postings
+    in a 3-day window (a weekend) and 27 over 14 days across 11 of the 18 employers.
