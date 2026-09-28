@@ -20,7 +20,8 @@ def load(name):
 
 def test_greenhouse_dates_places_and_text():
     first, second = boardparse.greenhouse("Example", load("greenhouse"), NOW)  # the posting without an id is skipped
-    assert set(first) == KEYS and set(first["detail"]) == DETAIL
+    assert set(first) == KEYS | {"requisition_id"} and set(first["detail"]) == DETAIL
+    assert set(second) == KEYS  # requisition_id only when the board gives one
     assert (first["req_id"], first["title"], first["ats"]) == ("8805001002", "Data Engineer, New Grad", "greenhouse")
     assert first["url"] == "https://example.com/careers/job?gh_jid=8805001002"
     assert (first["posted_days_ago"], first["posted_on"]) == (7, "Posted 7 Days Ago")  # first_published, not updated_at

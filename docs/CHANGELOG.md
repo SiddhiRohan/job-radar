@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Email statuses for Greenhouse postings by id.** A Greenhouse posting is stored under the board's own number, which
+emails never quote. The board also gives the employer's requisition id when there is one; it is now kept on the
+posting, and an email quoting it moves the application as a Workday requisition id does.
+
 **US cities that share a name with a city abroad are kept.** Vancouver, WA; Dublin, OH and CA; Vienna, VA;
 Melbourne, FL; Warsaw, IN; and a few more were dropped by the US-only rule because the city name alone is on the
 list of places abroad. The pairs are listed one by one: a bare state code would also keep "Bengaluru, IN" and

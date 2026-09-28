@@ -17,7 +17,7 @@ from email.utils import parseaddr, parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import quote
 
-from radar import applications, mailmatch
+from radar import applications, mailmatch, store
 
 STATE = Path(".cache/ui/mail.json")
 HOST, FOLDER, MAX_BODY = "imap.gmail.com", '"[Gmail]/All Mail"', 200_000
@@ -99,7 +99,7 @@ def fetch(address, password, since, seen):
 
 def sync(messages=None):
     """Apply every new message. messages defaults to a live IMAP fetch; tests pass a list instead."""
-    state, apps = load(), applications.rows()
+    state, apps = load(), mailmatch.with_board_ids(applications.rows(), store.load())
     companies = json.loads(Path("companies.json").read_text(encoding="utf-8"))
     tenants = {c["tenant"].lower(): c["name"] for c in companies if c.get("tenant")}  # job-board employers have none
     if messages is None:

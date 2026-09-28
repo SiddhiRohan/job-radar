@@ -95,6 +95,8 @@ def greenhouse(company, data, now=None):
         text = wd.html_to_text(html.unescape(p.get("content") or ""))
         dt, url = when(p.get("first_published")) or when(p.get("updated_at")), p.get("absolute_url")
         out.append(posting(company, "greenhouse", now, p["id"], p.get("title"), dt, url, places, text))
+        if p.get("requisition_id"):  # the employer's own id, the one its emails quote; the board id never appears
+            out[-1]["requisition_id"] = str(p["requisition_id"])
     return out
 
 

@@ -74,9 +74,23 @@ def _id_rx(req_id):
     return re.compile(rf"(?<![A-Za-z0-9])(?:{alts})(?![A-Za-z0-9])", re.I)
 
 
+def ids_of(app):
+    """An application's requisition id and any other id of the same posting; ids shorter than 5 are ignored."""
+    return [i for i in (app["req_id"], *app.get("also", ())) if len(i) >= 5]
+
+
 def by_req_id(text, apps):
-    """Applications whose requisition id appears in the text as a whole token. Ids shorter than 5 are ignored."""
-    return [a for a in apps if len(a["req_id"]) >= 5 and _id_rx(a["req_id"]).search(text)]
+    """Applications whose requisition id, or another id of the same posting, appears in the text as a whole token."""
+    return [a for a in apps if any(_id_rx(i).search(text) for i in ids_of(a))]
+
+
+def with_board_ids(apps, jobs):
+    """A job-board posting is stored under the board's own number, which emails never quote; when the board also gave
+    the employer's requisition id, an application carries it under "also" so an email quoting it still matches."""
+    other = {(j["company"], j["req_id"]): j["requisition_id"] for j in jobs if j.get("requisition_id")}
+    return [
+        a | {"also": [other[(a["company"], a["req_id"])]]} if (a["company"], a["req_id"]) in other else a for a in apps
+    ]
 
 
 def by_company(text, apps):
