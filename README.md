@@ -105,7 +105,7 @@ the setup, asks what you are looking for, and tunes the search with you. After t
 | --- | --- |
 | `/radar-today` | The day's shortlist, and the three to apply to first |
 | `/radar-run` | Run the radar now |
-| `/radar-evaluate <link>` | Judge one Workday posting against your resume |
+| `/radar-evaluate <link>` | Judge one posting against your resume |
 | `/radar-tailor <company> <req_id>` | A tailored resume draft for one posting |
 | `/radar-applied` | Record an application or a reply |
 | `/radar-mail` | Read hiring emails and update statuses |
@@ -133,7 +133,7 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 | Mark a posting applied | **Mark applied** on its card, then move it between stages on the Applied board |
 | Tailor a resume | Ask the chat ("tailor the second one"), or paste a Workday job URL in Tailor |
 | Tailor from the terminal | `python -m tailoring.apply <company> <req_id> --cover` |
-| Judge any posting | `python -m radar.evaluate <workday link>` |
+| Judge any posting | `python -m radar.evaluate <link>` (Workday, Greenhouse, Lever or Ashby) |
 | Record an application | `python -m radar.applications add <company> <req_id> <title>` |
 | Check the setup | `python -m radar.doctor` |
 | The morning brief | Top of Today, or `python -m radar.brief` |

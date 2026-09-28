@@ -1,6 +1,6 @@
 ---
 description: Judge one posting against the resume
-argument-hint: <workday job link> | <company> <req_id>
+argument-hint: <job link> | <company> <req_id>
 ---
 Run `python -m radar.evaluate $ARGUMENTS`. Explain the verdict in plain words: how well each resume fits and why,
 what the posting asks that the resume does not show, sponsorship with the posting's own sentence when there is one,

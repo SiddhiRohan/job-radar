@@ -31,7 +31,7 @@ def test_summary_reads_like_a_verdict():
 
 def test_a_link_that_is_not_workday_is_explained(capsys):
     assert evaluate.main(["https://example.com/jobs/1"]) == 1
-    assert "not a Workday job URL" in capsys.readouterr().out
+    assert "not a job link the radar reads" in capsys.readouterr().out
     assert evaluate.main([]) == 2
 
 

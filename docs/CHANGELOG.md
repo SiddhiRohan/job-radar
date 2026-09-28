@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+**Job-board postings watched and judged.** The posting watcher checks Greenhouse, Lever and Ashby postings by whether
+the board still lists them, and `python -m radar.evaluate` takes a link from any of the three as well as Workday.
+
 **Every morning, even with the app closed.** One switch on the Setup page, or `python -m radar.schedule install`,
 asks the computer's own scheduler (Task Scheduler, launchd or cron) to start the run at `run_time`. The doctor says
 which of the two ways is in use.

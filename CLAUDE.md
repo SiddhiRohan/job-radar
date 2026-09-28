@@ -35,7 +35,7 @@ whether they need visa sponsorship, a pay floor, and anything they never want to
 | --- | --- | --- |
 | What's new today? | `/radar-today` | `python -m radar.brief` gives the three to apply to first, what changed and what went quiet. The newest file in `digests/` has the full list. Lead with the brief. |
 | Run it now | `/radar-run` | `python run.py`. It can take up to an hour; only one run happens at a time, so a second start just says so. |
-| Is this job right for me? | `/radar-evaluate <link>` | `python -m radar.evaluate <workday link>`, or `<company> <req_id>` for one already stored. Explain the verdict plainly, including gaps. |
+| Is this job right for me? | `/radar-evaluate <link>` | `python -m radar.evaluate <link>` for a Workday, Greenhouse, Lever or Ashby posting, or `<company> <req_id>` for one already stored. Explain the verdict plainly, including gaps. |
 | Tailor my resume for it | `/radar-tailor <company> <req_id>` | `python -m tailoring.apply "<company>" <req_id> --no-prompt --yes` writes a draft to review. Report the folder and the questions in its notes.md. If it says the fit is a skip, ask before adding `--force`. |
 | I applied / I heard back | `/radar-applied ...` | `python -m radar.applications add "<company>" <req_id> "<title>"`, or `status "<company>" <req_id> interview`, or `list`. |
 | Any replies? | `/radar-mail` | `python -m radar.mail`, then say what moved and what waits for review on the Applied page. |
