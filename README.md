@@ -109,6 +109,7 @@ the setup, asks what you are looking for, and tunes the search with you. After t
 | `/radar-tailor <company> <req_id>` | A tailored resume draft for one posting |
 | `/radar-applied` | Record an application or a reply |
 | `/radar-mail` | Read hiring emails and update statuses |
+| `/radar-add <employer> [link]` | Add an employer to the daily search |
 | `/radar-tune <what>` | Change what it looks for, in plain words |
 
 Both ways use the same files, so you can set up in one and use the other.

@@ -39,6 +39,7 @@ whether they need visa sponsorship, a pay floor, and anything they never want to
 | Tailor my resume for it | `/radar-tailor <company> <req_id>` | `python -m tailoring.apply "<company>" <req_id> --no-prompt --yes` writes a draft to review. Report the folder and the questions in its notes.md. If it says the fit is a skip, ask before adding `--force`. |
 | I applied / I heard back | `/radar-applied ...` | `python -m radar.applications add "<company>" <req_id> "<title>"`, or `status "<company>" <req_id> interview`, or `list`. |
 | Any replies? | `/radar-mail` | `python -m radar.mail`, then say what moved and what waits for review on the Applied page. |
+| Add an employer | `/radar-add <employer> [link]` | `python -m companies.add "<employer>" <link>` with its Workday careers site or a posting on it, or its Greenhouse, Lever or Ashby board. Find the link if they did not give one. |
 | Show me different jobs | `/radar-tune <what to change>` | Edit `config.json` or `profile.md` to match, shown as a before and after, applied after they agree. |
 | Why am I getting rejected? | | `python -c "from radar import patterns; print(chr(10).join(patterns.summary(patterns.analyse())))"` |
 | Open the app | | `python start.py`, then http://localhost:8000 |

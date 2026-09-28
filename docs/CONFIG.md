@@ -154,6 +154,11 @@ with the same name rechecks it.
 
 ### Adding an employer
 
+The short way, for any employer on Workday, Greenhouse, Lever or Ashby: `python -m companies.add "Name" <link>`,
+with a link to its Workday careers site or any posting on it, or to its board. It checks the link with one request,
+prints how many postings are open, and writes the entry as verified with sponsorship and a tier. Running it again
+updates the entry. The steps below are the long way, and what the short one does.
+
 On Workday:
 
 1. Find one of its postings on `myworkdayjobs.com` and read the tenant, shard and site from the URL.
