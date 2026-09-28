@@ -246,3 +246,31 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     what the owner applied to through it, and guessing a company and title from free text would put wrong rows in
     the table. In a dry run every moved application was checked by title against its requisition; one email needed its full
     body, not the stored snippet, to name its role.
+
+## 2026-09-27: the fit, factor by factor
+
+49. **The fit is shown factor by factor, with evidence; sponsorship, location and pay by rule.** A score and a
+    two-sentence why said how good a fit was but not on what evidence, and the owner wants postings judged on
+    experience, not on shared keywords. The verdict now lists four factors (experience, level, skills, domain),
+    each with a verdict word and a short quote or paraphrase from the posting and from the resume, so a score can be
+    checked against the text instead of taken on trust, and a wrong one shows where it went wrong. Experience means
+    the same kind of work at the depth asked, judged against the better-fitting base. Sponsorship, location and pay
+    are facts the pipeline already reads: the tag and phrase from `sponsor.py` with the company default (plus
+    Claude's stored read, which the digest already uses), the Workday location fields, and the `salary.py` range.
+    Computing them costs no tokens and cannot contradict the section a posting sits in, because the sponsorship
+    badge calls the digest's own `says_no` and `sponsors`. No location or pay preference is configured, so any US
+    location meets, with remote or hybrid named only from the location strings or clear wording ("fully remote",
+    "hybrid work schedule"; never "remote sensing", "hybrid cloud" or a negated phrase), and pay meets when a range
+    is stated, is partial when it is not, and is never a gap.
+50. **Factors come before the scores; older verdicts stay as they are.** "factors" is the first property of the
+    schema and the prompt says to fill it first, so the evidence is written before the scores, which must agree with
+    it. The existing fields and their meaning are unchanged, but what the scores are conditioned on is not: compare
+    the first runs' score-4 counts with the recent 6 to 14 a day. Moving "factors" to the end of `PROPERTIES` in
+    `radar/fit.py` restores the old order. The schema cannot require exactly four factors (array and string length
+    keywords are not supported, like minimum and maximum), so the prompt asks for four in order and
+    `model_factors()` keeps the first entry for each known name and drops anything else. The added output is about
+    200 to 400 tokens per scored posting, 0.3 to 0.6 cents at Sonnet 4.6 output prices and under a dollar a day at
+    the 120 cap; `max_tokens` rises from 1024 to 1536 so a longer verdict is never cut off mid-JSON. Verdicts stored
+    before this have no "factors" key and get no table and no gaps line, rather than three rule rows that would look
+    broken; rescoring them would cost a call each. Rule verdicts (years gate, sponsorship no, PERM ad) store an empty
+    list because no model read the posting; the drawer shows their three rule rows, and the why line names the rule.

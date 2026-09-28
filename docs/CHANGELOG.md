@@ -9,6 +9,14 @@ terminal never run it twice at once.
 **A single resume is enough.** `Resume/resume.docx`, or an entry and an experienced file, works next to the original
 folder tree; `profile.md` is optional.
 
+**The fit, factor by factor.** Each newly scored posting carries four factors from Claude: experience (the same kind
+of work at the depth asked, not shared keywords), level, skills and domain, each marked meets, partial or gap with
+what the posting asks and what the resume shows. Sponsorship, location and pay are read by rule from the stored
+posting. The posting drawer shows all seven above the description; Apply and Entry level rows in the digest add a
+line such as `gaps: skills (Databricks), domain`. Postings scored earlier show nothing new. About 200 to 400 more
+output tokens per scored posting. `radar/fit.py`, `radar/factors.py`. The drawer also no longer prints "null" above
+a posting that has no fit note yet.
+
 **Rejections move on their own by role.** A rejection email without a requisition id now moves the one application
 whose role it names ("applying for the Data Engineer II position"); a rejection for a role not on the list is kept
 apart on the Email card instead of waiting for review. `radar/rolematch.py`; `python -m radar.mail --recheck`

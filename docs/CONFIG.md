@@ -82,6 +82,33 @@ The title rules run in this order, before any detail is fetched.
 | `score_cap` | 120 | The most postings sent to Claude in one run. Entry-level titles and postings asking two years or fewer go first, then the newest. Unscored postings wait for the next run. |
 | `prepare_cap` | 0 | How many Apply postings get a tailoring plan made in advance after the run. 0 turns it off; plans are made on demand from the chat or Tailor. |
 
+### How a fit is judged
+
+Claude returns the E and X scores (1 to 5, one per resume base) together with four factors. Each factor is marked
+meets, partial or gap, and carries what the posting asks and the resume evidence that answers it, 20 words at most
+each, plus a short note. The factors are written first and the scores must agree with them.
+
+| Factor | What it judges |
+| --- | --- |
+| Experience | Years and depth in the same kind of work the role needs, against the better-fitting resume base. Shared keywords alone do not count. |
+| Level | Whether the posting's seniority fits the entry or the experienced base. |
+| Skills | The must-have skills the resume proves. When one is missing, the note names the most important, as "Missing: Databricks." |
+| Domain | Familiarity with the industry or problem area. |
+
+Three more are read by rule from the stored posting, with no model call:
+
+| Factor | Meets | Partial | Gap |
+| --- | --- | --- | --- |
+| Sponsorship | The posting or the company default sponsors, or Claude read the posting as sponsoring | Neither says | The posting says no or reads as a PERM ad, Claude read it as no, or the company default is no and neither the posting nor Claude says yes |
+| Location | Any US location; the note says remote or hybrid when the location or clear wording in the posting does | No location | Outside the US |
+| Pay | A range is stated (`radar/salary.py`) | Not listed | Never: there is no pay target to miss |
+
+Sponsorship uses the same test as the digest's Skipped and Apply sections, so its badge never disagrees with the
+section a posting is in. The posting drawer shows all seven above the description, and Apply and Entry level rows in
+the digest get a line such as `gaps: skills (Databricks), domain`. Postings scored before the factors existed keep
+their old verdict, with no table and no gaps line. Postings decided by rule (years gate, sponsorship no, PERM ad)
+never reach Claude, so they show only the three rule rows.
+
 ## companies.json
 
 One entry per employer.
@@ -182,6 +209,7 @@ These rules are not settings. Changing them means changing the code, with a test
 | Six or more years of required experience: scored 1 without calling Claude, so it never reaches Apply | `radar/poll.py`, `radar/score.py` |
 | Sponsorship phrases that mean no, and PERM-style ads | `radar/sponsor.py` |
 | Apply needs a best score of 4 and a sponsoring posting or default; Entry level takes entry titles scoring 3 | `radar/digest.py` |
+| The scoring prompt, the four model factors, and the sponsorship, location and pay rules | `radar/fit.py`, `radar/factors.py` |
 | 1.5 seconds between Workday requests, and a 6-hour response cache | `radar/wd.py` |
 
 ## Common adjustments
