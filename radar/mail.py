@@ -100,7 +100,8 @@ def fetch(address, password, since, seen):
 def sync(messages=None):
     """Apply every new message. messages defaults to a live IMAP fetch; tests pass a list instead."""
     state, apps = load(), applications.rows()
-    tenants = {c["tenant"].lower(): c["name"] for c in json.loads(Path("companies.json").read_text(encoding="utf-8"))}
+    companies = json.loads(Path("companies.json").read_text(encoding="utf-8"))
+    tenants = {c["tenant"].lower(): c["name"] for c in companies if c.get("tenant")}  # job-board employers have none
     if messages is None:
         # Google shows app passwords as four groups of four; the spaces are display only.
         address, password = env("GMAIL_ADDRESS"), (env("GMAIL_APP_PASSWORD") or "").replace(" ", "")
