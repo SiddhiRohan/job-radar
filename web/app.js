@@ -476,15 +476,16 @@ function show() {
   document.querySelectorAll(".view").forEach(s => (s.hidden = s.dataset.view !== v));
   document.querySelectorAll(".nav a").forEach(a => a.classList.toggle("on", a.dataset.view === v));
   $("#datectl").hidden = v !== "today";
-  if (v === "today") loadToday(); if (v === "applied") loadApplied();
+  if (v === "today") loadToday(); if (v === "applied") loadApplied(); if (v === "setup") loadSetup();
 }
 /* A new view starts at the top; refreshes keep the place. Browsers with the View Transitions API cross-fade the
    swap; the CSS turns that off under prefers-reduced-motion. */
 window.addEventListener("hashchange", () => {
-  const go = () => { window.scrollTo(0, 0); show(); };
-  if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(go); else go();
+  const go = () => { window.scrollTo(0, 0); show(); };  /* runs even when the animation is skipped */
+  if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(go).ready.catch(() => {}); else go();
 });
 show();
+setupFirst();
 
 /* ---------- keyboard ---------- */
 /* j/k walk the visible postings on Today, a marks or undoes, o opens the posting, [ ] change the day, 1 2 3 switch

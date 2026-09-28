@@ -23,6 +23,7 @@ from radar import (
     digest,
     doctor,
     evaluate,
+    firstrun,
     mail,
     owner,
     patterns,
@@ -481,6 +482,36 @@ def chat_reset(body: dict):
     if p.exists():
         p.unlink()
     return {"ok": True}
+
+
+@app.get("/api/setup")
+def setup_state():
+    """Resume, key and profile status for the setup page. The key itself is never sent back."""
+    return firstrun.state() | {"checks": doctor.checks()}
+
+
+@app.post("/api/setup/resume")
+def setup_resume(body: dict):
+    try:
+        return {"ok": True, "saved": firstrun.save_resume(body.get("name"), body.get("data", ""))}
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@app.post("/api/setup/key")
+def setup_key(body: dict):
+    try:
+        return {"ok": True, "checked": firstrun.save_key(body.get("key"))}
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@app.post("/api/setup/profile")
+def setup_profile(body: dict):
+    try:
+        return {"ok": True, "chars": firstrun.save_profile(body.get("text"))}
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
 
 
 @app.get("/api/doctor")

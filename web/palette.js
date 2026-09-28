@@ -29,6 +29,7 @@ function buildItems() {
     { g: "Go", label: "Today", run: () => (location.hash = "today") },
     { g: "Go", label: "Tailor", run: () => (location.hash = "tailor") },
     { g: "Go", label: "Applied", run: () => (location.hash = "applied") },
+    { g: "Go", label: "Setup and checks", run: () => (location.hash = "setup") },
     { g: "Do", label: "Run the radar", hint: "poll, score, digest", run: () => runRadar(1, false) },
     { g: "Do", label: "Check mail", hint: "statuses from hiring emails", run: () => jobRun("/api/mail/sync", "Mail check") },
     { g: "Do", label: "Check postings", hint: "closed or changed since you applied", run: () => jobRun("/api/watch/run", "Posting check") },

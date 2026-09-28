@@ -32,6 +32,7 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
     <a href="#today" data-view="today">Today</a>
     <a href="#tailor" data-view="tailor">Tailor</a>
     <a href="#applied" data-view="applied">Applied</a>
+    <a href="#setup" data-view="setup">Setup</a>
   </nav>
   <div id="datectl" class="datectl" hidden>
     <button type="button" id="prev" aria-label="Earlier day">&lsaquo;</button>
@@ -75,6 +76,10 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
   <section id="view-applied" data-view="applied" class="view" hidden>
     <div id="applied-body"></div>
   </section>
+
+  <section id="view-setup" data-view="setup" class="view" hidden>
+    <div id="setup-body" class="setup-grid"></div>
+  </section>
 </main>
 
 <aside id="drawer" class="drawer" aria-label="Posting" hidden>
@@ -110,6 +115,7 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
 <script src="applied.js"></script>
 <script src="mail.js"></script>
 <script src="insights.js"></script>
+<script src="setup.js"></script>
 <script src="app.js"></script>
 <script src="palette.js"></script>
 <script src="drawer.js"></script>

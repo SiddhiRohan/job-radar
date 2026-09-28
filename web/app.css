@@ -364,3 +364,13 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .prow .pv, .prow .pr { font-size: var(--fs-sm); text-align: right; font-variant-numeric: tabular-nums; } .prow .pr { color: var(--ink-2); }
 .prow.hot .pr { color: var(--danger); font-weight: 600; }
 @media (max-width: 760px) { .vgrid { grid-template-columns: 1fr; } }
+
+/* Setup: the doctor's checks and three short steps, one card each. */
+.setup-grid { display: grid; gap: 12px; margin: 16px 0 40px; max-width: 760px; }
+.card.setup textarea { width: 100%; font: inherit; font-size: var(--fs-sm); margin: 4px 0 8px; resize: vertical; }
+.card.setup .row-inline { display: flex; gap: 8px; flex-wrap: wrap; }
+.card.setup .row-inline input { flex: 1; min-width: 220px; }
+.checks { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; font-size: var(--fs-sm); }
+.check .badge { display: inline-block; min-width: 38px; margin-right: 8px; padding: 0 6px; border-radius: 999px; font-size: var(--fs-xs);
+  text-align: center; border: 1px solid currentColor; }
+.check.ok .badge { color: var(--apply); } .check.info .badge { color: var(--ink-3); } .check.fix .badge { color: var(--danger); font-weight: 600; }
