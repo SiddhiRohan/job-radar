@@ -23,6 +23,7 @@ from radar import (
     digest,
     doctor,
     evaluate,
+    factors,
     firstrun,
     mail,
     owner,
@@ -62,6 +63,7 @@ def row(j):
         "why": v.get("why") or v.get("error"),
         "cover": v.get("cover_letter_required", False),
         "salary": salary.extract(j.get("description", "")),
+        "factors": factors.table(j),  # [] for verdicts stored before factors existed
     }
 
 

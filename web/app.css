@@ -214,6 +214,18 @@ kbd { font: inherit; font-size: var(--fs-sm); padding: 1px 7px; border: 1px soli
 .drawer mark { color: var(--ink); border-radius: 3px; padding: 0 3px; }
 .drawer mark.pay { background: color-mix(in srgb, var(--apply) 20%, transparent); }
 .drawer mark.spon { background: color-mix(in srgb, var(--maybe) 24%, transparent); }
+/* Fit by factor, above the description. The badge carries the verdict as a word; the colour repeats it. */
+.drawer .factors { margin: 0 0 14px; table-layout: fixed; font-size: var(--fs-xs); line-height: 1.4; }
+.drawer .factors caption { text-align: left; font: 600 var(--fs-sm) var(--font-display); color: var(--ink); padding: 0 0 4px; }
+.drawer .factors th, .drawer .factors td { padding: 5px 10px 5px 0; border-bottom: 0; border-top: 1px solid var(--rule); vertical-align: top; text-align: left; }
+.drawer .factors thead th { border-top: 0; padding-top: 0; color: var(--ink-3); font-weight: 500; }
+.drawer .factors thead th:first-child { width: 92px; }
+.drawer .factors tbody th { color: var(--ink); font-weight: 600; }
+.drawer .factors tr.fnote td { border-top: 0; padding-top: 0; color: var(--ink-3); }
+.drawer .factors .dim { color: var(--ink-3); }
+.fv { display: block; width: fit-content; margin-top: 3px; padding: 0 7px; border-radius: 999px; font-weight: 500;
+  border: 1px solid color-mix(in srgb, currentColor 45%, transparent); }
+.fv.meets { color: var(--apply); } .fv.partial { color: var(--maybe); } .fv.gap { color: var(--danger); }
 .drawer footer { padding: 12px 20px; border-top: 1px solid var(--rule); display: flex; gap: 8px; align-items: center; background: var(--surface-2); }
 .drawer footer a { margin-left: auto; color: var(--ink-2); font-size: var(--fs-sm); }
 .row.sel { border-color: var(--accent); }
