@@ -46,7 +46,7 @@ The hour of tab-hopping becomes one page you read with your coffee.
   <img src="docs/img/today-light.png" alt="The Today view: the morning brief with three postings to apply to first, what changed and what went quiet, then the Apply section of cards with a fit score, pay, a sponsorship tag and a Mark applied button.">
 </picture>
 
-<sub>The Today view, opening with the morning brief. Screenshots and video use demo data and fictional employers. Music: “Funky Martian” by Michael Ramir C., from Mixkit.</sub>
+<sub>The Today view, opening with the morning brief. Screenshots and video use demo data and fictional employers. Music: “Feel Alive” by Michael Ramir C., from Mixkit.</sub>
 
 ## What it does
 

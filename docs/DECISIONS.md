@@ -396,10 +396,10 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     caption saying what is happening, so the story reads with the sound off, as most people first watch. Every claim
     in it can be checked against the code. The live-action shots were generated with Seedance 2.5, 4 seconds each at
     48 credits: one shot of the four friends came first and every later shot used it as a reference, so the same
-    people appear throughout, and the lead is the student from the earlier morning shot. The music is “Funky
-    Martian” by Michael Ramir C., from Mixkit, under its free stock music license: use in videos on any web
-    platform, no attribution required, no redistribution on its own, so only the finished video is in the repo, and
-    the README credits it anyway. A first cut with music synthesized in code sounded wrong to the owner and was
-    dropped. GitHub does not play video files from a repository inline, so the README shows a small animated preview
-    that links to the file; a copy uploaded through GitHub's editor gives an inline player with sound, and the file
-    is under the 10 MB limit for that.
+    people appear throughout, and the lead is the student from the earlier morning shot. The music is “Feel Alive”
+    by Michael Ramir C., from Mixkit, under its free stock music license: use in videos on any web platform, no
+    attribution required, no redistribution on its own, so only the finished video is in the repo, and the README
+    credits it anyway. A first cut with music synthesized in code sounded wrong to the owner and was dropped. GitHub
+    does not play video files from a repository inline, so the README shows a small animated preview that links to
+    the file; a copy uploaded through GitHub's editor gives an inline player with sound, and the file is under the
+    10 MB limit for that.
