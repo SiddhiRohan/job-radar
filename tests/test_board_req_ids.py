@@ -36,3 +36,27 @@ def test_mail_sync_moves_a_board_application_by_its_requisition_id(tmp_path, mon
     message |= {"date": "2026-09-24 09:00", "body": "We would like to interview you for R-10042, Data Engineer."}
     assert mail.sync([message])["updated"] == 1
     assert applications.rows()[0]["status"] == "interview"
+
+
+def test_a_board_id_still_matches_after_another_email_moved_a_status(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(applications, "PATH", tmp_path / "applications.md")
+    monkeypatch.setattr(mail, "STATE", tmp_path / "mail.json")
+    companies = [{"name": "Contoso", "ats": "greenhouse"}, {"name": "Northwind", "tenant": "northwind"}]
+    (tmp_path / "companies.json").write_text(json.dumps(companies), encoding="utf-8")
+    posting = {"company": "Contoso", "req_id": "8805001002", "requisition_id": "R-10042", "title": "Data Engineer"}
+    (tmp_path / "jobs.jsonl").write_text(json.dumps(posting) + "\n", encoding="utf-8")
+    row = {"date": "2026-09-20 10:00", "title": "Data Engineer", "status": "applied", "folder": ""}
+    applications.write(
+        [row | {"company": "Northwind", "req_id": "R77777"}, row | {"company": "Contoso", "req_id": "8805001002"}]
+    )
+    first = {
+        "message_id": "<1@x>",
+        "sender": "northwind@myworkday.com",
+        "subject": "Interview",
+        "date": "2026-09-24 08:00",
+    }
+    first["body"] = "We would like to interview you for R77777."
+    second = {"message_id": "<2@x>", "sender": "no-reply@us.greenhouse-mail.io", "subject": "Interview"}
+    second |= {"date": "2026-09-24 09:00", "body": "We would like to interview you for R-10042, Data Engineer."}
+    assert mail.sync([first, second])["updated"] == 2
