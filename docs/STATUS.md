@@ -13,7 +13,8 @@ tailoring and tracking. The dated history of the author's own runs is kept in a 
   years-asked and sponsorship rules run before any model call.
 - Scoring against the resume with the Anthropic Messages API, prompt-cached. Each verdict carries the fit factor by
   factor: experience, level, skills and domain from the model, with what the posting asks and what the resume
-  shows; sponsorship, location and pay by rule. Optional batch scoring at half the price.
+  shows; sponsorship, location and pay by rule. Optional batch scoring at half the price, or scoring by a coding
+  assistant with no API key.
 - A morning brief at the end of each run: what to apply to first and why, what changed, what went quiet.
 - A local web app: Today with the brief, filter chips, keyboard shortcuts, a posting drawer and a command palette;
   Tailor with locked facts; Applied with a drag board, charts, email statuses, rejection patterns and posting
@@ -23,13 +24,15 @@ tailoring and tracking. The dated history of the author's own runs is kept in a 
 - Runs itself every morning while the app is open, or through the computer's own scheduler when it is closed; a
   lock keeps two runs from overlapping.
 - A command-line workflow for coding assistants: `CLAUDE.md`, `AGENTS.md`, slash commands in `.claude/commands/`,
-  and terminal commands to evaluate a link, record an application, read the brief and check the setup.
+  and terminal commands to evaluate a link, add an employer from a link, record an application, read the brief,
+  score without a key and check the setup.
 - Email statuses over read-only IMAP: automatic with a requisition id, and for rejections that name the role of
   exactly one application; everything else waits for review.
 - A daily watcher for the postings behind open applications, on Workday and on the three boards.
-- A chat assistant with tools over the shortlist, tailoring, email, posting status and the brief.
+- A chat assistant with tools over the shortlist, tailoring, email, posting status and the brief; it judges a
+  pasted job link and adds an employer from a link too.
 - The server accepts changes only from its own pages. A pre-commit check keeps personal details out of commits.
-- 340 offline tests, CI on every PR, pre-commit with ruff and gitleaks.
+- 398 offline tests, CI on every PR, pre-commit with ruff and gitleaks.
 
 **Next**
 

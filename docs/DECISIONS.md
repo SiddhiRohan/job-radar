@@ -371,9 +371,13 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     recognizing a JobRadar task made by hand before the setup page existed, and the author's machine has exactly
     that. So the name stays, and status, install and remove look at the folder the entry starts in: a copy
     whose folder is not in the entry reports no schedule, removes nothing, and refuses to install over it with a
-    message saying another copy holds the task. Cron keeps a line per copy, told apart the same way. Found by
-    starting a fresh clone next to the author's install: its setup page said it ran every morning and offered to
-    stop a task that belonged to the other folder.
+    message saying another copy holds the task. The folder must end where an entry the radar writes has it end
+    (before `\.cache\run-daily.cmd`, a closing quote, or `&&` in a task made by hand), so "job-radar - Copy",
+    "job-radar (1)" and a copy nested inside another are all other copies. A task whose folder no longer exists
+    can only fail, so any copy may replace or remove it. Cron keeps a line per copy, told apart the same way.
+    Found by starting a fresh clone next to the author's install: its setup page said it ran every morning and
+    offered to stop a task that belonged to the other folder; a review then found the lookalike and moved-folder
+    cases.
 
 65. **A coding assistant can score instead of an API key.** Someone using the radar through Claude Code already pays
     for a model, so asking them for a second, metered key is a reason to leave. `radar.handscore` hands the
