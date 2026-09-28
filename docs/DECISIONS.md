@@ -274,3 +274,39 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     before this have no "factors" key and get no table and no gaps line, rather than three rule rows that would look
     broken; rescoring them would cost a call each. Rule verdicts (years gate, sponsorship no, PERM ad) store an empty
     list because no model read the posting; the drawer shows their three rule rows, and the why line names the rule.
+
+## 2026-09-27: ready for other people
+
+51. **Public from a fresh repository, not this one.** An audit before going public found the author's resume, a
+    skills file, scored postings and a first digest in commits from 13 September, two personal email addresses in
+    commit metadata, and five pull request descriptions naming real applications. Rewriting history would not clean
+    it: GitHub keeps every pull request's commits reachable, and only GitHub Support can purge them, and the owner
+    does not want history rewritten. So this repository stays private as the full record, and the public one starts
+    from a clean snapshot. The current tree is scrubbed (tests use fictional employers such as Contoso), and a
+    pre-commit privacy guard blocks any commit containing a term from `.privacy-terms`, the owner settings in `.env`,
+    or a requisition id in `applications.md`. It reports matches by position, never the term, so its output is safe
+    anywhere.
+52. **Setup is a script, not an installer.** The owner ruled out a desktop app. `start.py` uses only the standard
+    library so it runs before anything is installed; it makes `.venv`, installs again only when `requirements.txt`
+    changes (a hash stamp), copies `.env.example`, runs the doctor and opens the app. Thin wrappers make it a
+    double-click on Windows and macOS. Development tools moved to `requirements-dev.txt` so a first start installs
+    less.
+53. **The app schedules the run, and a lock keeps runs single.** A laptop asleep at 7:30 missed the day, and the app
+    could not see a run the operating system started. While open, the app now runs at `run_time` and catches up when
+    it opens; `run.py` takes `.cache/run.lock` for its whole life, so the app, the system scheduler and a terminal
+    never overlap. Nothing runs until the doctor finds nothing to fix, because a first start with no resume polled
+    for an hour against nothing. A failed start waits two hours. A lock older than four hours is treated as left by a
+    machine that shut down mid-run.
+54. **Only the app's own page may write.** The setup page accepts a resume and an API key, and any website open in
+    another tab can send requests to localhost. Writes now need no origin (a terminal) or a local one. The key is
+    checked with a token count, which is free, stored only in `.env`, and never sent back to the browser.
+55. **Two ways in, one set of files.** People who use a coding assistant get `CLAUDE.md` as an operating guide, with
+    short slash commands that call the same Python commands the app uses; `AGENTS.md` points other assistants to it.
+    The rules for changing the code moved to `CONTRIBUTING.md`. Public docs use this project's own vocabulary and
+    name no other product.
+56. **The morning brief needs no model.** Its value is judgment, and the judgment is already on disk: fit scores and
+    factor gaps, sponsorship, pay, mail events, watcher closures, rejection patterns. Picks rank by best fit, then a
+    posting that can sponsor, then stated pay, then newest; the reason is the first factor gap, else the start of the
+    why. Changes count since the previous brief, not since midnight, so a second run on one day repeats nothing.
+57. **The system schedule is the person's switch.** Changing a computer's scheduler is theirs to decide, so it is a
+    button on the Setup page and a command, never done by a run. The doctor reports which way the radar runs.
