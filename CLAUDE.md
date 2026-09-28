@@ -41,6 +41,8 @@ whether they need visa sponsorship, a pay floor, and anything they never want to
 | Any replies? | `/radar-mail` | `python -m radar.mail`, then say what moved and what waits for review on the Applied page. |
 | Add an employer | `/radar-add <employer> [link]` | `python -m companies.add "<employer>" <link>` with its Workday careers site or a posting on it, or its Greenhouse, Lever or Ashby board. Find the link if they did not give one. |
 | Show me different jobs | `/radar-tune <what to change>` | Edit `config.json` or `profile.md` to match, shown as a before and after, applied after they agree. |
+| Run even when the app is closed | | `python -m radar.schedule install` (or `status`, `remove`) asks the computer's own scheduler to start the run at `run_time`. |
+| Make it cheaper | | Set `"score_batch": true` in `config.json`: half the scoring cost, scores within the hour. Or lower `score_cap`. |
 | Why am I getting rejected? | | `python -c "from radar import patterns; print(chr(10).join(patterns.summary(patterns.analyse())))"` |
 | Open the app | | `python start.py`, then http://localhost:8000 |
 
