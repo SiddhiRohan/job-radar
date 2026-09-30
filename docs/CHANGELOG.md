@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+**Find an application.** A search at the top of Applied lists the applications whose company, role or status
+matches what you type, word by word, with the matches highlighted and the status still changeable. Press `f` to
+jump to it.
+
+**Rejections in plain words.** The rejections card now opens with how every application turned out (good replies,
+rejections, still waiting), names the clearest pattern in one sentence, and groups applications by role, level,
+resume, fit score, years asked, sponsorship or company. Each group says whether it is rejected more or less often
+than your average, or that it is too small to tell, and clicking it lists its applications.
+
 **An intro video, and a README for going public.** A 47-second video with sound, `docs/media/job-radar-intro.mp4`,
 opens the README through a silent preview. The README now starts with why the radar helps on a student visa and
 what a morning with it looks like, and adds what leaves your machine and a short FAQ.

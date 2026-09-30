@@ -64,6 +64,9 @@ The hour of tab-hopping becomes one page you read with your coffee.
 - **Reads replies for you.** With a Gmail app password it checks your inbox, read-only, and moves an application
   to screen, interview, rejected or offer when an email carries its requisition id and says so plainly. Replies
   without one wait in a needs-review list for you to settle; plain confirmations are skipped.
+- **Shows what your rejections have in common.** Group your applications by role, level, resume, fit score, years
+  asked, sponsorship or company, see which groups are rejected more often than your average, in plain words, and
+  open a group to see the applications behind it.
 - **Watches what you applied to.** It re-checks each posting behind an open application and tells you when one
   closes, which is often the only answer you get.
 - **Stays on your machine.** Resumes, applications and chat history are local files, ignored by git.
@@ -159,6 +162,7 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 | Wider window when the list is thin | `python run.py --days 3 --all-tiers` |
 | Start a run from the app | **Run the radar**, top right of Today |
 | Mark a posting applied | **Mark applied** on its card, then move it between stages on the Applied board |
+| Find an application | The search at the top of Applied (press **f**): company, role or status |
 | Tailor a resume | Ask the chat ("tailor the second one"), or paste a job link in Tailor |
 | Tailor from the terminal | `python -m tailoring.apply <company> <req_id> --cover` |
 | Judge any posting | `python -m radar.evaluate <link>` (Workday, Greenhouse, Lever or Ashby) |
@@ -169,7 +173,7 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/applied-dark.png">
-  <img src="docs/img/applied.png" alt="The Applied view: headline tiles for applications, last 7 days, companies and replies, the Email card with an application a hiring email moved to interview, a column chart of applications per day, and bar charts of where applications stand and which companies were applied to most.">
+  <img src="docs/img/applied.png" alt="The Applied view: a search for applications, headline tiles for applications, last 7 days, companies and replies, the Email card with an application a hiring email moved to interview, a column chart of applications per day, and bar charts of where applications stand and which companies were applied to most.">
 </picture>
 
 <sub>The Applied view: how many you have sent, how fast, where they stand and where they went. A board below
