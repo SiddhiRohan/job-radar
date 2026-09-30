@@ -75,3 +75,13 @@ def test_summary_is_honest_with_little_data():
 def test_missing_posting_still_counts():
     r = patterns.analyse([app("Z", "Data Engineer", "rejected", "9")] * 3, [])
     assert r["tallies"]["Fit score"]["unscored"]["rejected"] == 3
+
+
+def test_every_application_comes_with_its_buckets():
+    r = patterns.analyse(APPS, JOBS)
+    assert len(r["apps"]) == 6
+    first = r["apps"][0]
+    assert (first["company"], first["title"], first["status"]) == ("A", "Senior Data Engineer", "rejected")
+    assert first["dims"]["Seniority in title"] == "Senior" and first["dims"]["Company"] == "A"
+    senior = [a["company"] for a in r["apps"] if a["dims"]["Seniority in title"] == "Senior"]
+    assert senior == ["A", "B", "C"]  # the same three the Senior bucket counts

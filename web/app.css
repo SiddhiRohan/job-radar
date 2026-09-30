@@ -399,3 +399,39 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .brief-list { margin: 0; padding-left: 18px; font-size: var(--fs-sm); color: var(--ink-2); }
 .brief-pattern { margin: 12px 0 0; font-size: var(--fs-sm); color: var(--ink); border-left: 3px solid var(--maybe); padding-left: 10px; }
 .brief-foot { display: flex; justify-content: flex-end; margin-top: 6px; }
+
+/* What the rejections say: outcomes in one bar, the clearest pattern, and groups to click through. */
+.rj-lead { margin: 6px 0 10px; line-height: 1.5; }
+.rj-lead b.good { color: var(--apply); } .rj-lead b.rej { color: var(--danger); }
+.rj-total { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.obar { display: flex; gap: 2px; height: 12px; min-width: 90px; flex: 1; border-radius: 6px; overflow: hidden; background: var(--surface-2); }
+.rj-total .obar { height: 16px; min-width: 200px; }
+.obar .seg { display: block; height: 100%; }
+.seg.good { background: var(--apply); } .seg.rej { background: var(--danger); } .seg.wait { background: var(--rule-strong); }
+.legend { display: flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--ink-2); flex-wrap: wrap; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-left: 6px; }
+.legend i.good { background: var(--apply); } .legend i.rej { background: var(--danger); } .legend i.wait { background: var(--rule-strong); }
+.rj-insight { margin: 0 0 14px; padding: 10px 14px; border-left: 3px solid var(--danger); border-radius: 0 var(--radius) var(--radius) 0;
+  background: color-mix(in srgb, var(--danger) 6%, var(--surface)); line-height: 1.5; }
+.rj-insight.calm { border-left-color: var(--apply); background: color-mix(in srgb, var(--apply) 6%, var(--surface)); }
+.rj-tabs { margin: 0 0 10px; } .rj-tabs .sub { margin: 0 4px 0 0; }
+.rj-groups { display: grid; gap: 2px; }
+.rj-row { width: 100%; display: grid; grid-template-columns: minmax(170px, 1.5fr) minmax(90px, 2fr) auto 190px; gap: 14px; align-items: center;
+  font: inherit; font-size: var(--fs-sm); text-align: left; color: var(--ink); background: transparent; border: 1px solid transparent;
+  border-radius: var(--radius); padding: 7px 10px; cursor: pointer; }
+.rj-row:hover, .rj-group.open .rj-row { background: var(--surface-2); border-color: var(--rule); }
+.rj-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rj-row .rl { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rj-row .rn { color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rt { justify-self: start; font-size: var(--fs-xs); padding: 2px 10px; border-radius: 999px; white-space: nowrap; border: 1px solid var(--rule-strong); color: var(--ink-2); }
+.rt.hot { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); background: color-mix(in srgb, var(--danger) 8%, transparent); }
+.rt.cool { color: var(--apply); border-color: color-mix(in srgb, var(--apply) 45%, transparent); background: color-mix(in srgb, var(--apply) 8%, transparent); }
+.rt.few { color: var(--ink-3); border-style: dashed; }
+.rj-apps { list-style: none; margin: 2px 0 8px 18px; padding: 4px 0 4px 12px; border-left: 2px solid var(--rule-strong); display: grid; gap: 4px; font-size: var(--fs-sm); }
+.rj-apps li { max-width: none; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+.rj-apps li > span:not(.stag) { color: var(--ink-2); }
+.stag { font-size: var(--fs-xs); padding: 0 8px; border-radius: 999px; border: 1px solid var(--rule-strong); color: var(--ink-2); }
+.stag.s-rejected { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
+.stag.s-screen, .stag.s-interview, .stag.s-offer { color: var(--apply); border-color: color-mix(in srgb, var(--apply) 45%, transparent); }
+@media (max-width: 760px) { .rj-row { grid-template-columns: 1fr auto; } .rj-row .obar { grid-column: 1 / -1; grid-row: 2; } .rj-row .rn { display: none; } }
+@media (prefers-reduced-motion: reduce) { .card.search { transition: none; } }
