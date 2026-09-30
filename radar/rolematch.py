@@ -1,8 +1,8 @@
 """Which application a rejection email is about, from the role it names. Pure functions.
 
 Rejection emails rarely carry the requisition id, but nearly all name the role: "applying for the Data Engineer II
-position", "the position of Machine Learning Engineer at Workday". Calibrated on the owner's 19 rejection emails that
-had waited in Needs review on 2026-09-27: every one named the role. Only the subject and the start of the body are
+position", "the position of Machine Learning Engineer at Northwind". Calibrated on a set of real rejection emails
+that carried no requisition id: every one named the role. Only the subject and the start of the body are
 read, because footers often list other openings ("jobs you may like") whose titles would match by accident."""
 
 import re

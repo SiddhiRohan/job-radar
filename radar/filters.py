@@ -18,8 +18,19 @@ NON_US = [
     "calgary", "munich", "berlin", "madrid", "barcelona", "milan", "rome", "krakow", "sao paulo", "bogota",
     "buenos aires", "mexico city", "monterrey", "guadalajara", "luxembourg", "copenhagen", "oslo", "helsinki",
     "athens", "edinburgh",
+    # Seen on Greenhouse boards, which give no country to check a place against (2026-09-27)
+    "serbia", "belgrade", "ukraine", "estonia", "cyprus", "slovenia", "ljubljana", "lithuania", "vilnius", "uruguay",
+    "great britain", "british columbia", "alberta", "quebec", "manitoba", "nova scotia", "auckland", "frankfurt",
+    "stuttgart", "cologne", "cork", "são paulo", "cdmx", "abu dhabi", "emea", "apac", "latam",
 ]
 # fmt: on
+# US places that share a name with a city above, as postings and Workday URLs write them. Only these pairs: a bare
+# state code is not enough, since "Bengaluru, IN" and "Munich, DE" use country codes that are also state codes.
+US_TWINS = re.compile(
+    r"\b(vancouver,? (wa|washington)|dublin,? (oh|ohio|ca|california)|vienna,? (va|virginia)"
+    r"|melbourne,? (fl|florida)|warsaw,? (in|indiana)|athens,? (ga|georgia|oh|ohio)|paris,? (tx|texas)"
+    r"|rome,? (ga|georgia|ny|new york)|london,? (ky|kentucky|oh|ohio))\b"
+)
 
 
 def _word(phrase):
@@ -28,7 +39,7 @@ def _word(phrase):
 
 def looks_non_us(location):
     s = location.lower()
-    if re.search(r"\b(us|usa|united states|u\.s\.)\b", s):
+    if re.search(r"\b(us|usa|united states|u\.s\.)\b", s) or US_TWINS.search(s):
         return False
     return any(_word(w).search(s) for w in NON_US)
 

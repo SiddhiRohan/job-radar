@@ -8,7 +8,7 @@ from radar import llm, owner
 COVER_RULES = """Write a one-page cover letter for this posting. Role and company specific. Add to the resume rather than
 repeating it: pick two or three things from the resume that matter for THIS job and say why, in plain human voice.
 No buzzwords, no visa or sponsorship mention, no em dashes, no bullet points. About 250-320 words.
-Format: greeting line, 3-4 short paragraphs, sign-off with the name {name}. Return only the letter text."""
+Format: greeting line, 3-4 short paragraphs, sign-off with {name}. Return only the letter text."""
 
 OUTREACH_SCHEMA = {
     "type": "object",
@@ -27,7 +27,7 @@ def cover_letter(job, jd, profile, resume_text):
         f"POSTING: {job['title']} at {job['company']} ({job.get('detail_location') or job['location']})\n"
         f"{jd[:10000]}\n\nTAILORED RESUME:\n{resume_text[:8000]}\n\nWrite the letter."
     )
-    rules = COVER_RULES.replace("{name}", owner.name())
+    rules = COVER_RULES.replace("{name}", owner.signature())
     text, _ = llm.complete(rules + "\n\nCANDIDATE PROFILE:\n" + profile, user, max_tokens=2000)
     return text.replace("—", "-").strip()
 
@@ -38,7 +38,7 @@ def outreach(job, jd, profile, resume_text=""):
         f"that appear here):\n{resume_text[:6000]}\n\nWrite both pieces."
     )
     for _ in range(3):
-        rules = OUTREACH_RULES.replace("{name}", owner.short_name())
+        rules = OUTREACH_RULES.replace("{name}", owner.signature(short=True))
         o, _ = llm.complete(rules + "\n\nCANDIDATE PROFILE:\n" + profile, user, OUTREACH_SCHEMA)
         o = {k: v.replace("—", "-").strip() for k, v in o.items()}
         if 200 <= len(o["linkedin_note"]) < 285 and 100 <= len(o["message"].split()) <= 120:
@@ -61,5 +61,5 @@ def write_docx(text, out_path, base_path):
     doc.styles["Normal"].font.size = Pt(11)
     for para in [p for p in text.split("\n") if p.strip()]:
         doc.add_paragraph(para.strip())
-    doc.core_properties.author = owner.name()
+    doc.core_properties.author = owner.name() if owner.name() != owner.UNSET else ""
     doc.save(out_path)

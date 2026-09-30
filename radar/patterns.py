@@ -55,7 +55,8 @@ def dimensions(app, job):
 
 def analyse(apps=None, jobs=None, min_support=3):
     """Findings per dimension: buckets with at least min_support rejections, ranked by how far their rejection rate
-    sits above the overall one. Also the headline counts."""
+    sits above the overall one. Also the headline counts, and every application with its buckets so the Applied
+    view can list the applications behind a bucket."""
     apps = applications.rows() if apps is None else apps
     jobs = {f"{j['company']}|{j['req_id']}": j for j in (store.load() if jobs is None else jobs)}
     total, rejected = len(apps), sum(1 for a in apps if a["status"] == "rejected")
@@ -63,8 +64,10 @@ def analyse(apps=None, jobs=None, min_support=3):
     tallies = defaultdict(
         lambda: defaultdict(Counter)
     )  # dimension -> bucket -> {"applied": n, "rejected": n, "responded": n}
+    listed = []
     for a in apps:
         d = dimensions(a, jobs.get(f"{a['company']}|{a['req_id']}"))
+        listed.append({k: a[k] for k in ("company", "req_id", "title", "status")} | {"dims": d})
         for dim, bucket in d.items():
             t = tallies[dim][bucket]
             t["applied"] += 1
@@ -99,6 +102,7 @@ def analyse(apps=None, jobs=None, min_support=3):
         "enough_data": rejected >= min_support,
         "findings": findings,
         "tallies": {dim: {b: dict(t) for b, t in buckets.items()} for dim, buckets in tallies.items()},
+        "apps": listed,
     }
 
 

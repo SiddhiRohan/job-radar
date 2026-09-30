@@ -14,3 +14,10 @@ repos:
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: privacy-guard
+        name: personal details stay out of commits
+        entry: python scripts/privacy_guard.py
+        language: system
+        types: [text]

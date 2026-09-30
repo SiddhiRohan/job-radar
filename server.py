@@ -7,16 +7,33 @@ import shutil
 import threading
 import uuid
 import webbrowser
-from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 import uvicorn
 from docx import Document
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from radar import applications, chat, digest, mail, owner, patterns, poll, prepare, salary, score, watch, wd
+from radar import (
+    applications,
+    autorun,
+    brief,
+    chat,
+    digest,
+    doctor,
+    evaluate,
+    factors,
+    firstrun,
+    mail,
+    owner,
+    patterns,
+    prepare,
+    salary,
+    schedule,
+    watch,
+)
 from tailoring import apply as applier
 from tailoring import finalize, letters, resumes, skills, tailor
 
@@ -48,6 +65,7 @@ def row(j):
         "why": v.get("why") or v.get("error"),
         "cover": v.get("cover_letter_required", False),
         "salary": salary.extract(j.get("description", "")),
+        "factors": factors.table(j),  # [] for verdicts stored before factors existed
     }
 
 
@@ -143,21 +161,8 @@ def applied():
 
 @app.post("/api/applied")
 def mark_applied(body: dict):
-    rows = applied_rows()
-    key = (body["req_id"], body["company"])
-    if any((r["req_id"], r["company"]) == key for r in rows):
+    if not applications.add(body["company"], body["req_id"], body["title"], body.get("folder", "")):
         return {"ok": True, "already": True}
-    rows.append(
-        {
-            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "company": body["company"],
-            "title": body["title"],
-            "status": "applied",
-            "folder": body.get("folder", ""),
-            "req_id": body["req_id"],
-        }
-    )
-    write_applied(rows)
     return {"ok": True}
 
 
@@ -262,45 +267,12 @@ def open_path(body: dict):
     return {"ok": True}
 
 
-def ingest_url(url):
-    """Parse a pasted Workday job URL, fetch and score it if jobs.jsonl does not have it, return the record."""
-    parsed = wd.parse_job_url(url)
-    if not parsed:
-        raise ValueError(
-            "that is not a Workday job URL; it should look like https://<tenant>.<wd5>.myworkdayjobs.com/<site>/job/..."
-        )
-    tenant, shard, site, ext, req_id = parsed
-    comps = {c["tenant"]: c for c in json.load(open("companies.json", encoding="utf-8"))}
-    c = comps.get(tenant) or {"name": tenant, "tenant": tenant, "shard": shard, "site": site, "sponsors_h1b": None}
-    for j in jobs_all():
-        if j["req_id"] == req_id and j["company"] == c["name"]:
-            return j
-    d = wd.fetch_detail(tenant, shard, f"/wday/cxs/{tenant}/{site}{ext}")
-    j = {
-        "company": c["name"],
-        "title": d.get("title") or req_id,
-        "location": d["location"] or "",
-        "posted_on": "pasted",
-        "posted_days_ago": 0,
-        "req_id": req_id,
-        "url": url,
-        "detail_path": f"/wday/cxs/{tenant}/{site}{ext}",
-        "search_term": "pasted",
-        "first_seen": datetime.now().astimezone().isoformat(timespec="seconds"),
-    }
-    poll.enrich(j, c, json.load(open("config.json", encoding="utf-8")))
-    j["verdict"] = score.rule_verdict(j) or score.ask_claude(score.load_api_key(), score.system_blocks(), j)[0]
-    with open("jobs.jsonl", "a", encoding="utf-8") as f:
-        f.write(json.dumps(j) + "\n")
-    return j
-
-
 @app.post("/api/tailor")
 def start_tailor(body: dict):
     """Cached plan comes back at once; pass fresh=true to re-plan (also used after confirming a JD skill)."""
 
     def work():
-        j = ingest_url(body["url"]) if body.get("url") else applier.find_job(body["company"], body["req_id"])
+        j = evaluate.ingest_url(body["url"]) if body.get("url") else applier.find_job(body["company"], body["req_id"])
         cache = prepare.plan_cache_path(j)
         if cache.exists() and not body.get("fresh"):
             return dict(json.loads(cache.read_text(encoding="utf-8")), cached=True)
@@ -361,11 +333,7 @@ def start_cover(body: dict):
     def work():
         j = applier.find_job(body["company"], body["req_id"])
         text = "\n".join(t for s in body["sections"] for t in s["text"])
-        return {
-            "text": letters.cover_letter(
-                j, j.get("description", ""), Path("profile.md").read_text(encoding="utf-8"), text
-            )
-        }
+        return {"text": letters.cover_letter(j, j.get("description", ""), resumes.profile_text(), text)}
 
     return background(work)
 
@@ -375,7 +343,7 @@ def start_outreach(body: dict):
     def work():
         j = applier.find_job(body["company"], body["req_id"])
         text = "\n".join(t for s in body["sections"] for t in s["text"])
-        return letters.outreach(j, j.get("description", ""), Path("profile.md").read_text(encoding="utf-8"), text)
+        return letters.outreach(j, j.get("description", ""), resumes.profile_text(), text)
 
     return background(work)
 
@@ -493,6 +461,7 @@ def chat_message(body: dict):
         "check_mail": check_mail_for,
         "rejection_patterns": lambda args: {"lines": patterns.summary(patterns.analyse())},
         "posting_status": lambda args: watch.report(),
+        "morning_brief": lambda args: {"text": brief.text(brief.current())},
     }
     return background(chat.message, body.get("session", "default"), body["text"], body.get("context", {}), hooks)
 
@@ -516,6 +485,58 @@ def chat_reset(body: dict):
     return {"ok": True}
 
 
+@app.get("/api/brief")
+def morning_brief():
+    """The brief the last run wrote, or one built now when no run has written a complete one yet."""
+    return brief.current()
+
+
+@app.get("/api/setup")
+def setup_state():
+    """Resume, key and profile status for the setup page. The key itself is never sent back."""
+    return firstrun.state() | {"checks": doctor.checks()}
+
+
+@app.post("/api/setup/resume")
+def setup_resume(body: dict):
+    try:
+        return {"ok": True, "saved": firstrun.save_resume(body.get("name"), body.get("data", ""))}
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@app.post("/api/setup/key")
+def setup_key(body: dict):
+    try:
+        return {"ok": True, "checked": firstrun.save_key(body.get("key"))}
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@app.post("/api/schedule")
+def daily_schedule(body: dict):
+    """Turn the operating system's daily run on or off, at run_time from config.json."""
+    at = json.loads(Path("config.json").read_text(encoding="utf-8")).get("run_time", "07:30")
+    if body.get("on") and schedule.elsewhere():
+        return {"ok": False, "scheduled": False, "why": "The daily task already starts another copy of the radar"}
+    ok = schedule.install(at) if body.get("on") else schedule.remove()
+    return {"ok": ok, "scheduled": schedule.status()}
+
+
+@app.post("/api/setup/profile")
+def setup_profile(body: dict):
+    try:
+        return {"ok": True, "chars": firstrun.save_profile(body.get("text"))}
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@app.get("/api/doctor")
+def doctor_report():
+    """The same checks as python -m radar.doctor, for the setup page."""
+    return {"checks": doctor.checks()}
+
+
 @app.post("/api/run")
 def run_radar(body: dict):
     return chat.run_radar(int(body.get("days", 1)), bool(body.get("all_tiers")))
@@ -524,6 +545,24 @@ def run_radar(body: dict):
 @app.get("/api/run")
 def run_status():
     return chat.run_status()
+
+
+LOCAL_HOSTS = ("localhost", "127.0.0.1", "[::1]", "::1")
+
+
+def allowed(method, origin):
+    """Writes must come from this app's own page. A website open in another tab can send a request to localhost, and
+    the browser labels it with that site's origin; those are refused. Requests with no origin (a terminal) pass."""
+    if method in ("GET", "HEAD", "OPTIONS") or not origin:
+        return True
+    return urlparse(origin).hostname in LOCAL_HOSTS
+
+
+@app.middleware("http")
+async def same_origin_writes(request, call_next):
+    if not allowed(request.method, request.headers.get("origin")):
+        return JSONResponse({"detail": "requests from other websites are refused"}, status_code=403)
+    return await call_next(request)
 
 
 @app.middleware("http")
@@ -550,5 +589,8 @@ def favicon():
 
 if __name__ == "__main__":
     UI_DIR.mkdir(parents=True, exist_ok=True)
-    threading.Timer(1.0, lambda: webbrowser.open("http://localhost:8000")).start()
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
+    ready = lambda: not any(c["level"] == "fix" for c in doctor.checks())  # noqa: E731
+    autorun.start(lambda: chat.run_radar(1, False), ready)  # the daily run while the app is open, with catch-up
+    port = int(os.environ.get("RADAR_PORT", "8000"))  # another port when 8000 is taken
+    threading.Timer(1.0, lambda: webbrowser.open(f"http://localhost:{port}")).start()
+    uvicorn.run(app, host="127.0.0.1", port=port, log_level="warning")

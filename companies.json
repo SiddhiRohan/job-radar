@@ -672,6 +672,17 @@
     "tier": 2
   },
   {
+    "name": "Airbnb",
+    "ats": "greenhouse",
+    "board": "airbnb",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:33+00:00",
+    "open_roles": 159,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
     "name": "Allstate",
     "tenant": "allstate",
     "shard": "wd5",
@@ -768,6 +779,17 @@
     "tier": 2
   },
   {
+    "name": "Block",
+    "ats": "greenhouse",
+    "board": "block",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:25+00:00",
+    "open_roles": 214,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
     "name": "Bristol Myers Squibb",
     "tenant": "bristolmyerssquibb",
     "shard": "wd5",
@@ -804,6 +826,17 @@
     "tier": 2
   },
   {
+    "name": "Chime",
+    "ats": "greenhouse",
+    "board": "chime",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:30+00:00",
+    "open_roles": 66,
+    "sponsors_h1b": null,
+    "sponsorship_source": "not found in H-1B lists",
+    "tier": 2
+  },
+  {
     "name": "Chubb",
     "tenant": "ace",
     "shard": "wd5",
@@ -813,6 +846,17 @@
     "open_roles": 473,
     "sponsors_h1b": true,
     "sponsorship_source": "FY2025 LCA lookup: 116 LCAs",
+    "tier": 2
+  },
+  {
+    "name": "Coinbase",
+    "ats": "greenhouse",
+    "board": "coinbase",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:37+00:00",
+    "open_roles": 210,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
     "tier": 2
   },
   {
@@ -864,6 +908,28 @@
     "tier": 2
   },
   {
+    "name": "Databricks",
+    "ats": "greenhouse",
+    "board": "databricks",
+    "verified": true,
+    "verified_at": "2026-09-28T00:05:33+00:00",
+    "open_roles": 888,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
+    "name": "Datadog",
+    "ats": "greenhouse",
+    "board": "datadog",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:42+00:00",
+    "open_roles": 449,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
     "name": "Deutsche Bank",
     "tenant": "db",
     "shard": "wd3",
@@ -885,6 +951,28 @@
     "open_roles": 620,
     "sponsors_h1b": true,
     "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
+    "name": "DoorDash",
+    "ats": "greenhouse",
+    "board": "doordashusa",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:23+00:00",
+    "open_roles": 459,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
+    "name": "Dropbox",
+    "ats": "greenhouse",
+    "board": "dropbox",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:19+00:00",
+    "open_roles": 44,
+    "sponsors_h1b": null,
+    "sponsorship_source": "not found in H-1B lists",
     "tier": 2
   },
   {
@@ -1068,6 +1156,17 @@
     "tier": 2
   },
   {
+    "name": "HubSpot",
+    "ats": "greenhouse",
+    "board": "hubspotjobs",
+    "verified": true,
+    "verified_at": "2026-09-28T00:28:21+00:00",
+    "open_roles": 133,
+    "sponsors_h1b": null,
+    "sponsorship_source": "not found in H-1B lists",
+    "tier": 2
+  },
+  {
     "name": "Infosys",
     "tenant": "infosys",
     "shard": "wd103",
@@ -1116,6 +1215,17 @@
     "tier": 2
   },
   {
+    "name": "Lyft",
+    "ats": "greenhouse",
+    "board": "lyft",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:49+00:00",
+    "open_roles": 175,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
     "name": "Manulife John Hancock",
     "tenant": "manulife",
     "shard": "wd3",
@@ -1147,6 +1257,17 @@
     "verified": true,
     "verified_at": "2026-09-13T22:46:07+00:00",
     "open_roles": 1151,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
+    "name": "MongoDB",
+    "ats": "greenhouse",
+    "board": "mongodb",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:44+00:00",
+    "open_roles": 396,
     "sponsors_h1b": true,
     "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
     "tier": 2
@@ -1212,6 +1333,17 @@
     "tier": 2
   },
   {
+    "name": "Okta",
+    "ats": "greenhouse",
+    "board": "okta",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:46+00:00",
+    "open_roles": 333,
+    "sponsors_h1b": null,
+    "sponsorship_source": "not found in H-1B lists",
+    "tier": 2
+  },
+  {
     "name": "PNC",
     "tenant": "pnc",
     "shard": "wd5",
@@ -1233,6 +1365,17 @@
     "open_roles": 16,
     "sponsors_h1b": true,
     "sponsorship_source": "FY2025 LCA lookup: 14 LCAs in the first three quarters; data engineer and data scientist titles",
+    "tier": 2
+  },
+  {
+    "name": "Palantir",
+    "ats": "lever",
+    "board": "palantir",
+    "verified": true,
+    "verified_at": "2026-09-28T00:05:36+00:00",
+    "open_roles": 321,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
     "tier": 2
   },
   {
@@ -1284,6 +1427,17 @@
     "tier": 2
   },
   {
+    "name": "Robinhood",
+    "ats": "greenhouse",
+    "board": "robinhood",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:40+00:00",
+    "open_roles": 159,
+    "sponsors_h1b": null,
+    "sponsorship_source": "not found in H-1B lists",
+    "tier": 2
+  },
+  {
     "name": "Royal Bank of Canada",
     "tenant": "rbc",
     "shard": "wd3",
@@ -1332,6 +1486,28 @@
     "tier": 2
   },
   {
+    "name": "Snowflake",
+    "ats": "ashby",
+    "board": "snowflake",
+    "verified": true,
+    "verified_at": "2026-09-28T00:05:38+00:00",
+    "open_roles": 349,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
+    "name": "Spotify",
+    "ats": "lever",
+    "board": "spotify",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:28+00:00",
+    "open_roles": 80,
+    "sponsors_h1b": null,
+    "sponsorship_source": "not found in H-1B lists",
+    "tier": 2
+  },
+  {
     "name": "Strategic Education",
     "tenant": "strayer",
     "shard": "wd1",
@@ -1341,6 +1517,17 @@
     "open_roles": 26,
     "sponsors_h1b": true,
     "sponsorship_source": "FY2025 LCA lookup: 27 LCAs and LCs; 15 petitions",
+    "tier": 2
+  },
+  {
+    "name": "Stripe",
+    "ats": "greenhouse",
+    "board": "stripe",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:35+00:00",
+    "open_roles": 701,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
     "tier": 2
   },
   {
@@ -1435,6 +1622,17 @@
     "verified": true,
     "verified_at": "2026-09-13T22:44:59+00:00",
     "open_roles": 344,
+    "sponsors_h1b": true,
+    "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
+    "tier": 2
+  },
+  {
+    "name": "Twilio",
+    "ats": "greenhouse",
+    "board": "twilio",
+    "verified": true,
+    "verified_at": "2026-09-28T00:27:21+00:00",
+    "open_roles": 138,
     "sponsors_h1b": true,
     "sponsorship_source": "top H-1B sponsor lists (careernomics FY2025 top-100, scoutify)",
     "tier": 2

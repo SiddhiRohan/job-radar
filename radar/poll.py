@@ -1,4 +1,4 @@
-"""Poll verified Workday sites, apply title/location rules, enrich new postings, track them in jobs.jsonl."""
+"""Poll Workday sites and job boards, apply title/location rules, enrich new postings, track them in jobs.jsonl."""
 
 import argparse
 import json
@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from radar import filters, sponsor, store, wd
+from radar import boards, filters, sponsor, store, wd
 
 sys.stdout.reconfigure(encoding="utf-8")
 MAX_DESC = 15000
@@ -19,9 +19,12 @@ def load_json(path, default):
 
 
 def search_all(cfg, companies, max_days, removed):
-    """Search every company x term; return (found dict keyed company|req_id, errors) after title/location rules."""
+    """Search each Workday site per term and read each job board whole; return (found by company|req_id, errors)."""
     found, errors = {}, {}
     for c in companies:
+        if boards.system(c):  # Greenhouse, Lever or Ashby: one request, then the same title and location rules
+            boards.poll(cfg, c, max_days, found, removed, errors)
+            continue
         entry_terms = cfg.get("entry_terms", []) if c.get("tier", 1) <= 2 else []
         for term in cfg["search_terms"] + list(c.get("extra_terms") or []) + entry_terms:
             # Entry searches come back by relevance and the roles stay open for weeks: one page, wider window.
@@ -54,9 +57,9 @@ def search_all(cfg, companies, max_days, removed):
     return found, errors
 
 
-def enrich(j, company, cfg):
-    """Fetch the detail record; derive US check, years gate, sponsorship, and contract flags."""
-    d = wd.fetch_detail(company["tenant"], company["shard"], j["detail_path"])
+def enrich(j, company, cfg, detail=None):
+    """Detail record (fetched, or the one a board posting carries): US check, years gate, sponsorship, contract."""
+    d = detail or wd.fetch_detail(company["tenant"], company["shard"], j["detail_path"])
     text = d["description"]
     j.update(
         description=text[:MAX_DESC],
@@ -102,7 +105,7 @@ def main():
     kept = []
     for key, j in new:
         try:
-            enrich(j, companies[j["company"]], cfg)
+            enrich(j, companies[j["company"]], cfg, j.pop("detail", None))  # boards carry it; never stored
         except Exception as e:
             j["enrich_error"] = str(e)[:150]
             errors[f"{j['company']} {j['req_id']}"] = f"detail: {str(e)[:120]}"

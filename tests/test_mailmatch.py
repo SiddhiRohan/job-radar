@@ -6,74 +6,74 @@ import pytest
 from radar import mailmatch
 
 APPS = [
-    {"company": "Capital One", "req_id": "R1001740", "title": "AI Engineer 3"},
-    {"company": "GM", "req_id": "JR-202619337", "title": "Data Engineer"},
-    {"company": "Walmart", "req_id": "R-2331482", "title": "Data Scientist III"},
-    {"company": "Walmart", "req_id": "R-2023715", "title": "Data Engineer III"},
-    {"company": "HP", "req_id": "1234", "title": "Data Analyst"},
+    {"company": "Northwind", "req_id": "R1000001", "title": "AI Engineer 3"},
+    {"company": "Lamna", "req_id": "JR-202600001", "title": "Data Engineer"},
+    {"company": "Woodgrove", "req_id": "R-300003", "title": "Data Scientist III"},
+    {"company": "Woodgrove", "req_id": "R-300004", "title": "Data Engineer III"},
+    {"company": "Trey", "req_id": "1234", "title": "Data Analyst"},
 ]
 
 
-def mail(subject, body, sender="Capital One <capitalone@myworkday.com>"):
+def mail(subject, body, sender="Northwind <northwind@myworkday.com>"):
     return {"sender": sender, "subject": subject, "body": body}
 
 
 def test_confirmation_with_req_id_updates_to_applied():
-    d = mailmatch.decide(mail("Thank you for applying", "We received your application for R1001740."), APPS)
-    assert d["action"] == "update" and d["req_id"] == "R1001740" and d["status"] == "applied"
+    d = mailmatch.decide(mail("Thank you for applying", "We received your application for R1000001."), APPS)
+    assert d["action"] == "update" and d["req_id"] == "R1000001" and d["status"] == "applied"
 
 
 def test_rejection_wins_over_thank_you():
-    body = "Thank you for applying to R1001740. Unfortunately we have decided to move forward with other candidates."
+    body = "Thank you for applying to R1000001. Unfortunately we have decided to move forward with other candidates."
     assert mailmatch.decide(mail("Your application", body), APPS)["status"] == "rejected"
 
 
 def test_invitations_to_screen_and_interview():
-    d = mailmatch.decide(mail("Next steps", "Please schedule a phone screen for R1001740."), APPS)
+    d = mailmatch.decide(mail("Next steps", "Please schedule a phone screen for R1000001."), APPS)
     assert d["action"] == "update" and d["status"] == "screen"
-    d = mailmatch.decide(mail("Invitation", "We would like to invite you to interview for R1001740."), APPS)
+    d = mailmatch.decide(mail("Invitation", "We would like to invite you to interview for R1000001."), APPS)
     assert d["action"] == "update" and d["status"] == "interview"
 
 
 def test_invitation_inside_a_confirmation_goes_to_review():
-    body = "Thank you for applying to R1001740. We would like to invite you to interview next week."
+    body = "Thank you for applying to R1000001. We would like to invite you to interview next week."
     d = mailmatch.decide(mail("Next steps", body), APPS)
-    assert d["action"] == "review" and d["status"] == "interview" and d["req_id"] == "R1001740"
+    assert d["action"] == "review" and d["status"] == "interview" and d["req_id"] == "R1000001"
 
 
 def test_req_id_without_hyphen_still_matches():
-    d = mailmatch.decide(mail("Application received", "Req JR202619337 received.", "GM <gm@myworkday.com>"), APPS)
-    assert d["action"] == "update" and d["company"] == "GM"
+    d = mailmatch.decide(mail("Application received", "Req JR202600001 received.", "Lamna <lamna@myworkday.com>"), APPS)
+    assert d["action"] == "update" and d["company"] == "Lamna"
 
 
 def test_longer_number_is_not_a_match():
-    d = mailmatch.decide(mail("Update", "We regret to inform you. Reference R10017401."), APPS)
+    d = mailmatch.decide(mail("Update", "We regret to inform you. Reference R10000011."), APPS)
     assert d["action"] == "review" and d["reason"] == "no req id"  # a guess to confirm, never an automatic update
 
 
 def test_rejection_without_req_id_goes_to_review_with_a_guess():
     d = mailmatch.decide(
-        mail("Your Capital One application", "We regret to inform you the position has been filled."), APPS
+        mail("Your Northwind application", "We regret to inform you the position has been filled."), APPS
     )
     assert d["action"] == "review" and d["status"] == "rejected" and d["reason"] == "no req id"
-    assert (d["company"], d["req_id"]) == ("Capital One", "R1001740")
+    assert (d["company"], d["req_id"]) == ("Northwind", "R1000001")
 
 
 def test_two_applications_at_one_company_list_both_first():
     body = "We have decided to move forward with other candidates."
-    d = mailmatch.decide(mail("Walmart update", body, "Walmart <walmart@myworkday.com>"), APPS)
+    d = mailmatch.decide(mail("Woodgrove update", body, "Woodgrove <woodgrove@myworkday.com>"), APPS)
     assert d["action"] == "review" and d["company"] is None
-    assert {c["req_id"] for c in d["candidates"]} == {"R-2331482", "R-2023715"}
+    assert {c["req_id"] for c in d["candidates"]} == {"R-300003", "R-300004"}
 
 
 def test_two_req_ids_go_to_review():
-    d = mailmatch.decide(mail("Update", "For R-2331482 and R-2023715 we regret to inform you."), APPS)
+    d = mailmatch.decide(mail("Update", "For R-300003 and R-300004 we regret to inform you."), APPS)
     assert d["action"] == "review" and "2 req ids" in d["reason"]
 
 
 def test_mail_that_cannot_change_a_status_is_ignored():
-    assert mailmatch.decide(mail("Update on R1001740", "Please see the attached document."), APPS) is None
-    assert mailmatch.decide(mail("Verify your candidate account", "Code for R1001740: 482913"), APPS) is None
+    assert mailmatch.decide(mail("Update on R1000001", "Please see the attached document."), APPS) is None
+    assert mailmatch.decide(mail("Verify your candidate account", "Code for R1000001: 482913"), APPS) is None
     assert mailmatch.decide(mail("Thank you for applying!", "We received your application."), APPS) is None
     assert mailmatch.decide(mail("Weekly deals", "Save 20% this week", "Store <deals@shop.com>"), APPS) is None
 
@@ -92,7 +92,7 @@ def test_mail_that_cannot_change_a_status_is_ignored():
     ],
 )
 def test_confirmation_boilerplate_is_not_a_status_change(body):
-    d = mailmatch.decide(mail("Thank you for applying", f"{body} Req R1001740."), APPS)
+    d = mailmatch.decide(mail("Thank you for applying", f"{body} Req R1000001."), APPS)
     assert d["action"] == "update" and d["status"] == "applied"  # forward-only, so this changes nothing
 
 
@@ -125,40 +125,46 @@ def test_more_rejection_wordings(body):
 
 
 def test_review_guess_prefers_sender_and_subject_over_footer():
-    apps = APPS + [{"company": "Workday", "req_id": "JR-0109848", "title": "Data Engineer"}]
+    apps = APPS + [{"company": "Workday", "req_id": "JR-0000123", "title": "Data Engineer"}]
     body = "We regret to inform you that we will not be proceeding. Powered by Workday."
-    d = mailmatch.decide(mail("Capital One job application: update", body, "Capital One <c@myworkday.com>"), apps)
-    assert d["action"] == "review" and d["company"] == "Capital One"
+    d = mailmatch.decide(mail("Northwind job application: update", body, "Northwind <c@myworkday.com>"), apps)
+    assert d["action"] == "review" and d["company"] == "Northwind"
 
 
 def test_workday_sender_address_names_the_employer():
-    tenants = {"pwc": "PwC", "capitalone": "Capital One"}
-    apps = APPS + [{"company": "Workday", "req_id": "JR-0109848", "title": "Data Engineer"}]
+    tenants = {"fabrikam": "Fabrikam", "northwind": "Northwind"}
+    apps = APPS + [{"company": "Workday", "req_id": "JR-0000123", "title": "Data Engineer"}]
     body = "We regret to inform you that we will not be proceeding. Powered by Workday."
-    not_tracked = mailmatch.decide(mail("Job application: update", body, "pwc@myworkday.com"), apps, tenants)
-    assert not_tracked["action"] == "untracked" and not_tracked["company"] == "PwC"  # never applied to PwC
-    tracked = mailmatch.decide(mail("Job application: update", body, "capitalone@myworkday.com"), apps, tenants)
-    assert tracked["company"] == "Capital One"
+    not_tracked = mailmatch.decide(mail("Job application: update", body, "fabrikam@myworkday.com"), apps, tenants)
+    assert not_tracked["action"] == "untracked" and not_tracked["company"] == "Fabrikam"  # never applied to Fabrikam
+    tracked = mailmatch.decide(mail("Job application: update", body, "northwind@myworkday.com"), apps, tenants)
+    assert tracked["company"] == "Northwind"
 
 
 # Rejections without a requisition id, worded like the owner's real ones (2026-09-27): matched by the role they name.
 TRACKED = [
-    {"company": "Mastercard", "req_id": "R-288332", "title": "Senior Data Engineer", "status": "applied"},
-    {"company": "Mastercard", "req_id": "R-289305", "title": "Data Engineer II", "status": "applied"},
-    {"company": "Mastercard", "req_id": "R-291128", "title": "Data Scientist", "status": "applied"},
-    {"company": "Expedia", "req_id": "R-109347", "title": "Machine Learning Scientist II", "status": "applied"},
+    {"company": "Contoso", "req_id": "R-100001", "title": "Senior Data Engineer", "status": "applied"},
+    {"company": "Contoso", "req_id": "R-100002", "title": "Data Engineer II", "status": "applied"},
+    {"company": "Contoso", "req_id": "R-100003", "title": "Data Scientist", "status": "applied"},
+    {"company": "Tailspin", "req_id": "R-200001", "title": "Machine Learning Scientist II", "status": "applied"},
     {
-        "company": "Expedia",
-        "req_id": "R-109446",
-        "title": "Machine Learning Scientist II - Agentic Experiences",
+        "company": "Tailspin",
+        "req_id": "R-200002",
+        "title": "Machine Learning Scientist II - Search",
         "status": "applied",
     },
-    {"company": "Walmart", "req_id": "R-2648464", "title": "(USA) Senior, Data Scientist", "status": "applied"},
-    {"company": "Walmart", "req_id": "R-2641183", "title": "Senior Data Scientist", "status": "applied"},
-    {"company": "Cisco", "req_id": "2020310", "title": "Forward Deployed Engineer- Splunk", "status": "rejected"},
-    {"company": "LexisNexis", "req_id": "R118426", "title": "Fraud Data Analyst", "status": "applied"},
+    {"company": "Woodgrove", "req_id": "R-300001", "title": "(USA) Senior, Data Scientist", "status": "applied"},
+    {"company": "Woodgrove", "req_id": "R-300002", "title": "Senior Data Scientist", "status": "applied"},
+    {"company": "Adatum", "req_id": "4000001", "title": "Forward Deployed Engineer", "status": "rejected"},
+    {"company": "Litware", "req_id": "R500001", "title": "Fraud Data Analyst", "status": "applied"},
 ]
-TENANTS = {"mastercard": "Mastercard", "expedia": "Expedia", "cisco": "Cisco", "relx": "LexisNexis", "truist": "Truist"}
+TENANTS = {
+    "contoso": "Contoso",
+    "tailspin": "Tailspin",
+    "adatum": "Adatum",
+    "litware": "Litware",
+    "proseware": "Proseware",
+}
 NO = " After careful consideration, we have decided to move forward with other candidates."
 
 
@@ -168,54 +174,56 @@ def reject(sender, body, subject="An update on your application"):
 
 def test_rejection_names_the_role_and_moves_that_application():
     d = reject(
-        "MasterCard People Services <mastercard@myworkday.com>",
+        "Contoso People Services <contoso@myworkday.com>",
         "Thank you for applying to the Senior Data Engineer position.",
     )
-    assert (d["action"], d["req_id"], d["reason"]) == ("update", "R-288332", "title")
-    d = reject("mastercard@myworkday.com", "Thank you for applying to the Data Engineer II position.")
-    assert d["req_id"] == "R-289305"
+    assert (d["action"], d["req_id"], d["reason"]) == ("update", "R-100001", "title")
+    d = reject("contoso@myworkday.com", "Thank you for applying to the Data Engineer II position.")
+    assert d["req_id"] == "R-100002"
 
 
 def test_a_shorter_title_inside_a_longer_one_is_not_a_match():
-    # "Data Scientist" is a Mastercard application; "Senior Data Scientist" is not, so nothing matches by title.
-    d = reject("mastercard@myworkday.com", "Thank you for applying to the Senior Data Scientist position.")
+    # "Data Scientist" is a Contoso application; "Senior Data Scientist" is not, so nothing matches by title.
+    d = reject("contoso@myworkday.com", "Thank you for applying to the Senior Data Scientist position.")
     assert d["action"] == "untracked" and d["role"] == "Senior Data Scientist"
-    d = reject("expedia@myworkday.com", "Thank you for applying for the Machine Learning Scientist II position.")
-    assert d["req_id"] == "R-109347"  # not the "II - Agentic Experiences" one
+    d = reject("tailspin@myworkday.com", "Thank you for applying for the Machine Learning Scientist II position.")
+    assert d["req_id"] == "R-200001"  # not the "II - Agentic Experiences" one
 
 
 def test_role_not_on_the_list_is_filed_apart():
-    d = reject("relx@myworkday.com", "We appreciate the time you invested in applying for the Data Scientist opening.")
-    assert (d["action"], d["company"], d["role"]) == ("untracked", "LexisNexis", "Data Scientist")
     d = reject(
-        "Truist@myworkday.com", "Thank you for applying for the Data Scientist I - Card Fraud position at Truist."
+        "litware@myworkday.com", "We appreciate the time you invested in applying for the Data Scientist opening."
     )
-    assert d["action"] == "untracked" and d["company"] == "Truist"
+    assert (d["action"], d["company"], d["role"]) == ("untracked", "Litware", "Data Scientist")
     d = reject(
-        "Recruiting @ Perplexity <no-reply@ashbyhq.com>",
-        "Thank you for your interest in the Member of Technical Staff (Data Scientist, Evals) role.",
+        "Proseware@myworkday.com", "Thank you for applying for the Data Scientist I - Card Fraud position at Proseware."
+    )
+    assert d["action"] == "untracked" and d["company"] == "Proseware"
+    d = reject(
+        "Recruiting @ Wingtip <no-reply@ashbyhq.com>",
+        "Thank you for your interest in the Member of Technical Staff (Data Scientist) role.",
     )
     assert d["action"] == "untracked"
 
 
 def test_rejection_for_an_application_already_rejected_is_ignored():
-    d = reject("Cisco@myworkday.com", "Thank you for applying to the Forward Deployed Engineer- Splunk position.")
+    d = reject("Adatum@myworkday.com", "Thank you for applying to the Forward Deployed Engineer position.")
     assert d == {"action": "ignore"}
 
 
 def test_same_title_twice_still_asks():
-    d = reject("noreply@walmart.com", "Thank you for applying to the Senior Data Scientist position at Walmart.")
-    assert d["action"] == "review" and {c["req_id"] for c in d["candidates"]} == {"R-2648464", "R-2641183"}
+    d = reject("noreply@woodgrove.com", "Thank you for applying to the Senior Data Scientist position at Woodgrove.")
+    assert d["action"] == "review" and {c["req_id"] for c in d["candidates"]} == {"R-300001", "R-300002"}
 
 
 def test_footer_job_suggestions_do_not_count():
-    body = "Thank you for your interest in Mastercard." + " " * 1600 + "Jobs you may like: Data Scientist, New York."
-    d = reject("mastercard@myworkday.com", body)
-    assert d["action"] == "review"  # three open Mastercard applications, no role named up top
+    body = "Thank you for your interest in Contoso." + " " * 1600 + "Jobs you may like: Data Scientist, New York."
+    d = reject("contoso@myworkday.com", body)
+    assert d["action"] == "review"  # three open Contoso applications, no role named up top
 
 
 def test_role_phrase_after_a_false_start():
     from radar import rolematch
 
-    text = "Thank you for your interest in Walmart. We appreciate the time you took to apply for the (USA) Data Scientist III position."
+    text = "Thank you for your interest in Woodgrove. We appreciate the time you took to apply for the (USA) Data Scientist III position."
     assert rolematch.named_role(text) == "(USA) Data Scientist III"

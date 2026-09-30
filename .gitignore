@@ -15,5 +15,10 @@ skills_confirmed.md
 applications.md
 memory.md
 
-# Written by another tool outside this project; CLAUDE.md is the real copy
-AGENTS.md
+# Private notes and the privacy guard's word list stay on this machine only
+notes/
+.privacy-terms
+
+# Claude Code: per-machine settings and helper worktrees
+.claude/settings.local.json
+.claude/worktrees/

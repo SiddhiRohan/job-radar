@@ -26,6 +26,25 @@ function marked(s, marks) {
   parts.push(s.slice(pos));
   return parts;
 }
+/* Fit by factor: the model's four (experience, level, skills, domain) with what the posting asks and what the resume
+   shows, then sponsorship, location and pay read by rule, which have no resume side and span both columns. The badge
+   says the verdict in words; its colour only repeats it. Postings scored before factors existed have none: no table. */
+function factorTable(fs) {
+  if (!fs || !fs.length) return null;
+  const rows = fs.flatMap(f => {
+    const name = f.factor.charAt(0).toUpperCase() + f.factor.slice(1);
+    const head = el("th", { scope: "row", title: f.rule ? "Read from the posting by rule, not by the model" : null },
+      name, " ", el("span", { class: `fv ${f.verdict}` }, f.verdict));
+    const cells = f.rule ? [el("td", { colspan: "2" }, f.posting)]
+      : [el("td", {}, f.posting), el("td", { class: f.resume ? "" : "dim" }, f.resume || "Nothing on the resume")];
+    const main = el("tr", {}, head, ...cells);
+    return f.note ? [main, el("tr", { class: "fnote" }, el("td"), el("td", { colspan: "2" }, f.note))] : [main];
+  });
+  return el("table", { class: "factors" }, el("caption", {}, "Fit by factor"),
+    el("thead", {}, el("tr", {}, el("th", { scope: "col" }, "Factor"), el("th", { scope: "col" }, "Posting asks"),
+      el("th", { scope: "col" }, "Resume shows"))),
+    el("tbody", {}, ...rows));
+}
 
 async function openDrawer(r, row) {
   D.key = r.key || `${r.company}|${r.req_id}`; D.row = row || null;
@@ -49,7 +68,9 @@ async function openDrawer(r, row) {
     if (p.salary) facts.push(el("span", { class: "pay" }, p.salary.text));
     facts.push(el("span", { class: `tag ${p.sponsorship || "unknown"}` }, p.sponsorship || "unknown"));
     $("#d-facts").replaceChildren(...facts);
-    $("#d-body").replaceChildren(p.why ? el("p", { class: "dwhy" }, p.why) : null, ...paragraphs(p.description, marks));
+    /* replaceChildren turns a null into the text "null", so absent parts are filtered out, not passed. */
+    const parts = [p.why ? el("p", { class: "dwhy" }, p.why) : null, factorTable(p.factors), ...paragraphs(p.description, marks)];
+    $("#d-body").replaceChildren(...parts.filter(Boolean));
     $("#d-body").scrollTop = 0;
   } catch (e) { $("#d-body").replaceChildren(el("p", { class: "error" }, e.message)); }
 }

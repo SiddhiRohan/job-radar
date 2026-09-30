@@ -12,7 +12,7 @@ from pathlib import Path
 
 import requests
 
-from radar import applications, salary, store, wd
+from radar import applications, boards, salary, store, wd
 
 STATE = Path(".cache/ui/watch.json")
 DONE = ("rejected", "offer")
@@ -65,8 +65,18 @@ def gone(response):
         return False
 
 
-def check(app, job, company, fetch=wd.fetch_detail):
+def check(app, job, company, fetch=wd.fetch_detail, find=boards.find):
     """One posting: {"status": "open"|"closed"|"unknown", "changes": [...]}."""
+    if job and company and boards.system(company):  # a board lists every open posting: gone from it means closed
+        try:
+            match = find(company, job["req_id"])
+        except (requests.RequestException, ValueError) as e:
+            return {"status": "unknown", "changes": [], "note": str(e)[:80]}
+        return (
+            {"status": "closed", "changes": []}
+            if match is None
+            else {"status": "open", "changes": compare(job, match["detail"])}
+        )
     if not job or not job.get("detail_path") or not company:
         return {"status": "unknown", "changes": [], "note": "posting not stored"}
     try:
@@ -84,7 +94,7 @@ def check(app, job, company, fetch=wd.fetch_detail):
     return {"status": "open", "changes": compare(job, detail)}
 
 
-def run(fetch=wd.fetch_detail):
+def run(fetch=wd.fetch_detail, find=boards.find):
     """Check every open application; keep first-seen dates for closures and changes."""
     state, today = load(), datetime.now().strftime("%Y-%m-%d")
     jobs = {f"{j['company']}|{j['req_id']}": j for j in store.load()}
@@ -94,7 +104,7 @@ def run(fetch=wd.fetch_detail):
         if a["status"] in DONE:
             continue
         key = f"{a['company']}|{a['req_id']}"
-        r = check(a, jobs.get(key), companies.get(a["company"]), fetch)
+        r = check(a, jobs.get(key), companies.get(a["company"]), fetch, find)
         rec = state["postings"].setdefault(
             key, {"company": a["company"], "title": a["title"], "applied": a["date"][:10], "changes": []}
         )

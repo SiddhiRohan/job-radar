@@ -2,6 +2,81 @@
 
 ## Unreleased
 
+**Find an application.** A search at the top of Applied lists the applications whose company, role or status
+matches what you type, word by word, with the matches highlighted and the status still changeable. Press `f` to
+jump to it.
+
+**Rejections in plain words.** The rejections card now opens with how every application turned out (good replies,
+rejections, still waiting), names the clearest pattern in one sentence, and groups applications by role, level,
+resume, fit score, years asked, sponsorship or company. Each group says whether it is rejected more or less often
+than your average, or that it is too small to tell, and clicking it lists its applications.
+
+**An intro video, and a README for going public.** A 47-second video with sound, `docs/media/job-radar-intro.mp4`,
+opens the README through a silent preview. The README now starts with why the radar helps on a student visa and
+what a morning with it looks like, and adds what leaves your machine and a short FAQ.
+
+**Score with a coding assistant, no API key needed.** `python -m radar.handscore next` writes the postings waiting
+for a score, with the rules, the verdict schema, the resumes and the profile, to `.cache/to_score.json`; the
+assistant judges them and `python -m radar.handscore save <file>` checks every verdict against the schema before
+storing it, naming what is wrong with any it refuses. `/radar-score` runs the whole loop in Claude Code.
+
+**Add an employer from a link.** `python -m companies.add "Name" <link>` takes a Workday careers site or posting,
+or a Greenhouse, Lever or Ashby board, checks it with one request, and adds the employer to `companies.json`. A
+coding assistant does the same with `/radar-add`, finding the link when it is not given. The chat in the web app
+can now do both: paste a job link to have it judged, or ask it to add an employer.
+
+**Email statuses for Greenhouse postings by id.** A Greenhouse posting is stored under the board's own number, which
+emails never quote. The board also gives the employer's requisition id when there is one; it is now kept on the
+posting, and an email quoting it moves the application as a Workday requisition id does.
+
+**US cities that share a name with a city abroad are kept.** Vancouver, WA; Dublin, OH and CA; Vienna, VA;
+Melbourne, FL; Warsaw, IN; and a few more were dropped by the US-only rule because the city name alone is on the
+list of places abroad. The pairs are listed one by one: a bare state code would also keep "Bengaluru, IN" and
+"Munich, DE", whose country codes are state codes too.
+
+**Half-price scoring, if you can wait.** With `"score_batch": true` in `config.json` the run sends its postings
+to Claude as one batch through the Message Batches API, at half the price. The run waits up to an hour, then asks
+directly about anything the batch did not answer, so every posting under the cap still gets a score. Off by
+default. `radar/batch.py`.
+
+**Job-board postings watched and judged.** The posting watcher checks Greenhouse, Lever and Ashby postings by whether
+the board still lists them, and `python -m radar.evaluate` takes a link from any of the three as well as Workday.
+
+**Every morning, even with the app closed.** One switch on the Setup page, or `python -m radar.schedule install`,
+asks the computer's own scheduler (Task Scheduler, launchd or cron) to start the run at `run_time`. The doctor says
+which of the two ways is in use. A second copy of the radar on the same computer leaves the first one's task
+alone.
+
+**A morning brief.** The last step of each run writes a short note: the three postings to apply to first with one
+line on why, status changes from email and postings that closed since the last brief, applications quiet for ten
+days, and one pattern in the rejections. It sits at the top of Today, answers `python -m radar.brief`, and is a chat
+tool. No model call.
+
+**Runs itself every morning.** While the web app is open the radar runs at `run_time` each day, and catches up as
+soon as the app opens if the computer was off. A lock makes sure the app, the operating system's scheduler and a
+terminal never run it twice at once.
+
+**A single resume is enough.** `Resume/resume.docx`, or an entry and an experienced file, works next to the original
+folder tree; `profile.md` is optional.
+
+**The fit, factor by factor.** Each newly scored posting carries four factors from Claude: experience (the same kind
+of work at the depth asked, not shared keywords), level, skills and domain, each marked meets, partial or gap with
+what the posting asks and what the resume shows. Sponsorship, location and pay are read by rule from the stored
+posting. The posting drawer shows all seven above the description; Apply and Entry level rows in the digest add a
+line such as `gaps: skills (Databricks), domain`. Postings scored earlier show nothing new. About 200 to 400 more
+output tokens per scored posting. `radar/fit.py`, `radar/factors.py`. The drawer also no longer prints "null" above
+a posting that has no fit note yet.
+
+**Employers on Greenhouse, Lever and Ashby.** Eighteen employers that are not on Workday are polled through their
+public job boards: Airbnb, Block, Chime, Coinbase, Databricks, Datadog, DoorDash, Dropbox, HubSpot, Lyft, MongoDB,
+Okta, Robinhood, Stripe and Twilio on Greenhouse, Palantir and Spotify on Lever, Snowflake on Ashby. A board is read
+whole in one request per run, and its postings go through the same title, date-window and US rules as Workday results,
+with no second request for the description. Ashby pay comes from its compensation field, so those postings show a
+range too. `radar/boards.py` and `radar/boardparse.py`; `python -m companies.board "Name" <URL>` adds another employer
+from a careers, board or posting address. Mail sync, pasted Workday URLs and the companies report skip board entries
+where they look for a Workday tenant, and a few more non-US places seen on Greenhouse (Serbia, Ukraine, EMEA and
+others) count as non-US.
+
 **Rejections move on their own by role.** A rejection email without a requisition id now moves the one application
 whose role it names ("applying for the Data Engineer II position"); a rejection for a role not on the list is kept
 apart on the Email card instead of waiting for review. `radar/rolematch.py`; `python -m radar.mail --recheck`

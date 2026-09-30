@@ -3,7 +3,21 @@
 import json
 from collections import Counter
 
+from radar import boards
+
 SEC_PER_PAGE = 1.6  # measured: 1122 pages in 30 min on the 2026-09-13 run (1.5 s gap, cache hits are free)
+
+
+def seconds(c, terms, pages):
+    """Search-phase time for one employer: a Workday page per term, or one request for a whole job board."""
+    if boards.system(c):
+        return SEC_PER_PAGE
+    return (terms + len(c.get("extra_terms") or [])) * pages.get(c["tier"], 10) * SEC_PER_PAGE
+
+
+def where(c):
+    """The Tenant and Site cells: tenant.shard and site on Workday, the system and board token otherwise."""
+    return f"{c['ats']} | {c['board']}" if boards.system(c) else f"{c['tenant']}.{c['shard']} | {c['site']}"
 
 
 def tier3_days(cfg):
@@ -23,14 +37,7 @@ def main():
     seeded = 15  # verified before this expansion
 
     def minutes(tiers):
-        return (
-            sum(
-                (terms + len(c.get("extra_terms") or [])) * pages.get(c["tier"], 10) * SEC_PER_PAGE
-                for c in companies
-                if c["tier"] in tiers
-            )
-            / 60
-        )
+        return sum(seconds(c, terms, pages) for c in companies if c["tier"] in tiers) / 60
 
     daily, tier3 = minutes({1, 2}), minutes({3})
     ats = Counter((v.get("ats") or "unknown").split(" ")[0].split("(")[0].rstrip(";,") for v in not_wd.values())
@@ -64,12 +71,11 @@ def main():
         md += [
             f"## Tier {t} ({len(rows)})",
             "",
-            "| Company | Tenant | Site | Open roles | sponsors_h1b | Source |",
+            "| Company | Tenant or board system | Site or board | Open roles | sponsors_h1b | Source |",
             "|---|---|---|---|---|---|",
         ]
         md += [
-            f"| {c['name']} | {c['tenant']}.{c['shard']} | {c['site']} | {c.get('open_roles', '')} | {c['sponsors_h1b']} | "
-            f"{c['sponsorship_source']} |"
+            f"| {c['name']} | {where(c)} | {c.get('open_roles', '')} | {c['sponsors_h1b']} | {c['sponsorship_source']} |"
             for c in rows
         ]
         md.append("")

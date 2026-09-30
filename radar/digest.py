@@ -5,7 +5,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from radar import filters, salary, store
+from radar import filters, fit, salary, store
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -25,7 +25,8 @@ def best(j):
     return max(s for s in scores if isinstance(s, int)) if any(isinstance(s, int) for s in scores) else 0
 
 
-def line(j):
+def line(j, gaps=False):
+    """One posting; with gaps, a line naming the factors that are partial or a gap (none for older verdicts)."""
     v = j.get("verdict") or {}
     pair = f"E{v.get('score_entry', '-')}/X{v.get('score_experienced', '-')}"
     rec = f"{v.get('recommended_resume') or '?'} · {v.get('recommended_variant') or '?'}"
@@ -37,6 +38,8 @@ def line(j):
     ]
     if v.get("why"):
         out.append(f"    {v['why']}")
+    if gaps and (gap := fit.gap_line(v)):
+        out.append(f"    {gap}")
     extras = []
     if v.get("hard_requirements_missing"):
         extras.append("missing: " + ", ".join(v["hard_requirements_missing"]))
@@ -48,12 +51,12 @@ def line(j):
     return "\n".join(out)
 
 
-def section(title, items):
+def section(title, items, gaps=False):
     if not items:
         return [f"## {title} (0)", ""]
     return (
         [f"## {title} ({len(items)})", ""]
-        + [line(j) for j in sorted(items, key=lambda j: (-best(j), j["company"], j["title"]))]
+        + [line(j, gaps) for j in sorted(items, key=lambda j: (-best(j), j["company"], j["title"]))]
         + [""]
     )
 
@@ -108,8 +111,8 @@ def build(run, jobs):
     s = sections(new)
     skipped, contract, apply_, maybe = s["skipped"], s["contract"], s["apply"], s["maybe"]
     md += (
-        section("Apply", apply_)
-        + section("Entry level", s["entry"])
+        section("Apply", apply_, gaps=True)
+        + section("Entry level", s["entry"], gaps=True)
         + section("Maybe", maybe)
         + section("Contract / backup", contract)
     )

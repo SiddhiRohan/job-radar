@@ -32,6 +32,7 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
     <a href="#today" data-view="today">Today</a>
     <a href="#tailor" data-view="tailor">Tailor</a>
     <a href="#applied" data-view="applied">Applied</a>
+    <a href="#setup" data-view="setup">Setup</a>
   </nav>
   <div id="datectl" class="datectl" hidden>
     <button type="button" id="prev" aria-label="Earlier day">&lsaquo;</button>
@@ -60,20 +61,25 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
 
 <main>
   <section id="view-today" data-view="today" class="view">
+    <div id="brief"></div>
     <p id="stats" class="stats"></p>
     <div id="today-body"></div>
   </section>
 
   <section id="view-tailor" data-view="tailor" class="view" hidden>
     <form id="urlform" class="urlform">
-      <input id="url" type="url" placeholder="Paste a Workday job URL" aria-label="Workday job URL" required>
+      <input id="url" type="url" placeholder="Paste a job link: Workday, Greenhouse, Lever or Ashby" aria-label="Job link" required>
       <button type="submit" class="primary">Load posting</button>
     </form>
-    <div id="tailor-body"><p class="empty">Tailoring is on demand: ask the chat ("tailor the Netflix one"), or paste a Workday job URL above to open the editor.</p></div>
+    <div id="tailor-body"><p class="empty">Tailoring is on demand: ask the chat ("tailor the Netflix one"), or paste a job link above to open the editor.</p></div>
   </section>
 
   <section id="view-applied" data-view="applied" class="view" hidden>
     <div id="applied-body"></div>
+  </section>
+
+  <section id="view-setup" data-view="setup" class="view" hidden>
+    <div id="setup-body" class="setup-grid"></div>
   </section>
 </main>
 
@@ -83,7 +89,7 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
     <div id="d-facts" class="facts"></div>
   </header>
   <div id="d-body" class="body"></div>
-  <footer><button type="button" id="d-apply" class="primary">Mark applied</button><button type="button" id="d-tailor">Tailor</button><a id="d-open" href="#" target="_blank" rel="noopener">Open on Workday</a></footer>
+  <footer><button type="button" id="d-apply" class="primary">Mark applied</button><button type="button" id="d-tailor">Tailor</button><a id="d-open" href="#" target="_blank" rel="noopener">Open the posting</a></footer>
 </aside>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <dialog id="cmdk" class="cmdk" aria-label="Search and commands">
@@ -101,6 +107,7 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
     <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Earlier and later day</dd>
     <dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></dt><dd>Today, Tailor, Applied</dd>
     <dt><kbd>Ctrl</kbd> <kbd>K</kbd></dt><dd>Search and commands</dd>
+    <dt><kbd>f</kbd></dt><dd>Find an application on Applied</dd>
     <dt><kbd>/</kbd></dt><dd>Ask the assistant</dd>
     <dt><kbd>?</kbd></dt><dd>This list</dd>
     <dt><kbd>Esc</kbd></dt><dd>Close</dd>
@@ -110,6 +117,10 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
 <script src="applied.js"></script>
 <script src="mail.js"></script>
 <script src="insights.js"></script>
+<script src="rejections.js"></script>
+<script src="appsearch.js"></script>
+<script src="setup.js"></script>
+<script src="brief.js"></script>
 <script src="app.js"></script>
 <script src="palette.js"></script>
 <script src="drawer.js"></script>

@@ -13,7 +13,7 @@ from docx import Document
 from radar import digest
 from tailoring import apply as applier
 from tailoring import plan as planner
-from tailoring import skills, tailor
+from tailoring import resumes, skills, tailor
 
 sys.stdout.reconfigure(encoding="utf-8")
 PLANS = Path(".cache/ui/plans")
@@ -46,11 +46,7 @@ def row(j):
 
 def make_tailor(j):
     """Plan with --no-prompt semantics; return the base/tailored text per section for the editor."""
-    profile = (
-        Path("profile.md").read_text(encoding="utf-8")
-        + "\n\nRULES:\n"
-        + Path("docs/RESUME_RULES.md").read_text(encoding="utf-8")
-    )
+    profile = resumes.profile_text() + "\n\nRULES:\n" + Path("docs/RESUME_RULES.md").read_text(encoding="utf-8")
     base, base_label = applier.pick_base(j)
     doc = Document(base)
     info = tailor.parse(doc)
@@ -71,7 +67,7 @@ def make_tailor(j):
     tailor.apply_plan(doc, info, plan, extra_allowed=skills.text())
     after = {i: tailor.marked_text(ps[i]) for i in before}
     notes = {}
-    for h in plan["hard_to_defend"] + plan.get("questions_for_owner", plan.get("questions_for_rohan", [])):
+    for h in plan["hard_to_defend"] + next((v for k, v in plan.items() if k.startswith("questions_for_")), []):
         m = re.search(r"job (\d+) bullet (\d+)", h, re.I)
         notes.setdefault((int(m.group(1)), int(m.group(2))) if m else "general", []).append(h)
     secs = [{"id": "summary", "label": "Summary", "base": [before[info["summary"]]], "text": [after[info["summary"]]]}]

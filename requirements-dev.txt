@@ -1,0 +1,5 @@
+# Tools for working on the code: tests, lint and the commit hooks.
+-r requirements.txt
+pytest>=8
+ruff>=0.6
+pre-commit>=3.7

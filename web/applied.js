@@ -7,7 +7,7 @@ const svg = (tag, attrs = {}) => { const e = document.createElementNS(SVGNS, tag
 const dayOf = r => r.date.slice(0, 10);  /* applications.md stores local time */
 const localDay = t => { const d = new Date(t); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
 const shortDay = d => new Date(d + "T12:00").toLocaleDateString(undefined, { month: "short", day: "numeric" });
-const A = { rows: [], showAll: false, shown: {} };  /* shown: last tile value per label, so only a change counts up */
+const A = { rows: [], showAll: false, shown: {}, query: "" };  /* shown: last tile value per label, so only a change counts up; query: the search */
 
 /* One floating tooltip for every chart. Text only, never innerHTML: company names come from job postings. */
 let tipEl;  /* made on first use: el() is defined in app.js, which loads after this file */
@@ -150,5 +150,6 @@ function renderApplied(rows = A.rows) {
   A.rows = rows;
   const body = $("#applied-body"), open = body.querySelector("details.tableview")?.open;
   const t = table(rows); if (open) t.open = true;
-  body.replaceChildren(tiles(rows), mailCard(rows), el("div", { class: "vgrid" }, perDay(rows), stages(rows), companies(rows), patternsCard(), watchCard(), board(rows)), t);  /* mailCard: web/mail.js, patternsCard and watchCard: web/insights.js */
+  body.replaceChildren(searchCard(rows), tiles(rows), mailCard(rows), el("div", { class: "vgrid" }, perDay(rows), stages(rows), companies(rows), patternsCard(), watchCard(), board(rows)), t);
+  /* searchCard: web/appsearch.js, mailCard: web/mail.js, patternsCard: web/rejections.js, watchCard: web/insights.js */
 }

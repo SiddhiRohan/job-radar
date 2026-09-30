@@ -98,7 +98,7 @@ details > summary { margin-bottom: 8px; }
 h2 .n { color: var(--ink-2); font-weight: 400; font-size: var(--fs-sm); }
 h2.apply { color: var(--apply); } h2.entry { color: var(--accent); } h2.maybe { color: var(--maybe); } h2.lower, h2.contract { color: var(--ink-2); }
 details summary { cursor: pointer; list-style: none; } details summary::-webkit-details-marker { display: none; }
-details > summary h2::before { content: "B8"; font-size: var(--fs-sm); color: var(--ink-3); transition: transform .15s ease; }
+details > summary h2::before { content: "\25B8"; font-size: var(--fs-sm); color: var(--ink-3); transition: transform .15s ease; }
 details[open] > summary h2::before { transform: rotate(90deg); }
 
 /* Rows are cards. The border and a shadow on hover carry the separation; no shadow at rest keeps long lists cheap. */
@@ -214,6 +214,18 @@ kbd { font: inherit; font-size: var(--fs-sm); padding: 1px 7px; border: 1px soli
 .drawer mark { color: var(--ink); border-radius: 3px; padding: 0 3px; }
 .drawer mark.pay { background: color-mix(in srgb, var(--apply) 20%, transparent); }
 .drawer mark.spon { background: color-mix(in srgb, var(--maybe) 24%, transparent); }
+/* Fit by factor, above the description. The badge carries the verdict as a word; the colour repeats it. */
+.drawer .factors { margin: 0 0 14px; table-layout: fixed; font-size: var(--fs-xs); line-height: 1.4; }
+.drawer .factors caption { text-align: left; font: 600 var(--fs-sm) var(--font-display); color: var(--ink); padding: 0 0 4px; }
+.drawer .factors th, .drawer .factors td { padding: 5px 10px 5px 0; border-bottom: 0; border-top: 1px solid var(--rule); vertical-align: top; text-align: left; }
+.drawer .factors thead th { border-top: 0; padding-top: 0; color: var(--ink-3); font-weight: 500; }
+.drawer .factors thead th:first-child { width: 92px; }
+.drawer .factors tbody th { color: var(--ink); font-weight: 600; }
+.drawer .factors tr.fnote td { border-top: 0; padding-top: 0; color: var(--ink-3); }
+.drawer .factors .dim { color: var(--ink-3); }
+.fv { display: block; width: fit-content; margin-top: 3px; padding: 0 7px; border-radius: 999px; font-weight: 500;
+  border: 1px solid color-mix(in srgb, currentColor 45%, transparent); }
+.fv.meets { color: var(--apply); } .fv.partial { color: var(--maybe); } .fv.gap { color: var(--danger); }
 .drawer footer { padding: 12px 20px; border-top: 1px solid var(--rule); display: flex; gap: 8px; align-items: center; background: var(--surface-2); }
 .drawer footer a { margin-left: auto; color: var(--ink-2); font-size: var(--fs-sm); }
 .row.sel { border-color: var(--accent); }
@@ -364,3 +376,82 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .prow .pv, .prow .pr { font-size: var(--fs-sm); text-align: right; font-variant-numeric: tabular-nums; } .prow .pr { color: var(--ink-2); }
 .prow.hot .pr { color: var(--danger); font-weight: 600; }
 @media (max-width: 760px) { .vgrid { grid-template-columns: 1fr; } }
+
+/* Setup: the doctor's checks and three short steps, one card each. */
+.setup-grid { display: grid; gap: 12px; margin: 16px 0 40px; max-width: 760px; }
+.card.setup textarea { width: 100%; font: inherit; font-size: var(--fs-sm); margin: 4px 0 8px; resize: vertical; }
+.card.setup .row-inline { display: flex; gap: 8px; flex-wrap: wrap; }
+.card.setup .row-inline input { flex: 1; min-width: 220px; }
+.checks { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; font-size: var(--fs-sm); }
+.check .badge { display: inline-block; min-width: 38px; margin-right: 8px; padding: 0 6px; border-radius: 999px; font-size: var(--fs-xs);
+  text-align: center; border: 1px solid currentColor; }
+.check.ok .badge { color: var(--apply); } .check.info .badge { color: var(--ink-3); } .check.fix .badge { color: var(--danger); font-weight: 600; }
+
+/* Morning brief: a compact card above the day's list. */
+.card.brief { margin: 14px 0 6px; }
+.card.brief > summary { display: flex; align-items: baseline; gap: 10px; cursor: pointer; list-style: none; position: static; background: none; margin: 0; }
+.card.brief > summary::-webkit-details-marker { display: none; }
+.card.brief h4 { font-size: var(--fs-sm); color: var(--ink-2); margin: 12px 0 4px; font-weight: 600; }
+.brief-picks { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.brief-picks li { font-size: var(--fs-sm); }
+.brief-picks .bp-head { display: flex; flex-wrap: wrap; gap: 0 6px; align-items: baseline; }
+.brief-picks .bp-why { display: block; color: var(--ink-2); }
+.brief-list { margin: 0; padding-left: 18px; font-size: var(--fs-sm); color: var(--ink-2); }
+.brief-pattern { margin: 12px 0 0; font-size: var(--fs-sm); color: var(--ink); border-left: 3px solid var(--maybe); padding-left: 10px; }
+.brief-foot { display: flex; justify-content: flex-end; margin-top: 6px; }
+
+/* Search on Applied: one line until something is typed, then the matching applications below it. */
+.card.search { margin-bottom: 10px; padding: 10px 16px; }
+.sbar { display: flex; align-items: center; gap: 10px; }
+.sbar svg { width: 20px; height: 20px; flex: none; fill: none; stroke: var(--ink-3); stroke-width: 2; stroke-linecap: round; }
+.sbar input { flex: 1; min-width: 0; font: inherit; font-size: var(--fs-md); color: var(--ink); background: transparent; border: 0; padding: 6px 0; outline: none; }
+.sbar input::placeholder { color: var(--ink-3); }
+.card.search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow), var(--shadow); }
+.sbar .shint { color: var(--ink-3); font-size: var(--fs-xs); }
+.sresults:not(:empty) { border-top: 1px solid var(--rule); margin-top: 8px; padding-top: 6px; }
+.sresults .sub { margin: 4px 0 6px; }
+.slist { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.slist li { max-width: none; }  /* results use the card's width, not the 72ch reading measure */
+.slist li { display: grid; grid-template-columns: minmax(110px, 1fr) minmax(0, 2.4fr) auto auto; gap: 12px; align-items: center; padding: 6px 8px; border-radius: var(--radius-sm); font-size: var(--fs-sm); }
+.slist li:hover { background: var(--surface-2); }
+.slist .sc { font: 600 var(--fs-sm) var(--font-display); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slist .stt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slist .sd { color: var(--ink-3); font-size: var(--fs-xs); white-space: nowrap; }
+.sresults mark { background: color-mix(in srgb, var(--accent) 22%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+@media (max-width: 720px) { .slist li { grid-template-columns: 1fr auto; } .slist .stt { grid-column: 1 / -1; grid-row: 2; } .slist .sd { display: none; } }
+
+/* What the rejections say: outcomes in one bar, the clearest pattern, and groups to click through. */
+.rj-lead { margin: 6px 0 10px; line-height: 1.5; }
+.rj-lead b.good { color: var(--apply); } .rj-lead b.rej { color: var(--danger); }
+.rj-total { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.obar { display: flex; gap: 2px; height: 12px; min-width: 90px; flex: 1; border-radius: 6px; overflow: hidden; background: var(--surface-2); }
+.rj-total .obar { height: 16px; min-width: 200px; }
+.obar .seg { display: block; height: 100%; }
+.seg.good { background: var(--apply); } .seg.rej { background: var(--danger); } .seg.wait { background: var(--rule-strong); }
+.legend { display: flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--ink-2); flex-wrap: wrap; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-left: 6px; }
+.legend i.good { background: var(--apply); } .legend i.rej { background: var(--danger); } .legend i.wait { background: var(--rule-strong); }
+.rj-insight { margin: 0 0 14px; padding: 10px 14px; border-left: 3px solid var(--danger); border-radius: 0 var(--radius) var(--radius) 0;
+  background: color-mix(in srgb, var(--danger) 6%, var(--surface)); line-height: 1.5; }
+.rj-insight.calm { border-left-color: var(--apply); background: color-mix(in srgb, var(--apply) 6%, var(--surface)); }
+.rj-tabs { margin: 0 0 10px; } .rj-tabs .sub { margin: 0 4px 0 0; }
+.rj-groups { display: grid; gap: 2px; }
+.rj-row { width: 100%; display: grid; grid-template-columns: minmax(170px, 1.5fr) minmax(90px, 2fr) auto 190px; gap: 14px; align-items: center;
+  font: inherit; font-size: var(--fs-sm); text-align: left; color: var(--ink); background: transparent; border: 1px solid transparent;
+  border-radius: var(--radius); padding: 7px 10px; cursor: pointer; }
+.rj-row:hover, .rj-group.open .rj-row { background: var(--surface-2); border-color: var(--rule); }
+.rj-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rj-row .rl { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rj-row .rn { color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rt { justify-self: start; font-size: var(--fs-xs); padding: 2px 10px; border-radius: 999px; white-space: nowrap; border: 1px solid var(--rule-strong); color: var(--ink-2); }
+.rt.hot { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); background: color-mix(in srgb, var(--danger) 8%, transparent); }
+.rt.cool { color: var(--apply); border-color: color-mix(in srgb, var(--apply) 45%, transparent); background: color-mix(in srgb, var(--apply) 8%, transparent); }
+.rt.few { color: var(--ink-3); border-style: dashed; }
+.rj-apps { list-style: none; margin: 2px 0 8px 18px; padding: 4px 0 4px 12px; border-left: 2px solid var(--rule-strong); display: grid; gap: 4px; font-size: var(--fs-sm); }
+.rj-apps li { max-width: none; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+.rj-apps li > span:not(.stag) { color: var(--ink-2); }
+.stag { font-size: var(--fs-xs); padding: 0 8px; border-radius: 999px; border: 1px solid var(--rule-strong); color: var(--ink-2); }
+.stag.s-rejected { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
+.stag.s-screen, .stag.s-interview, .stag.s-offer { color: var(--apply); border-color: color-mix(in srgb, var(--apply) 45%, transparent); }
+@media (max-width: 760px) { .rj-row { grid-template-columns: 1fr auto; } .rj-row .obar { grid-column: 1 / -1; grid-row: 2; } .rj-row .rn { display: none; } }
+@media (prefers-reduced-motion: reduce) { .card.search { transition: none; } }

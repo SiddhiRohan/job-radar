@@ -1,9 +1,4 @@
 {
- "Block": {
-  "ats_seen": "SmartRecruiters and Greenhouse",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
  "TCS": {
   "ats_seen": "own site",
   "searches_done": 1,
@@ -47,50 +42,18 @@
  "Rivian": {
   "ats_seen": "own site rivian.com/careers",
   "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'",
+  "boards_tried": [
+   "greenhouse board 'rivian': 404 on 2026-09-27"
+  ]
  },
  "Tesla": {
   "ats_seen": "own site tesla.com/careers",
   "searches_done": 1,
   "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
  },
- "Spotify": {
-  "ats_seen": "Lever jobs.lever.co/spotify",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
  "Uber": {
   "ats_seen": "own site jobs.uber.com iCIMS for university",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
- "Lyft": {
-  "ats_seen": "own site lyft.com/careers",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
- "DoorDash": {
-  "ats_seen": "Greenhouse",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
- "Airbnb": {
-  "ats_seen": "own site careers.airbnb.com",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
- "Stripe": {
-  "ats_seen": "own site stripe.com/careers",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
- "Coinbase": {
-  "ats_seen": "own site coinbase.com/careers",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
- "Robinhood": {
-  "ats_seen": "own site careers.robinhood.com",
   "searches_done": 1,
   "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
  },
@@ -207,7 +170,10 @@
  "Wayfair": {
   "ats_seen": "own site aboutwayfair.com/careers",
   "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
+  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'",
+  "boards_tried": [
+   "greenhouse board 'wayfair': 404 on 2026-09-27"
+  ]
  },
  "Siemens": {
   "ats_seen": "own site parent only subsidiaries on Workday",
@@ -241,21 +207,6 @@
  },
  "LinkedIn": {
   "ats_seen": "own site careers.linkedin.com",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
- "Palantir": {
-  "ats_seen": "Lever jobs.lever.co/palantir",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
- "Datadog": {
-  "ats_seen": "own site careers.datadoghq.com",
-  "searches_done": 1,
-  "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
- },
- "MongoDB": {
-  "ats_seen": "own site mongodb.com/careers",
   "searches_done": 1,
   "todo": "second search: '<name> myworkdayjobs' then 'site:myworkdayjobs.com <name>'"
  },

@@ -7,6 +7,8 @@
     "analytics"
   ],
   "max_days_ago": 1,
+  "auto_run": true,
+  "run_time": "07:30",
   "us_only": true,
   "title_must_match_term": true,
   "title_patterns": [
@@ -92,6 +94,7 @@
     "associate"
   ],
   "score_cap": 120,
+  "score_batch": false,
   "max_pages_by_tier": {
     "1": 3,
     "2": 3,

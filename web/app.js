@@ -116,6 +116,7 @@ function sectionEl(name, cls, rows, collapsed) {
   return [d];
 }
 async function loadToday() {
+  loadBrief();
   const body = $("#today-body");
   /* Same day already on screen: keep it while refreshing. A new day or a first load gets placeholders. */
   const sk = body.dataset.date === T.date && body.querySelector("article") ? 0 : laterSkeleton(body, 4);
@@ -416,8 +417,8 @@ async function loadHistory() {
 }
 function context() {
   const v = (location.hash || "#today").slice(1);
-  const ctx = { view: v, date: T.date, sections_hint: "Today rows: {section, company, req_id, title, score_entry, score_experienced, sponsorship, applied}" };
-  if (T.last) ctx.today = Object.fromEntries(Object.entries(T.last.sections).map(([k, rows]) => [k, rows.slice(0, 25).map(r => ({ company: r.company, req_id: r.req_id, title: r.title, E: r.score_entry, X: r.score_experienced, sponsorship: r.sponsorship, applied: r.applied }))]));
+  const ctx = { view: v, date: T.date, sections_hint: "Today rows: {section, company, req_id, title, score_entry, score_experienced, sponsorship, why (the fit in one line), applied}" };
+  if (T.last) ctx.today = Object.fromEntries(Object.entries(T.last.sections).map(([k, rows]) => [k, rows.slice(0, 25).map(r => ({ company: r.company, req_id: r.req_id, title: r.title, E: r.score_entry, X: r.score_experienced, sponsorship: r.sponsorship, why: (r.why || "").slice(0, 140), applied: r.applied }))]));
   if (S.state) ctx.tailor = { job: S.state.job, sections: S.state.sections.map(s => ({ id: s.id, label: s.label, text: s.text })), jd_skills: S.state.jd_skills, built: !!S.build };
   return ctx;
 }
@@ -476,15 +477,16 @@ function show() {
   document.querySelectorAll(".view").forEach(s => (s.hidden = s.dataset.view !== v));
   document.querySelectorAll(".nav a").forEach(a => a.classList.toggle("on", a.dataset.view === v));
   $("#datectl").hidden = v !== "today";
-  if (v === "today") loadToday(); if (v === "applied") loadApplied();
+  if (v === "today") loadToday(); if (v === "applied") loadApplied(); if (v === "setup") loadSetup();
 }
 /* A new view starts at the top; refreshes keep the place. Browsers with the View Transitions API cross-fade the
    swap; the CSS turns that off under prefers-reduced-motion. */
 window.addEventListener("hashchange", () => {
-  const go = () => { window.scrollTo(0, 0); show(); };
-  if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(go); else go();
+  const go = () => { window.scrollTo(0, 0); show(); };  /* runs even when the animation is skipped */
+  if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(go).ready.catch(() => {}); else go();
 });
 show();
+setupFirst();
 
 /* ---------- keyboard ---------- */
 /* j/k walk the visible postings on Today, a marks or undoes, o opens the posting, [ ] change the day, 1 2 3 switch
@@ -512,6 +514,7 @@ document.addEventListener("keydown", e => {
     o: () => today && (K.cur?.querySelector("a.title") || K.cur?.querySelector("a[href][target]"))?.click(),
     "[": () => today && $("#prev").click(), "]": () => today && $("#next").click(),
     1: () => (location.hash = "today"), 2: () => (location.hash = "tailor"), 3: () => (location.hash = "applied"),
+    f: () => (location.hash === "#applied") && $("#appsearch")?.focus(),
     "/": () => { setChat(true); $("#chatin").focus(); },
     "?": () => $("#keys").showModal(),
   };

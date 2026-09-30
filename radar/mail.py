@@ -17,7 +17,7 @@ from email.utils import parseaddr, parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import quote
 
-from radar import applications, mailmatch
+from radar import applications, mailmatch, store
 
 STATE = Path(".cache/ui/mail.json")
 HOST, FOLDER, MAX_BODY = "imap.gmail.com", '"[Gmail]/All Mail"', 200_000
@@ -99,8 +99,10 @@ def fetch(address, password, since, seen):
 
 def sync(messages=None):
     """Apply every new message. messages defaults to a live IMAP fetch; tests pass a list instead."""
-    state, apps = load(), applications.rows()
-    tenants = {c["tenant"].lower(): c["name"] for c in json.loads(Path("companies.json").read_text(encoding="utf-8"))}
+    postings = store.load()
+    state, apps = load(), mailmatch.with_board_ids(applications.rows(), postings)
+    companies = json.loads(Path("companies.json").read_text(encoding="utf-8"))
+    tenants = {c["tenant"].lower(): c["name"] for c in companies if c.get("tenant")}  # job-board employers have none
     if messages is None:
         # Google shows app passwords as four groups of four; the spaces are display only.
         address, password = env("GMAIL_ADDRESS"), (env("GMAIL_APP_PASSWORD") or "").replace(" ", "")
@@ -126,7 +128,7 @@ def sync(messages=None):
             if change:  # no change when the email is older news than the current status
                 state["events"].append(item | {"from_status": change[0]})
                 updated += 1
-                apps = applications.rows()
+                apps = mailmatch.with_board_ids(applications.rows(), postings)  # keep the board ids
         elif d["action"] == "untracked":  # a rejection for a role not on the list: kept for the record, no review
             state["untracked"].append(item)
             untracked += 1

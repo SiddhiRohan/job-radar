@@ -180,12 +180,12 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 42. **The first real mail run was wrong, and the rules were recalibrated on it.** It moved 14 statuses; 8 were false
     interviews, because confirmation emails say things like "you will be contacted if you're selected for an
     interview" and the rule matched the bare word. All 14 were undone from a backup taken just before the run. Against
-    the 179 hiring emails from that run, read once into a temporary file and deleted after: interview and screen now
+    every hiring email from that run, read once into a temporary file and deleted after: interview and screen now
     need invitation wording, phrases after "if", "may", "might" or "should" are ignored, curly apostrophes read as
-    straight, and two missed rejection wordings were added. Result on the same emails: 6 rejections applied
-    automatically, 14 rejections without an id to review, no false interviews. Plain confirmations no longer go to
-    review, a deliberate change from the owner's first rule: they cannot move a status and filled the list with 35
-    items. Paraphrases of the misread boilerplate are now regression tests.
+    straight, and two missed rejection wordings were added. Result on the same emails: rejections carrying an id
+    applied automatically, the rest went to review, and no false interviews. Plain confirmations no longer go to
+    review, a deliberate change from the owner's first rule: they cannot move a status and filled the list with
+    noise. Paraphrases of the misread boilerplate are now regression tests.
 43. **The second rule set missed rejections, and one old-rule run slipped through.** The owner found one application at
     interview again. Reading both of its emails: a confirmation ("contact you to arrange an interview if the role is
     a good match") and a rejection ("have decided not to move forward for the ... role"). Two causes. The
@@ -194,7 +194,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     rejection as a confirmation, because "decided not to" was not covered. The first calibration only compared the
     old rules with the new ones, so a wording both missed went unnoticed. A fresh scan of every hiring email for
     rejection-style words found four more: "won't be able to move forward", "aren't moving forward", "does not align
-    ... with", "pursuing other applicants". All are covered now; every one of the 28 rejections the rules find was
+    ... with", "pursuing other applicants". All are covered now; every rejection the rules find was
     checked by its triggering phrase, and the only rejection-style words left unmatched are conditional ("if you are
     not selected", "if the position is filled"). Review guesses now come from the sender and subject before the body,
     because every Workday email names Workday in its footer. Lesson: restart the server as part of merging a rule
@@ -214,7 +214,7 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 
 ## 2026-09-25: the postings behind applications
 
-46. **A taken-down Workday posting answers 403, not 404.** Checked against a posting the owner was rejected from: the
+46. **A taken-down Workday posting answers 403, not 404.** Checked against a posting known to be taken down: the
     detail endpoint returns `403 {"errorCode":"S22","message":"permission denied"}`, while a path that never existed
     returns 404 `S21`. The watcher treats 403 as closed only when Workday's JSON error body is present, so a
     firewall block or an outage (usually HTML) stays "unknown" and never reads as a closure. Closures and changes
@@ -234,8 +234,8 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 
 ## 2026-09-27: rejections by the role they name
 
-48. **A rejection names its role, so the role is enough.** All 19 emails waiting in Needs review were rejections and
-    none carried a requisition id the rule could match, but every one named the role. The owner asked for "not moving
+48. **A rejection names its role, so the role is enough.** Every email waiting in Needs review at the time was a
+    rejection without a requisition id the rule could match, and every one named the role. The owner asked for "not moving
     forward" and similar to go straight to rejected. Rejections only: an offer or an interview invitation without an
     id still waits for a person, since a wrong one of those costs more. The match is the employer (sender address,
     then sender and subject) plus the application's whole title as words in the subject or the first 1,500
@@ -244,5 +244,162 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     same title still go to review. A rejection for a role not on the list, or from an employer with nothing open,
     is filed under "Rejections for roles not on your list" rather than added as an application: the radar records
     what the owner applied to through it, and guessing a company and title from free text would put wrong rows in
-    the table. Dry run on the 19: seven would move (each checked by title against its requisition), eleven are
-    roles not on the list, one (Walmart) needs the full email to name its role.
+    the table. In a dry run every moved application was checked by title against its requisition; one email needed its full
+    body, not the stored snippet, to name its role.
+
+## 2026-09-27: the fit, factor by factor
+
+49. **The fit is shown factor by factor, with evidence; sponsorship, location and pay by rule.** A score and a
+    two-sentence why said how good a fit was but not on what evidence, and the owner wants postings judged on
+    experience, not on shared keywords. The verdict now lists four factors (experience, level, skills, domain),
+    each with a verdict word and a short quote or paraphrase from the posting and from the resume, so a score can be
+    checked against the text instead of taken on trust, and a wrong one shows where it went wrong. Experience means
+    the same kind of work at the depth asked, judged against the better-fitting base. Sponsorship, location and pay
+    are facts the pipeline already reads: the tag and phrase from `sponsor.py` with the company default (plus
+    Claude's stored read, which the digest already uses), the Workday location fields, and the `salary.py` range.
+    Computing them costs no tokens and cannot contradict the section a posting sits in, because the sponsorship
+    badge calls the digest's own `says_no` and `sponsors`. No location or pay preference is configured, so any US
+    location meets, with remote or hybrid named only from the location strings or clear wording ("fully remote",
+    "hybrid work schedule"; never "remote sensing", "hybrid cloud" or a negated phrase), and pay meets when a range
+    is stated, is partial when it is not, and is never a gap.
+50. **Factors come before the scores; older verdicts stay as they are.** "factors" is the first property of the
+    schema and the prompt says to fill it first, so the evidence is written before the scores, which must agree with
+    it. The existing fields and their meaning are unchanged, but what the scores are conditioned on is not: compare
+    the first runs' score-4 counts with the recent 6 to 14 a day. Moving "factors" to the end of `PROPERTIES` in
+    `radar/fit.py` restores the old order. The schema cannot require exactly four factors (array and string length
+    keywords are not supported, like minimum and maximum), so the prompt asks for four in order and
+    `model_factors()` keeps the first entry for each known name and drops anything else. The added output is about
+    200 to 400 tokens per scored posting, 0.3 to 0.6 cents at Sonnet 4.6 output prices and under a dollar a day at
+    the 120 cap; `max_tokens` rises from 1024 to 1536 so a longer verdict is never cut off mid-JSON. Verdicts stored
+    before this have no "factors" key and get no table and no gaps line, rather than three rule rows that would look
+    broken; rescoring them would cost a call each. Rule verdicts (years gate, sponsorship no, PERM ad) store an empty
+    list because no model read the posting; the drawer shows their three rule rows, and the why line names the rule.
+
+## 2026-09-27: ready for other people
+
+51. **Public from a fresh repository, not this one.** An audit before going public found the author's resume, a
+    skills file, scored postings and a first digest in commits from 13 September, two personal email addresses in
+    commit metadata, and five pull request descriptions naming real applications. Rewriting history would not clean
+    it: GitHub keeps every pull request's commits reachable, and only GitHub Support can purge them, and the owner
+    does not want history rewritten. So this repository stays private as the full record, and the public one starts
+    from a clean snapshot. The current tree is scrubbed (tests use fictional employers such as Contoso), and a
+    pre-commit privacy guard blocks any commit containing a term from `.privacy-terms`, the owner settings in `.env`,
+    or a requisition id in `applications.md`. It reports matches by position, never the term, so its output is safe
+    anywhere.
+52. **Setup is a script, not an installer.** The owner ruled out a desktop app. `start.py` uses only the standard
+    library so it runs before anything is installed; it makes `.venv`, installs again only when `requirements.txt`
+    changes (a hash stamp), copies `.env.example`, runs the doctor and opens the app. Thin wrappers make it a
+    double-click on Windows and macOS. Development tools moved to `requirements-dev.txt` so a first start installs
+    less.
+53. **The app schedules the run, and a lock keeps runs single.** A laptop asleep at 7:30 missed the day, and the app
+    could not see a run the operating system started. While open, the app now runs at `run_time` and catches up when
+    it opens; `run.py` takes `.cache/run.lock` for its whole life, so the app, the system scheduler and a terminal
+    never overlap. Nothing runs until the doctor finds nothing to fix, because a first start with no resume polled
+    for an hour against nothing. A failed start waits two hours. A lock older than four hours is treated as left by a
+    machine that shut down mid-run.
+54. **Only the app's own page may write.** The setup page accepts a resume and an API key, and any website open in
+    another tab can send requests to localhost. Writes now need no origin (a terminal) or a local one. The key is
+    checked with a token count, which is free, stored only in `.env`, and never sent back to the browser.
+55. **Two ways in, one set of files.** People who use a coding assistant get `CLAUDE.md` as an operating guide, with
+    short slash commands that call the same Python commands the app uses; `AGENTS.md` points other assistants to it.
+    The rules for changing the code moved to `CONTRIBUTING.md`. Public docs use this project's own vocabulary and
+    name no other product.
+56. **The morning brief needs no model.** Its value is judgment, and the judgment is already on disk: fit scores and
+    factor gaps, sponsorship, pay, mail events, watcher closures, rejection patterns. Picks rank by best fit, then a
+    posting that can sponsor, then stated pay, then newest; the reason is the first factor gap, else the start of the
+    why. Changes count since the previous brief, not since midnight, so a second run on one day repeats nothing.
+57. **The system schedule is the person's switch.** Changing a computer's scheduler is theirs to decide, so it is a
+    button on the Setup page and a command, never done by a run. The doctor reports which way the radar runs.
+
+## 2026-09-27: job boards beyond Workday
+
+58. **A job board is read whole, once per run.** Greenhouse, Lever and Ashby publish every open posting of an
+    employer, with its full description, in one public JSON response, and none has a search that behaves like
+    Workday's. So the radar fetches the board once, through `wd.request_json` (the same 1.5 s gap, retries and
+    6-hour cache), and gives each posting the Workday path's rules: the title must pass `title_matches_term` for a
+    search or entry term whose date window the posting is in, then the seniority, domain and US rules, with keys
+    `company|id` as before. Entry terms stand in for Workday's relevance search, which a board lacks, so they count
+    only for titles with entry wording (the same `is_entry_title` that widens the title patterns); otherwise every
+    matching title up to 14 days old would pass as an entry find. The description that came with the listing is the
+    detail record, so years, sponsorship and contract flags are read from it without a second request. Board
+    postings have no Workday detail path, so the posting watcher and a pasted URL in Tailor still cover Workday only.
+59. **Dates.** Greenhouse's `first_published` is the posting date. `updated_at` moves whenever the employer edits the
+    board (on the Databricks board hundreds of postings shared one timestamp), so it is used only when
+    `first_published` is missing. Lever gives `createdAt` in epoch milliseconds, Ashby `publishedAt`. Age is counted
+    in UTC calendar days and written in Workday's words ("Posted Today", "Posted 3 Days Ago", "Posted 30+ Days
+    Ago"), so pages and digests read alike. A posting without a date counts as 999 days old, outside every window.
+60. **Places and the US rule.** One US place keeps a posting, as Workday's additional locations do. Lever gives the
+    first place's ISO country and Ashby a country for every place; where a country is given, it decides. Greenhouse
+    gives only free text, sometimes several places joined by ";" (split apart) or by commas (left alone, since "San
+    Francisco, California" is one place), so its places are judged by the words in `filters.NON_US`. Against 745
+    distinct Greenhouse places on 15 live boards the words missed Serbia, Ukraine, Estonia, Cyprus, Slovenia,
+    Lithuania, Canadian provinces, EMEA and "São Paulo" with its accent; those were added, none of them a US place
+    name. Still wrong and not new: "Vancouver, WA", "Dublin, CA" and lists such as "SF, NYC, Toronto" read as non-US,
+    because a non-US city name wins unless "US" or "United States" is in the text. Workday's listing check has the
+    same gap; its detail record's country code covers it there.
+61. **Pay and ids.** Ashby keeps pay out of the description, in `compensation`. When the description has no range,
+    its salary summary goes in front as "Pay range: ..." so `salary.py` reads it (223 of 349 Snowflake postings gain
+    a range). Lever's `salaryRange` is used the same way, but neither live Lever board carried one, so that branch
+    follows Lever's documented shape only. The requisition id is the board's posting id; Greenhouse's own
+    `requisition_id`, the one an employer's emails quote, is not stored, so their emails match by role name.
+62. **Seeding: 18 employers, one request each.** Every token was confirmed by one request to the board the poll
+    reads, 21 requests in all (the cap was 60): the seven employers `not_on_workday.json` notes as Greenhouse or
+    Lever, and eleven whose own careers site fronts a board. Greenhouse's `company_name` matched the employer every
+    time. DoorDash's board is `doordashusa`; HubSpot's `hubspot` board exists but is empty and `hubspotjobs` is the
+    live one. Wayfair and Rivian answered 404 on Greenhouse and stay in `recheck_later.json` with what was tried;
+    the employers now polled leave that file. Sponsorship comes from `expand.py`'s lists: 12 are on the H-1B list,
+    and Dropbox, Chime, Robinhood, Okta, HubSpot and Spotify are on none, so null. All 18 are tier 2, the six
+    unknowns included, because that was the default asked for; `python -m companies.expand` recomputes tier from
+    sponsorship and would move those six to tier 3, so recording their filings in `companies/h1b_check.json` is the
+    durable fix and a good next task. Screened offline with the current config, the saved responses give 2 postings
+    in a 3-day window (a weekend) and 27 over 14 days across 11 of the 18 employers.
+
+63. **Batch scoring is a setting, off by default.** Batches cost half as much but answer in minutes to an hour, and
+    the digest, brief and email all wait on scoring, so turning it on is the person's call, not a default. One
+    batch per run, each request named by its position (`p0`, `p1`, ...) because custom ids allow only letters,
+    digits, `_` and `-`, which company names do not keep to. The run waits up to 60 minutes, polling every 30
+    seconds; a batch still running then is cancelled and whatever finished is read before the rest is asked
+    directly, so nothing is paid for twice. A request that errored, expired or came back cut off is asked directly
+    too, which also covers a model the key cannot use. Pasted links stay direct: someone is waiting on the answer.
+    If the machine sleeps mid-wait, the batch still finishes and is billed, but its answers are not collected and
+    the next run scores those postings again; keeping the batch id to collect them later is left for when it
+    happens in practice. In a live check, a one-posting batch with the structured-output schema answered in 94
+    seconds with all four factors.
+
+64. **One task name, checked by folder.** Windows Task Scheduler and launchd hold one daily entry named JobRadar
+    and `com.jobradar.daily`. A name per folder would let two copies each keep a schedule, but it would stop
+    recognizing a JobRadar task made by hand before the setup page existed, and the author's machine has exactly
+    that. So the name stays, and status, install and remove look at the folder the entry starts in: a copy
+    whose folder is not in the entry reports no schedule, removes nothing, and refuses to install over it with a
+    message saying another copy holds the task. The folder must end where an entry the radar writes has it end
+    (before `\.cache\run-daily.cmd`, a closing quote, or `&&` in a task made by hand), so "job-radar - Copy",
+    "job-radar (1)" and a copy nested inside another are all other copies. A task whose folder no longer exists
+    can only fail, so any copy may replace or remove it. Cron keeps a line per copy, told apart the same way.
+    Found by starting a fresh clone next to the author's install: its setup page said it ran every morning and
+    offered to stop a task that belonged to the other folder; a review then found the lookalike and moved-folder
+    cases.
+
+65. **A coding assistant can score instead of an API key.** Someone using the radar through Claude Code already pays
+    for a model, so asking them for a second, metered key is a reason to leave. `radar.handscore` hands the
+    assistant exactly what the scorer sends the API (the rules and schema from `radar/fit.py`, the profile and both
+    bases) and takes back verdicts only after checking them against the same schema, plus the factor order the
+    schema cannot state, so a verdict from either path reads the same in the digest, the drawer and the brief. The
+    check is a small reader for the part of JSON Schema that `fit.py` uses rather than a new dependency. Postings a
+    rule settles are left to the run, which settles them without a model. Verdicts are marked `scored_with:
+    "assistant"`, so their share can be compared with the API's later. The app's own morning run still waits for a
+    key; `python run.py` without one finds and filters, and the assistant scores when asked.
+
+66. **The intro video.** About 47 seconds, cut like a TV spot at the owner's request: four students in a sunny
+    apartment kitchen react as the radar's morning brief spreads between them, with hard cuts on the beat,
+    full-screen close-ups of the real app on demo data with fictional employers, questions typed the way the in-app
+    chat takes them, and a white end card with the line "Apply where you're wanted." Every shot carries a short
+    caption saying what is happening, so the story reads with the sound off, as most people first watch. Every claim
+    in it can be checked against the code. The live-action shots were generated with Seedance 2.5, 4 seconds each at
+    48 credits: one shot of the four friends came first and every later shot used it as a reference, so the same
+    people appear throughout, and the lead is the student from the earlier morning shot. The music is “Feel Alive”
+    by Michael Ramir C., from Mixkit, under its free stock music license: use in videos on any web platform, no
+    attribution required, no redistribution on its own, so only the finished video is in the repo, and the README
+    credits it anyway. A first cut with music synthesized in code sounded wrong to the owner and was dropped. GitHub
+    does not play video files from a repository inline, so the README shows a small animated preview that links to
+    the file; a copy uploaded through GitHub's editor gives an inline player with sound, and the file is under the
+    10 MB limit for that.

@@ -7,14 +7,44 @@ needs a restart for either file.
 
 Current values below are as of 2026-09-24.
 
+## Your resume and profile
+
+Put your resume in the `Resume/` folder. Any of these works:
+
+| Layout | Files | What the radar does |
+| --- | --- | --- |
+| One resume | `Resume/resume.docx` | Scores every posting against it, framed once as early-career and once as experienced |
+| Two resumes | `Resume/entry.docx` and `Resume/experienced.docx`, or any names starting with those words | Scores each posting against both and recommends one |
+| Folder tree | `Resume/Entry/1 Page/<file>` and `Resume/Experienced/V1/<role>/<1 Page or 2 Page>/<file>`, with the file name set as `RESUME_FILENAME` in `.env` | Also recommends a role folder and a length, and tailors from that variant |
+
+Word files (`.docx`) are needed for tailoring; a `.txt` or `.md` resume is enough for scoring. `profile.md` is
+optional: a few lines on your target roles, strengths and tools you do not have make the scores sharper. Without
+it the resume alone is used.
+
 ## config.json
+
+### When it runs
+
+| Key | Current | What it does |
+| --- | --- | --- |
+| `auto_run` | true | While the web app is open it runs the radar once a day at `run_time`. If the computer was off or asleep then, it runs as soon as the app opens. A failed start waits two hours before trying again. |
+| `run_time` | 07:30 | Local time of the daily run. |
+
+To run even when the app is closed, turn on **Every morning** on the Setup page, or run
+`python -m radar.schedule install` (and `remove` or `status`). It uses the computer's own scheduler: a Task
+Scheduler task named JobRadar on Windows, a launchd agent on macOS, a cron line on Linux, each starting `run.py` at
+`run_time` and appending to `logs/run.log`.
+
+Only one run happens at a time, whoever starts it: the web app, the operating system's scheduler or a terminal.
+A second one sees the lock in `.cache/run.lock` and steps aside. A lock older than four hours is treated as left
+behind by a machine that shut down mid-run.
 
 ### What gets searched
 
 | Key | Current | What it does |
 | --- | --- | --- |
-| `search_terms` | data engineer, data scientist, machine learning, AI engineer, analytics | Searches sent to every employer. Workday matches them against the whole posting, so each one returns many loose hits that the title rules then remove. |
-| `entry_terms` | early career, new college grad, entry level | Extra searches for tier 1 and 2 employers only. Each gets one page of results. |
+| `search_terms` | data engineer, data scientist, machine learning, AI engineer, analytics | Searches sent to every Workday employer. Workday matches them against the whole posting, so each one returns many loose hits that the title rules then remove. A job board has no search: every posting on it goes through the title rules instead. |
+| `entry_terms` | early career, new college grad, entry level | Extra searches for tier 1 and 2 employers only. Each gets one page of results. On a job board they widen the date window only for titles with entry wording. |
 | `max_days_ago` | 1 | How recent a posting must be, in days, for the role searches. `python run.py --days 3` overrides it for one run. |
 | `entry_max_days_ago` | 14 | The same limit for the entry searches. Junior roles stay open for weeks and come back sorted by relevance rather than date, so they get a wider window. Postings already seen are never stored twice. |
 | `max_pages_by_tier` | tier 1: 3, tier 2: 3, tier 3: 2 | How many pages of 20 results each role search reads, by employer tier. |
@@ -48,28 +78,63 @@ The title rules run in this order, before any detail is fetched.
 
 | Key | Current | What it does |
 | --- | --- | --- |
-| `us_only` | true | Drops postings whose listed location or detail record puts them outside the US. A posting with a US location among several still passes. |
+| `us_only` | true | Drops postings whose listed location or detail record puts them outside the US. A posting with a US location among several still passes. Lever and Ashby give each place's country, which decides; Greenhouse gives only the place's words. |
 
 ### Scoring and preparation
 
 | Key | Current | What it does |
 | --- | --- | --- |
 | `score_cap` | 120 | The most postings sent to Claude in one run. Entry-level titles and postings asking two years or fewer go first, then the newest. Unscored postings wait for the next run. |
+| `score_batch` | false | true sends the run's postings to Claude as one batch, at half the price of asking one at a time. The answers take minutes to an hour instead of seconds, so the digest and brief come later; the radar waits up to an hour, then asks directly about whatever the batch did not answer. |
 | `prepare_cap` | 0 | How many Apply postings get a tailoring plan made in advance after the run. 0 turns it off; plans are made on demand from the chat or Tailor. |
+
+### How a fit is judged
+
+Claude returns the E and X scores (1 to 5, one per resume base) together with four factors. Each factor is marked
+meets, partial or gap, and carries what the posting asks and the resume evidence that answers it, 20 words at most
+each, plus a short note. The factors are written first and the scores must agree with them.
+
+| Factor | What it judges |
+| --- | --- |
+| Experience | Years and depth in the same kind of work the role needs, against the better-fitting resume base. Shared keywords alone do not count. |
+| Level | Whether the posting's seniority fits the entry or the experienced base. |
+| Skills | The must-have skills the resume proves. When one is missing, the note names the most important, as "Missing: Databricks." |
+| Domain | Familiarity with the industry or problem area. |
+
+Three more are read by rule from the stored posting, with no model call:
+
+| Factor | Meets | Partial | Gap |
+| --- | --- | --- | --- |
+| Sponsorship | The posting or the company default sponsors, or Claude read the posting as sponsoring | Neither says | The posting says no or reads as a PERM ad, Claude read it as no, or the company default is no and neither the posting nor Claude says yes |
+| Location | Any US location; the note says remote or hybrid when the location or clear wording in the posting does | No location | Outside the US |
+| Pay | A range is stated (`radar/salary.py`) | Not listed | Never: there is no pay target to miss |
+
+Sponsorship uses the same test as the digest's Skipped and Apply sections, so its badge never disagrees with the
+section a posting is in. The posting drawer shows all seven above the description, and Apply and Entry level rows in
+the digest get a line such as `gaps: skills (Databricks), domain`. Postings scored before the factors existed keep
+their old verdict, with no table and no gaps line. Postings decided by rule (years gate, sponsorship no, PERM ad)
+never reach Claude, so they show only the three rule rows.
 
 ## companies.json
 
-One entry per employer.
+One entry per employer, either on Workday (`tenant`, `shard`, `site`) or on a job board (`ats`, `board`).
 
 | Field | Meaning |
 | --- | --- |
 | `name` | Display name. Postings are stored as `name` plus requisition id, so renaming an employer makes its old postings look new. |
 | `tenant`, `shard`, `site` | The Workday address, as in `https://<tenant>.<shard>.myworkdayjobs.com/<site>`. Taken from a real posting URL, never guessed. |
-| `tier` | 1 and 2 are polled daily, 3 on the `tier3_weekdays`. Tier also sets search depth through `max_pages_by_tier`. |
+| `ats`, `board` | An employer on a job board instead: `ats` is `greenhouse`, `lever` or `ashby`, and `board` is the token in the board's URL (`job-boards.greenhouse.io/<board>`, `jobs.lever.co/<board>`, `jobs.ashbyhq.com/<board>`). An entry without `ats`, or with `"ats": "workday"`, is a Workday one. For a board employer the requisition id is the board's posting id. |
+| `tier` | 1 and 2 are polled daily, 3 on the `tier3_weekdays`. Tier also sets search depth through `max_pages_by_tier`, and only tiers 1 and 2 get the entry terms. |
 | `sponsors_h1b` | The default when a posting says nothing about sponsorship: true reads as likely, false as unlikely, null as unknown. Posting text always wins over it. |
 | `sponsorship_source` | Where the default came from, for example a fiscal 2025 filing count. |
 | `extra_terms` | Optional searches for this employer only, for example `New College Grad 2026` at NVIDIA. |
 | `verified`, `verified_at`, `open_roles` | The last live check of the address and how many roles it listed then. |
+
+**A job board is read whole.** Greenhouse, Lever and Ashby list every open posting with its description in one
+response, so a board costs one request per run and nothing more is fetched for a new posting. Each posting then goes
+through the rules a Workday search result does: the title must match `title_patterns` (or `entry_title_patterns`
+with entry wording), it must be within `max_days_ago` (`entry_max_days_ago` for a title with entry wording, tiers 1
+and 2), and the seniority, domain and US rules apply.
 
 **Edit tier and sponsorship in the source lists, not in this file.** `python -m companies.expand` rebuilds
 `companies.json`. It always recomputes `tier` and `sponsorship_source`, and it recomputes `sponsors_h1b` for any
@@ -79,16 +144,40 @@ employer named in its lists, so hand edits to those fields are lost the next tim
   hand-seeded list, `H1B_TOP`. Then `companies/h1b_check.json`, which records a filing count as evidence. An
   employer in none of them keeps whatever value it already has.
 - Tier: add the employer to `TIER1` in `companies/expand.py`; it takes effect only if the employer sponsors.
-  Other sponsoring employers are tier 2 and the rest tier 3.
+  Other sponsoring employers are tier 2 and the rest tier 3. A job-board employer added with unknown sponsorship
+  starts in tier 2, and a rebuild moves it to tier 3 like any other unless its filings are recorded in
+  `companies/h1b_check.json`.
 
-`extra_terms` and the Workday address are kept across rebuilds.
+`extra_terms`, the Workday address and the job board are kept across rebuilds. `python -m companies.verify`
+rechecks Workday entries only; a board employer shows as SKIP there, and running `python -m companies.board` again
+with the same name rechecks it.
 
 ### Adding an employer
+
+The short way, for any employer on Workday, Greenhouse, Lever or Ashby: `python -m companies.add "Name" <link>`,
+with a link to its Workday careers site or any posting on it, or to its board. It checks the link with one request,
+prints how many postings are open, and writes the entry as verified with sponsorship and a tier. Running it again
+updates the entry. The steps below are the long way, and what the short one does.
+
+On Workday:
 
 1. Find one of its postings on `myworkdayjobs.com` and read the tenant, shard and site from the URL.
 2. Record it: `python -m companies.ledger set "Name" tenant shard site`.
 3. Check it against the live site: `python -m companies.resolve`.
 4. Rebuild the list: `python -m companies.expand`, then `python -m companies.report_companies`.
+
+On Greenhouse, Lever or Ashby:
+
+1. Follow any job on the employer's careers page to its board. The address names the board:
+   `job-boards.greenhouse.io/<board>/jobs/...` (older links use `boards.greenhouse.io`), `jobs.lever.co/<board>/...`
+   or `jobs.ashbyhq.com/<board>/...`. A careers page on the employer's own domain often hides the board; a
+   Greenhouse one shows `gh_jid=` in its job links, and the board token is then usually the company name.
+2. Add it: `python -m companies.board "Name" <that address>`. It reads the board once, prints how many postings
+   are open, and writes the entry as verified, with sponsorship from the lists above and a tier.
+3. Refresh the report if you want it: `python -m companies.report_companies`.
+
+A board with no open postings is usually one the employer stopped using, and the command says so. Boards on
+Lever's or Greenhouse's EU hosts are not supported.
 
 ## Email: statuses from hiring emails
 
@@ -146,7 +235,8 @@ already rejected or at offer, one request per posting at the usual 1.5 second ga
 seen, whether the posting closed (Workday answers "permission denied" for a posting that was taken down), was
 retitled, changed its pay range, or had its description rewritten. The Applied page shows closed postings with the
 days since you applied, and changed ones with what changed; "Check postings" runs it now. State lives in
-`.cache/ui/watch.json`. Nothing here changes a status: a closed posting is a hint, not a rejection.
+`.cache/ui/watch.json`. Nothing here changes a status: a closed posting is a hint, not a rejection. Postings from
+job-board employers are not re-read yet and count as unknown.
 
 ## Fixed in code
 
@@ -157,7 +247,9 @@ These rules are not settings. Changing them means changing the code, with a test
 | Six or more years of required experience: scored 1 without calling Claude, so it never reaches Apply | `radar/poll.py`, `radar/score.py` |
 | Sponsorship phrases that mean no, and PERM-style ads | `radar/sponsor.py` |
 | Apply needs a best score of 4 and a sponsoring posting or default; Entry level takes entry titles scoring 3 | `radar/digest.py` |
-| 1.5 seconds between Workday requests, and a 6-hour response cache | `radar/wd.py` |
+| The scoring prompt, the four model factors, and the sponsorship, location and pay rules | `radar/fit.py`, `radar/factors.py` |
+| 1.5 seconds between requests to Workday or a job board, and a 6-hour response cache | `radar/wd.py` |
+| How each job board's fields are read: dates, places, pay, description | `radar/boardparse.py` |
 
 ## Common adjustments
 

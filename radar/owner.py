@@ -22,12 +22,24 @@ def env(name, default=""):
     return default
 
 
+UNSET = "the owner"  # what name() says when .env gives no name
+
+
 def name():
-    return env("OWNER_NAME", "the owner")
+    return env("OWNER_NAME", UNSET)
 
 
 def short_name():
-    return env("OWNER_SHORT", name().split()[0] if name() != "the owner" else "the owner")
+    return env("OWNER_SHORT", name().split()[0] if name() != UNSET else UNSET)
+
+
+def signature(short=False):
+    """The name a letter is signed with. Without one in .env, the model is told to take it from the top of the
+    resume it is given, so a new user's letters never end with "the owner"."""
+    given = short_name() if short else name()
+    if given != UNSET:
+        return given
+    return "the candidate's " + ("first name" if short else "full name") + " as it appears at the top of the resume"
 
 
 def resume_filename():

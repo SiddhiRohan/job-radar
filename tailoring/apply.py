@@ -65,6 +65,12 @@ def ensure_variant(role, variant):
 
 def pick_base(j):
     v = j.get("verdict") or {}
+    if not resumes.legacy():  # the simple layout: tailor from the base the scorer recommended
+        kind = v.get("recommended_resume") or "experienced"
+        path = resumes.base_paths().get(kind)
+        if not path or path.suffix.lower() != ".docx":
+            raise RuntimeError("tailoring needs a Word resume: save it as Resume/resume.docx")
+        return path, kind
     if v.get("recommended_resume") == "entry":
         return resumes.ENTRY_BASE, "entry"
     role, _, variant = (v.get("recommended_variant") or "DS and DE Resumes/two-page").partition("/")
@@ -84,7 +90,7 @@ def main():
     ap.add_argument("--no-prompt", action="store_true", help="never ask JD-skill y/n; write them to notes.md instead")
     a = ap.parse_args()
     rules = Path("docs/RESUME_RULES.md").read_text(encoding="utf-8")
-    profile = Path("profile.md").read_text(encoding="utf-8")
+    profile = resumes.profile_text()
     j = find_job(a.company, a.req_id)
     skip, lines = assess(j)
     print("\n".join(lines))
@@ -138,7 +144,7 @@ def main():
     notes += ["## Hard to defend", ""] + ([f"- {x}" for x in plan["hard_to_defend"]] or ["- none"])
     notes += ["", "## JD skills outside skills_confirmed.md", ""] + ([f"- {s}" for s in skill_notes] or ["- none"])
     notes += ["", "## Questions for the owner (nothing below went into the resume)", ""]
-    notes += [f"- {q}" for q in plan.get("questions_for_owner", plan.get("questions_for_rohan", []))] or ["- none"]
+    notes += [f"- {q}" for q in next((v for k, v in plan.items() if k.startswith("questions_for_")), [])] or ["- none"]
     notes += ["", "## Date overlap explanations", ""] + [f"- {o}" for o in OVERLAPS]
     v = j.get("verdict") or {}
     if a.cover or v.get("cover_letter_required"):
