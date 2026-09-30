@@ -400,6 +400,26 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .brief-pattern { margin: 12px 0 0; font-size: var(--fs-sm); color: var(--ink); border-left: 3px solid var(--maybe); padding-left: 10px; }
 .brief-foot { display: flex; justify-content: flex-end; margin-top: 6px; }
 
+/* Search on Applied: one line until something is typed, then the matching applications below it. */
+.card.search { margin-bottom: 10px; padding: 10px 16px; }
+.sbar { display: flex; align-items: center; gap: 10px; }
+.sbar svg { width: 20px; height: 20px; flex: none; fill: none; stroke: var(--ink-3); stroke-width: 2; stroke-linecap: round; }
+.sbar input { flex: 1; min-width: 0; font: inherit; font-size: var(--fs-md); color: var(--ink); background: transparent; border: 0; padding: 6px 0; outline: none; }
+.sbar input::placeholder { color: var(--ink-3); }
+.card.search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow), var(--shadow); }
+.sbar .shint { color: var(--ink-3); font-size: var(--fs-xs); }
+.sresults:not(:empty) { border-top: 1px solid var(--rule); margin-top: 8px; padding-top: 6px; }
+.sresults .sub { margin: 4px 0 6px; }
+.slist { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.slist li { max-width: none; }  /* results use the card's width, not the 72ch reading measure */
+.slist li { display: grid; grid-template-columns: minmax(110px, 1fr) minmax(0, 2.4fr) auto auto; gap: 12px; align-items: center; padding: 6px 8px; border-radius: var(--radius-sm); font-size: var(--fs-sm); }
+.slist li:hover { background: var(--surface-2); }
+.slist .sc { font: 600 var(--fs-sm) var(--font-display); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slist .stt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slist .sd { color: var(--ink-3); font-size: var(--fs-xs); white-space: nowrap; }
+.sresults mark { background: color-mix(in srgb, var(--accent) 22%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+@media (max-width: 720px) { .slist li { grid-template-columns: 1fr auto; } .slist .stt { grid-column: 1 / -1; grid-row: 2; } .slist .sd { display: none; } }
+
 /* What the rejections say: outcomes in one bar, the clearest pattern, and groups to click through. */
 .rj-lead { margin: 6px 0 10px; line-height: 1.5; }
 .rj-lead b.good { color: var(--apply); } .rj-lead b.rej { color: var(--danger); }

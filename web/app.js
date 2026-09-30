@@ -514,6 +514,7 @@ document.addEventListener("keydown", e => {
     o: () => today && (K.cur?.querySelector("a.title") || K.cur?.querySelector("a[href][target]"))?.click(),
     "[": () => today && $("#prev").click(), "]": () => today && $("#next").click(),
     1: () => (location.hash = "today"), 2: () => (location.hash = "tailor"), 3: () => (location.hash = "applied"),
+    f: () => (location.hash === "#applied") && $("#appsearch")?.focus(),
     "/": () => { setChat(true); $("#chatin").focus(); },
     "?": () => $("#keys").showModal(),
   };
