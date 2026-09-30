@@ -11,9 +11,9 @@ rejections, still waiting), names the clearest pattern in one sentence, and grou
 resume, fit score, years asked, sponsorship or company. Each group says whether it is rejected more or less often
 than your average, or that it is too small to tell, and clicking it lists its applications.
 
-**An intro video, and a README for going public.** A 47-second video with sound, `docs/media/job-radar-intro.mp4`,
-opens the README through a silent preview. The README now starts with why the radar helps on a student visa and
-what a morning with it looks like, and adds what leaves your machine and a short FAQ.
+**An intro video, and a README for going public.** The whole 47-second video plays at the top of the README as a
+silent animation; the MP4 with sound is `docs/media/job-radar-intro.mp4`. The README now starts with why the radar
+helps on a student visa and what a morning with it looks like, and adds what leaves your machine and a short FAQ.
 
 **Score with a coding assistant, no API key needed.** `python -m radar.handscore next` writes the postings waiting
 for a score, with the rules, the verdict schema, the resumes and the profile, to `.cache/to_score.json`; the
