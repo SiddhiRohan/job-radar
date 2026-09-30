@@ -17,8 +17,8 @@ tailoring and tracking. The dated history of the author's own runs is kept in a 
   assistant with no API key.
 - A morning brief at the end of each run: what to apply to first and why, what changed, what went quiet.
 - A local web app: Today with the brief, filter chips, keyboard shortcuts, a posting drawer and a command palette;
-  Tailor with locked facts; Applied with a drag board, charts, email statuses, rejection patterns and posting
-  changes; a Setup page for the resume, API key, profile and daily schedule.
+  Tailor with locked facts; Applied with search, a drag board, charts, email statuses, rejection patterns in
+  plain words and posting changes; a Setup page for the resume, API key, profile and daily schedule.
 - Setup in minutes: `start.bat`, `start.sh` or `start.command` makes the environment and opens the Setup page; a
   doctor names anything missing; one resume file is enough.
 - Runs itself every morning while the app is open, or through the computer's own scheduler when it is closed; a
