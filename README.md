@@ -5,8 +5,7 @@
 <p align="center"><b>A morning shortlist of data and ML jobs, checked for visa sponsorship one posting at a time.</b><br>
 It runs on your laptop, reads employers' own career sites, and tells you what to apply to first.</p>
 
-<p align="center"><a href="docs/media/job-radar-intro.mp4"><img src="docs/img/intro-preview.webp" alt="The intro video: four students in a sunny kitchen crowd around a laptop as Job radar's morning brief, sponsorship check, fit by factor and email updates spread between them, ending on the line Apply where you're wanted." width="820"></a><br>
-<sub><a href="docs/media/job-radar-intro.mp4">Watch the 47-second intro, with sound</a></sub></p>
+<p align="center"><a href="docs/media/job-radar-intro.mp4"><img src="docs/img/intro.webp" alt="The 47-second intro video: four students in a sunny kitchen crowd around a laptop as Job radar's morning brief, sponsorship check, fit by factor and email updates spread between them, ending on the line Apply where you're wanted." width="820"></a></p>
 
 ## Why it helps on a student visa
 
