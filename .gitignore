@@ -23,5 +23,6 @@ notes/
 .claude/settings.local.json
 .claude/worktrees/
 
-# Codex: per-machine settings
+# Codex: per-machine settings, and the skills it copies from .claude/commands
 .codex/
+.agents/
