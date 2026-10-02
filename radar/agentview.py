@@ -9,7 +9,8 @@ def notes(rec):
 
 def prep_text(rec):
     p = rec["prep"]
-    out = [f"Interview prep: {rec['title']} at {rec['company']}, for the {rec['stage']}, made {rec['made']}", ""]
+    stage = {"screen": "recruiter screen", "interview": "interview"}.get(rec["stage"], "first screen")
+    out = [f"Interview prep: {rec['title']} at {rec['company']}, for the {stage}, made {rec['made']}", ""]
     out += [p["role"], "", "What they will probe:"]
     out += [
         f"- {f['topic']}: {f['why']} Your evidence: {f['evidence'] or 'nothing on the resume yet.'}" for f in p["focus"]
@@ -20,7 +21,7 @@ def prep_text(rec):
     for s in p["stories"]:
         out += [f"- {s['title']}"] + [f"  {k.title()}: {s[k]}" for k in ("situation", "task", "action", "result")]
     if p["gaps"]:
-        out += ["", "Gaps, and how to answer them:"] + [f"- {g['gap']}: {g['answer']}" for g in p["gaps"]]
+        out += ["", "Gaps, and how to answer them:"] + [f"- {g['gap'].rstrip('.')}: {g['answer']}" for g in p["gaps"]]
     out += ["", "Ask them:"] + [f"- {q}" for q in p["ask_them"]]
     return "\n".join(out + ["", "Work authorization:", p["work_authorization"]] + notes(rec))
 

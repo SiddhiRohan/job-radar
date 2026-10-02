@@ -106,8 +106,12 @@ def rules():
 def prompt(p):
     return "\n\n".join(
         [
-            f"APPLICATION: {p['title']} at {p['company']}, requisition {p['req_id']}, applied {p['applied']}, now at "
-            f"the {p['stage']} stage.",
+            f"APPLICATION: {p['title']} at {p['company']}, requisition {p['req_id']}, applied {p['applied']}, "
+            + (
+                f"now at the {p['stage']} stage."
+                if p["stage"] in STAGES
+                else "no reply yet: prepare for a first screen."
+            ),
             "POSTING:\n" + (p["posting"] or "(not stored: work from the title and the company)"),
             "FIT NOTES FROM THE RADAR:\n" + (p["fit"] or "(none)"),
             "SPONSORSHIP:\n" + p["sponsorship"],
@@ -126,7 +130,8 @@ def check(answer):
 
 
 def store_answer(item, answer, by, p, problems=()):
-    sources = [p[k] for k in ("posting", "fit", "sponsorship", "resume", "profile", "skills", "req_id", "title")]
+    keys = ("posting", "fit", "sponsorship", "resume", "profile", "skills", "req_id", "title", "applied")
+    sources = [p[k] for k in keys]
     clean, notes = facts.lock(answer, sources)
     state = load()
     state[item["key"]] = {k: item[k] for k in ("company", "req_id", "title", "stage")} | {

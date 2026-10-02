@@ -2,7 +2,7 @@
 
 import pytest
 
-from radar import applications, facts, prep
+from radar import agentview, applications, facts, prep
 
 RESUME = "Built a retrieval chatbot used by 2,000 people. Cut report time from 3 days to 4 hours with Airflow."
 
@@ -124,3 +124,13 @@ def test_numbers_match_with_or_without_thousands_separators():
     assert clean == {"a": ["2000 users", "[?] teams"]} and notes == [
         "3 in a.2 is not in the posting or your resume, so it was taken out."
     ]
+
+
+def test_a_prep_asked_for_before_any_reply_prepares_for_a_first_screen(home):
+    item = next(i for i in prep.due(every=True) if i["company"] == "Northwind")
+    p = prep.packet(item, jobs=[], recs={})
+    assert "applied " + item["applied"] + ", no reply yet: prepare for a first screen." in prep.prompt(p)
+    prep.store_answer(item, answer(gaps=[{"gap": "No Spark.", "answer": "Say so."}]), "test", p)
+    page = agentview.text("prep", "Northwind")
+    assert page.startswith("Interview prep: Data Scientist at Northwind, for the first screen, made ")
+    assert "- No Spark: Say so." in page

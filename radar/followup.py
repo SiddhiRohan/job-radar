@@ -86,7 +86,7 @@ def check(answer):
 
 
 def store_answer(item, answer, by, p, problems=()):
-    clean, notes = facts.lock(answer, [p["posting"], p["resume"], p["req_id"], p["title"]])
+    clean, notes = facts.lock(answer, [p[k] for k in ("posting", "resume", "req_id", "title", "applied")])
     state = load()
     state[item["key"]] = {k: item[k] for k in ("company", "req_id", "title", "applied")} | {
         "made": datetime.now().strftime("%Y-%m-%d %H:%M"),

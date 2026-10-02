@@ -111,3 +111,10 @@ def test_a_draft_leaves_the_list_when_sent_when_the_application_moves_or_the_pos
 def test_the_draft_is_signed_with_the_owners_name(home, monkeypatch):
     monkeypatch.setenv("OWNER_SHORT", "Jane")
     assert "ending with the sign-off Jane." in followup.rules()
+
+
+def test_the_application_date_is_a_known_number(home):
+    item = followup.due(today=TODAY)[0]
+    body = "I applied on September 10 and wanted to follow up."
+    followup.store_answer(item, draft(email_body=body), "test", followup.packet(item, jobs=[]))
+    assert followup.load()["Contoso|R1"]["draft"]["email_body"] == body
