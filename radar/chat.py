@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from radar import llm, owner, runlock
+from radar import agentchat, llm, owner, runlock
 
 SYSTEM = """You are the assistant inside a personal job-radar app. {name} is working through today's shortlist; the
 PROFILE section below says who they are and what they target. Be brief and plain; sentence case;
@@ -19,7 +19,9 @@ navigate to applied so they can settle the review items. When they ask whether a
 application is quiet, use posting_status: a closed posting with no reply is usually the answer. For "what should I
 do today" or "what changed", use morning_brief and lead with its picks. When they paste a job link or ask whether a
 job suits them, use evaluate_link and explain the verdict plainly, gaps included. To follow a new employer, use
-add_employer with a link to its jobs; ask for the link if they did not give one.
+add_employer with a link to its jobs; ask for the link if they did not give one. For an interview, use
+interview_prep and lead with the questions and the stories; for quiet applications, follow_ups; for what to learn,
+skill_gaps; for which employers sponsor, sponsor_map.
 CONTEXT (what the page shows now) follows; the Today rows are ranked by score, E = entry base, X = experienced base."""
 
 PAGE_TOOLS = {"navigate", "refresh", "open_tailor", "edit_section", "rebuild"}
@@ -181,6 +183,7 @@ TOOLS += [
         },
     },
 ]
+TOOLS += agentchat.TOOLS
 RUN = {"proc": None, "log": Path(".cache/ui/run.log")}
 SESSIONS = {}
 CHAT_DIR = Path(".cache/ui/chat")
@@ -292,6 +295,8 @@ def server_tool(name, args, hooks):
         return hooks["set_status"](args)
     if name == "remember":
         return remember(args.get("note", ""))
+    if name in agentchat.NAMES:
+        return agentchat.call(name, args)
     if name in (
         "tailor_posting",
         "build_resume",

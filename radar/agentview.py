@@ -36,10 +36,11 @@ def followup_text(rec):
     )
 
 
-def text(name, company=None):
-    """Everything one writer made, or one employer's part of it."""
+def text(name, company=None, req_id=None):
+    """Everything one writer made, or one employer's part of it, or one application's."""
     items = (prep if name == "prep" else followup).report()["items"]
     items = [r for r in items if not company or company.lower() in r["company"].lower()]
+    items = [r for r in items if not req_id or r["req_id"] == req_id]
     if not items:
         return "nothing written yet" + (f" for {company}" if company else "")
     page = prep_text if name == "prep" else followup_text
