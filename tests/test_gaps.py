@@ -80,3 +80,11 @@ def test_postings_before_the_window_do_not_count():
     r = gaps.analyse(jobs, confirmed=[], today=TODAY)
     assert r["skills"] == [] and r["postings"] == 0
     assert gaps.summary(r) == ["No skill is missing from two or more of the 0 postings scored since 2026-09-01."]
+
+
+def test_names_with_a_slash_ampersand_or_digit_stay_whole():
+    assert gaps.terms("A/B testing and experimentation") == ["A/B testing", "experimentation"]
+    assert gaps.terms("CI/CD, PL/SQL and R&D") == ["CI/CD", "PL/SQL", "R&D"]
+    assert gaps.terms("S3, EC2 and D3.js") == ["S3", "EC2", "D3.js"]
+    assert gaps.terms("AWS/GCP/Azure") == ["AWS", "GCP", "Azure"]  # three long names are three skills
+    assert gaps.terms("4+ years of AI/ML") == []

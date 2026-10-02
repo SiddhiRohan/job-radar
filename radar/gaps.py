@@ -18,6 +18,9 @@ DAYS = 30
 CUT = re.compile(r"\(.*?(?:\)|$)|\[.*?(?:\]|$)")  # parentheses hold commentary, not skill names
 SENTENCE = re.compile(r"[;:]|\s[-–—]\s|\.(?:\s|$)")
 SPLIT = re.compile(r"\s*(?:/|,|&|\band\b|\bor\b)\s*", re.I)
+# CI/CD, PL/SQL, A/B, R&D, UI/UX, TCP/IP: a short side makes one name, not two skills; AWS/GCP still splits.
+PAIR = re.compile(r"\b(?:[A-Z]{1,2}[/&][A-Z]{1,4}|[A-Z]{1,4}[/&][A-Z]{1,2})(?!\w)")
+JOINED = {"/": "∕", "&": "＆"}
 FILLER = re.compile(
     r"^(?:explicit|dedicated|formal|demonstrated|foundational|hands-on|strong|proven|solid|deep|large-scale|"
     r"production-scale|production-grade)\s+",
@@ -29,7 +32,8 @@ TAIL = re.compile(
     re.I,
 )
 VAGUE = re.compile(
-    r"^(?:equivalent|similar|other|related|any|etc|both|which|that|the|an?|is|are|with)\b|\byears?\b|\d", re.I
+    r"^(?:equivalent|similar|other|related|any|etc|both|which|that|the|an?|is|are|with)(?:\s|$)|\byears?\b|^\d|\d\+",
+    re.I,
 )
 ALIASES = {
     "google cloud": "gcp",
@@ -38,17 +42,21 @@ ALIASES = {
     "microsoft azure": "azure",
     "k8s": "kubernetes",
     "powerbi": "power bi",
+    "c/c++": "c++",
 }
-GENERIC = {"ai", "ml", "llm", "llms", "api", "apis", "data", "cloud", "analytics", "software", "engineering"}
+GENERIC = {"ai", "ml", "ai/ml", "ml/ai", "llm", "llms", "api", "apis", "data", "cloud", "analytics", "software"}
+GENERIC |= {"engineering"}
 
 
 def terms(text):
     """Short skill names in one missing-item text: "GCP/BigQuery (required, ...)" gives GCP and BigQuery. Only the
     first clause counts, and a phrase of more than three words is a description, not a skill name."""
     first = SENTENCE.split(CUT.sub(" ", text or ""), maxsplit=1)[0]
+    first = PAIR.sub(lambda m: m.group(0).translate(str.maketrans(JOINED)), first)
     out = []
     for part in SPLIT.split(first):
-        part = TAIL.sub("", FILLER.sub("", part.strip(" .'\"")))
+        part = TAIL.sub("", FILLER.sub("", part.strip(" '\"").rstrip(".")))
+        part = part.translate(str.maketrans({v: k for k, v in JOINED.items()}))
         if part and not VAGUE.search(part) and len(part.split()) <= 3 and len(part) <= 30:
             out.append(part)
     return out
