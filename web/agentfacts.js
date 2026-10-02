@@ -13,9 +13,9 @@ function gapsCard(g) {
   const card = el("section", { class: "card" }, el("h3", {}, "Skill gaps"),
     el("p", { class: "sub" }, `What ${g.postings} postings scored since ${g.since} found missing. Each bar is the postings missing that skill; the green part scored 3, one point below Apply.`));
   const learn = g.skills.filter(s => !s.confirmed).slice(0, 10);
-  if (!learn.length) return card.append(el("p", { class: "kempty" }, "No skill is missing from two or more postings yet.")), card;
-  const top = Math.max(...learn.map(s => s.postings));
-  card.append(el("div", { class: "legend-row" }, swatch("good", "scored 3"), swatch("wait", "scored lower or higher")),
+  const top = Math.max(1, ...learn.map(s => s.postings));
+  if (!learn.length) card.append(el("p", { class: "kempty" }, g.confirmed.length ? "Nothing new to learn: every repeated gap is a skill you already confirmed." : "No skill is missing from two or more postings yet."));
+  else card.append(el("div", { class: "legend-row" }, swatch("good", "scored 3"), swatch("wait", "scored lower or higher")),
     el("div", { class: "hbars gapbars" }, ...learn.map(s => el("div", { class: "hrow", title: s.examples.map(x => `${x.company}: ${x.title}`).join("\n") },
       el("span", { class: "hl" }, s.skill, s.not_have ? el("span", { class: "tag unknown" }, "not-have list") : null),
       partsBar([[s.scored_3, "good", "scored 3"], [s.postings - s.scored_3, "wait", "other scores"]], top, `${s.skill}: missing in ${s.postings} postings, ${s.scored_3} of them scored 3`),
