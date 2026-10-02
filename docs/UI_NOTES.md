@@ -129,3 +129,14 @@ Decision: finding postings is the product; tailoring is on demand. The pre-plann
 `tailor_posting`, `build_resume`, `save_resume`, so "tailor the Adobe one, build it, save it" works entirely in
 the drawer with a download link in the reply. The Tailor view stays for the full side-by-side (reachable from chat
 via `open_tailor` or by pasting a URL). Multi-user is a later change; everything is single-user today.
+
+## Agents view (2026-10-01)
+
+A fourth view, between Applied and Setup (key 4), for what the agents wrote and found. Interview prep and
+follow-ups get the full width: a prep is long, so only the newest opens and the rest stay one line each, and a
+draft shows the LinkedIn note with its character count, the email, copy buttons, a LinkedIn search link, and Mark
+sent or Dismiss. Skill gaps and the sponsor map sit side by side below as bars: a skill's bar is the postings
+missing it, with the part that scored 3 in green; an employer's bar is its postings split into yes, no and
+silent, in the colours the rejections card uses for good, rejected and waiting. The prep picker lists every
+application, newest first, so a prep can be written before any email arrives. Without an API key the run and write
+buttons are disabled and the lead line says how to use a coding assistant instead.

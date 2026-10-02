@@ -46,8 +46,10 @@ and Northwind.
 - `start.py`, `run.py`, `server.py` at the root are the entry points; `config.json` and `companies.json` are the two
   files people edit.
 - `radar/`: the daily pipeline (wd and boards, poll, filters, sponsor, store, score and batch, digest, prepare,
-  mail, watch, brief) plus `llm`, `fit`, `factors`, `chat`, `salary`, `mailmatch`, `rolematch`, `applications`,
-  `evaluate`, `doctor`, `firstrun`, `autorun`, `schedule`, `runlock`.
+  mail, watch, agents, brief) plus `llm`, `fit`, `factors`, `chat`, `salary`, `mailmatch`, `rolematch`,
+  `applications`, `evaluate`, `doctor`, `firstrun`, `autorun`, `schedule`, `runlock`. The agents are `prep`,
+  `followup`, `gaps` and `sponsormap`, with `facts` (the number lock), `agentview` (plain pages) and `agentchat`
+  (their chat tools).
 - `tailoring/`: apply, plan, tailor, letters, finalize, skills, resumes, skills_extract.
 - `companies/`: finding and verifying employers, with their data files; `add` adds one from a link.
 - `web/` the UI, `tests/` pytest, `scripts/` the privacy guard, `.claude/commands/` the assistant commands,

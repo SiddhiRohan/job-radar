@@ -238,6 +238,34 @@ days since you applied, and changed ones with what changed; "Check postings" run
 `.cache/ui/watch.json`. Nothing here changes a status: a closed posting is a hint, not a rejection. Postings from
 job-board employers are not re-read yet and count as unknown.
 
+## Agents
+
+After the watcher, the morning run hands what changed to the agents (`python -m radar.agents run`). Two write for
+you and need the model; two only count.
+
+| Agent | When | Model | Where it shows |
+| --- | --- | --- | --- |
+| Interview prep, `radar/prep.py` | An application reaches screen or interview, once per stage | yes | Agents view, brief, chat, `/radar-prep`, `python -m radar.agents show prep` |
+| Follow-ups, `radar/followup.py` | Still at applied after `followup_after_days`, posting not closed | yes | Agents view, brief, chat, `python -m radar.agents show followups` |
+| Skill gaps, `radar/gaps.py` | When asked, over the last 30 days of verdicts | no | Agents view, chat, `python -m radar.gaps` |
+| Sponsor map, `radar/sponsormap.py` | When asked, over the last 60 days of postings | no | Agents view, chat, `python -m radar.sponsormap` |
+
+Settings, under `"agents"` in `config.json`:
+
+| Key | Default | What it does |
+| --- | --- | --- |
+| `prep` | true | false stops the morning run writing preps. One asked for by name is still written. |
+| `followups` | true | The same for follow-up drafts. |
+| `followup_after_days` | 10 | Days at applied with no reply before a follow-up is drafted. |
+| `per_run` | 5 | The most preps, and the most drafts, one run writes; the rest wait for the next run. |
+
+A prep is one call of about 6,000 tokens in and 2,500 out, roughly five cents on Sonnet; a follow-up is a cent or
+two. Without an API key nothing is written: `python -m radar.agents next` puts the waiting tasks, with each agent's
+rules and schema, in `.cache/agent_tasks.json` for a coding assistant, and `python -m radar.agents save <file>`
+stores its answers once they pass the same checks. Preps are kept in `.cache/ui/prep.json` and drafts in
+`.cache/ui/followups.json`. Any number in either that is not in the posting or the resume is replaced by [?] and
+named in its notes. Nothing is ever sent.
+
 ## Fixed in code
 
 These rules are not settings. Changing them means changing the code, with a test.
@@ -250,6 +278,8 @@ These rules are not settings. Changing them means changing the code, with a test
 | The scoring prompt, the four model factors, and the sponsorship, location and pay rules | `radar/fit.py`, `radar/factors.py` |
 | 1.5 seconds between requests to Workday or a job board, and a 6-hour response cache | `radar/wd.py` |
 | How each job board's fields are read: dates, places, pay, description | `radar/boardparse.py` |
+| The prep and follow-up prompts, and the checks on their answers | `radar/prep.py`, `radar/followup.py` |
+| Numbers a prep or draft may use: only those in the posting and the resume | `radar/facts.py` |
 
 ## Common adjustments
 
