@@ -235,8 +235,8 @@ already rejected or at offer, one request per posting at the usual 1.5 second ga
 seen, whether the posting closed (Workday answers "permission denied" for a posting that was taken down), was
 retitled, changed its pay range, or had its description rewritten. The Applied page shows closed postings with the
 days since you applied, and changed ones with what changed; "Check postings" runs it now. State lives in
-`.cache/ui/watch.json`. Nothing here changes a status: a closed posting is a hint, not a rejection. Postings from
-job-board employers are not re-read yet and count as unknown.
+`.cache/ui/watch.json`. Nothing here changes a status: a closed posting is a hint, not a rejection. A job-board
+employer's posting is looked up on its board, which one cached request reads whole: gone from the board means closed.
 
 ## Agents
 
