@@ -109,5 +109,11 @@
     5,
     6
   ],
-  "prepare_cap": 0
+  "prepare_cap": 0,
+  "agents": {
+    "prep": true,
+    "followups": true,
+    "followup_after_days": 10,
+    "per_run": 5
+  }
 }
