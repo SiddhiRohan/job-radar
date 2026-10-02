@@ -2,22 +2,13 @@
 read aloud or sent under the person's name, so a figure the model made up ("cut latency by 40%") is taken out and
 named in a note, the way tailoring treats words outside the resume.
 
-A figure is a token that is all number: 40, 40%, 2,000+, $120k, 1.5x, 14.2. Digits inside a name (H-1B, S3, GPT-4,
-EC2), a date or range (2026-09-14, 3-5) or a ratio (1:1, 24/7) are left alone; a name is not a claim."""
+Every number counts, whatever its units: 40%, 800ms, $2B, 12-person, 2019-2021. Digits that are part of a name
+(H-1B, S3, GPT-4, Neo4j) or a ratio (1:1, 24/7) are not figures and are left as written."""
 
 import re
 
-TOKEN = re.compile(r"[\w$.,%+:/-]+")  # 1:1, 24/7 and links stay whole
-FIGURE = re.compile(r"\$?(\d+(?:,\d{3})*(?:\.\d+)?)(?:[%+xkKM]|k\+)?")
-DIGITS = re.compile(r"\d+(?:,\d{3})*(?:\.\d+)?")
+RUN = re.compile(r"\d+(?:,\d{3})*(?:\.\d+)?")
 MISSING = "[?]"
-
-
-def figure(token):
-    """(core, match) when the token, less trailing punctuation, is a figure, else None."""
-    core = token.rstrip(".,")
-    m = FIGURE.fullmatch(core)
-    return (core, m) if m else None
 
 
 def norm(n):
@@ -28,7 +19,16 @@ def norm(n):
 
 def numbers(text):
     """Every number in a source, inside a date or a name too: a figure may repeat any of them."""
-    return {norm(n) for n in DIGITS.findall(text or "")}
+    return {norm(n) for n in RUN.findall(text or "")}
+
+
+def named(text, start, end):
+    """The digits at text[start:end] belong to a name or a ratio: a letter right before them (S3, EC2, Neo4j), a
+    letter and a hyphen (H-1B, GPT-4), or digits on the far side of a colon or slash (1:1, 24/7)."""
+    before, after = text[max(0, start - 2) : start], text[end : end + 2]
+    if before[-1:].isalpha() or (before[-1:] == "-" and before[:1].isalpha()):
+        return True
+    return (before[-1:] in ":/" and before[:1].isdigit()) or (after[:1] in ":/" and after[1:2].isdigit())
 
 
 def lock(value, sources, where=""):
@@ -44,15 +44,13 @@ def lock(value, sources, where=""):
             return [clean(x, f"{at}.{i + 1}") for i, x in enumerate(v)]
         if not isinstance(v, str):
             return v
-
-        def swap(m):
-            f = figure(m.group(0))
-            if not f or norm(f[1].group(1)) in allowed:
-                return m.group(0)
-            core, fm = f
-            notes.append(f"{fm.group(1)} in {at} is not in the posting or your resume, so it was taken out.")
-            return core[: fm.start(1)] + MISSING + core[fm.end(1) :] + m.group(0)[len(core) :]
-
-        return TOKEN.sub(swap, v)
+        out, last = [], 0
+        for m in RUN.finditer(v):
+            if named(v, m.start(), m.end()) or norm(m.group(0)) in allowed:
+                continue
+            notes.append(f"{m.group(0)} in {at} is not in the posting or your resume, so it was taken out.")
+            out += [v[last : m.start()], MISSING]
+            last = m.end()
+        return "".join(out) + v[last:]
 
     return clean(value, where), notes

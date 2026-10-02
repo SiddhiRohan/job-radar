@@ -115,7 +115,7 @@ def test_the_report_lists_preps_newest_first_with_the_current_status(home):
     applications.set_status("Contoso", "R1", "offer")
     r = prep.report()
     assert {x["key"]: x["status"] for x in r["items"]} == {"Contoso|R1": "offer", "Adatum|R3": "screen"}
-    assert r["due"] == 0
+    assert prep.due() == []
 
 
 def test_numbers_match_with_or_without_thousands_separators():
@@ -147,3 +147,18 @@ def test_names_with_digits_are_not_figures_and_are_left_alone():
 def test_a_number_inside_a_source_date_may_be_repeated():
     clean, notes = facts.lock("Applied on September 9, 2026.", ["applied 2026-09-09"])
     assert clean == "Applied on September 9, 2026." and notes == []
+
+
+def test_the_company_is_a_source_so_its_digits_stay():
+    clean, notes = facts.lock("Thank you, 3M team.", ["3M", "R1"])
+    assert clean == "Thank you, 3M team." and notes == []
+
+
+def test_figures_with_units_ranges_and_years_are_still_checked():
+    said = "800ms to 120ms; $2B; 10TB; a 12-person team for 6-month sprints; 40-50%; 3X; 40%+; 2019-2021."
+    clean, notes = facts.lock(said, ["nothing to match"])
+    assert (
+        clean
+        == "[?]ms to [?]ms; $[?]B; [?]TB; a [?]-person team for [?]-month sprints; [?]-[?]%; [?]X; [?]%+; [?]-[?]."
+    )
+    assert len(notes) == 12
