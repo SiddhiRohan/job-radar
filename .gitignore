@@ -22,3 +22,6 @@ notes/
 # Claude Code: per-machine settings and helper worktrees
 .claude/settings.local.json
 .claude/worktrees/
+
+# Codex: per-machine settings
+.codex/
