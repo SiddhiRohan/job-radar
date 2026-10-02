@@ -37,7 +37,7 @@ tailoring and tracking. The dated history of the author's own runs is kept in a 
 - A chat assistant with tools over the shortlist, tailoring, email, posting status, the brief and the agents; it
   judges a pasted job link and adds an employer from a link too.
 - The server accepts changes only from its own pages. A pre-commit check keeps personal details out of commits.
-- 447 offline tests, CI on every PR, pre-commit with ruff and gitleaks.
+- 456 offline tests, CI on every PR, pre-commit with ruff and gitleaks.
 
 **Next**
 
