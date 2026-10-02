@@ -134,3 +134,16 @@ def test_a_prep_asked_for_before_any_reply_prepares_for_a_first_screen(home):
     page = agentview.text("prep", "Northwind")
     assert page.startswith("Interview prep: Data Scientist at Northwind, for the first screen, made ")
     assert "- No Spark: Say so." in page
+
+
+def test_names_with_digits_are_not_figures_and_are_left_alone():
+    text = "You will need H-1B sponsorship; data lands in S3 via EC2, GPT-4 drafts it, 1:1s are weekly."
+    assert facts.lock(text, ["nothing"]) == (text, [])
+    clean, notes = facts.lock("Saved $120k and 2,000+ hours, 1.5x faster, by 40%.", ["2,000 hours"])
+    assert clean == "Saved $[?]k and 2,000+ hours, [?]x faster, by [?]%."
+    assert [n.split()[0] for n in notes] == ["120", "1.5", "40"]
+
+
+def test_a_number_inside_a_source_date_may_be_repeated():
+    clean, notes = facts.lock("Applied on September 9, 2026.", ["applied 2026-09-09"])
+    assert clean == "Applied on September 9, 2026." and notes == []
