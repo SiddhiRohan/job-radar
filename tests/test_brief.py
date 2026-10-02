@@ -3,7 +3,7 @@
 import json
 from datetime import datetime
 
-from radar import applications, brief, mail, watch
+from radar import applications, brief, followup, mail, prep, watch
 
 DAY = "2026-09-28"
 
@@ -33,6 +33,8 @@ def isolate(tmp_path, monkeypatch):
     monkeypatch.setattr(mail, "STATE", tmp_path / "mail.json")
     monkeypatch.setattr(watch, "STATE", tmp_path / "watch.json")
     monkeypatch.setattr(applications, "PATH", tmp_path / "applications.md")
+    monkeypatch.setattr(prep, "STATE", tmp_path / "prep.json")
+    monkeypatch.setattr(followup, "STATE", tmp_path / "followups.json")
 
 
 def test_picks_rank_fit_then_sponsorship_then_pay(tmp_path, monkeypatch):
@@ -132,3 +134,48 @@ def test_a_closed_posting_is_not_called_quiet(tmp_path, monkeypatch):
     (tmp_path / "watch.json").write_text(json.dumps({"postings": postings}), encoding="utf-8")
     b = brief.build(now=datetime(2026, 9, 28, 9, 0), jobs=[])
     assert [x["posting"] for x in b["quiet"]] == ["open"]
+
+
+def test_the_brief_says_what_the_agents_wrote_since_the_last_one(tmp_path, monkeypatch):
+    isolate(tmp_path, monkeypatch)
+    applications.write(
+        [
+            {
+                "date": "2026-09-01 09:00",
+                "company": "Contoso",
+                "title": "Data Scientist",
+                "status": "interview",
+                "req_id": "R1",
+            },
+            {
+                "date": "2026-09-01 09:00",
+                "company": "Northwind",
+                "title": "ML Engineer",
+                "status": "applied",
+                "req_id": "R2",
+            },
+            {
+                "date": "2026-09-01 09:00",
+                "company": "Fabrikam",
+                "title": "Analyst",
+                "status": "applied",
+                "req_id": "R3",
+            },
+        ]
+    )
+    brief.STATE.write_text(json.dumps({"made_at": "2026-09-27 09:00"}), encoding="utf-8")
+    prep.STATE.write_text(
+        json.dumps({"Contoso|R1": {"company": "Contoso", "title": "Data Scientist", "made": "2026-09-28 07:50"}})
+    )
+    old = {"company": "Fabrikam", "title": "Analyst", "applied": "2026-09-01", "made": "2026-09-20 07:50", "done": None}
+    new = {
+        "company": "Northwind",
+        "title": "ML Engineer",
+        "applied": "2026-09-01",
+        "made": "2026-09-28 07:51",
+        "done": None,
+    }
+    followup.STATE.write_text(json.dumps({"Fabrikam|R3": old, "Northwind|R2": new}), encoding="utf-8")
+    b = brief.build(now=datetime(2026, 9, 28, 9, 0), jobs=[])
+    assert b["agents"] == ["Interview prep ready: Contoso, Data Scientist", "1 follow-up draft ready: Northwind"]
+    assert "Agents: 1 follow-up draft ready: Northwind" in brief.text(b)
