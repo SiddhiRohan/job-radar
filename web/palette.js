@@ -17,9 +17,9 @@ function goToday(date, then) {
   if (date && date !== T.date) { T.date = date; loadToday().then(then); } else if (then) then();
   if ((location.hash || "#today") !== "#today") location.hash = "today";
 }
-const jobRun = async (path, label) => {
+const jobRun = async (path, label, after = loadApplied) => {
   toast(`${label} started`);
-  try { await waitJob((await api(path, {})).job_id); toast(`${label} finished`); loadApplied(); }
+  try { await waitJob((await api(path, {})).job_id); toast(`${label} finished`); after(); }
   catch (e) { toast(`${label} failed: ${e.message}`); }
 };
 
@@ -29,10 +29,12 @@ function buildItems() {
     { g: "Go", label: "Today", run: () => (location.hash = "today") },
     { g: "Go", label: "Tailor", run: () => (location.hash = "tailor") },
     { g: "Go", label: "Applied", run: () => (location.hash = "applied") },
+    { g: "Go", label: "Agents", hint: "interview prep, follow-ups, skill gaps, sponsors", run: () => (location.hash = "agents") },
     { g: "Go", label: "Setup and checks", run: () => (location.hash = "setup") },
     { g: "Do", label: "Run the radar", hint: "poll, score, digest", run: () => runRadar(1, false) },
     { g: "Do", label: "Check mail", hint: "statuses from hiring emails", run: () => jobRun("/api/mail/sync", "Mail check") },
     { g: "Do", label: "Check postings", hint: "closed or changed since you applied", run: () => jobRun("/api/watch/run", "Posting check") },
+    { g: "Do", label: "Run the agents", hint: "interview prep and follow-up drafts", run: () => jobRun("/api/agents/run", "Agents", loadAgents) },
     { g: "Do", label: "New chat thread", run: () => $("#chatnew").click() },
     { g: "Do", label: "Keyboard shortcuts", run: () => $("#keys").showModal() },
     { g: "Look", label: "Accent: Teal", run: () => setAccent("") },

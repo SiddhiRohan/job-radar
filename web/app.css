@@ -455,3 +455,28 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .stag.s-screen, .stag.s-interview, .stag.s-offer { color: var(--apply); border-color: color-mix(in srgb, var(--apply) 45%, transparent); }
 @media (max-width: 760px) { .rj-row { grid-template-columns: 1fr auto; } .rj-row .obar { grid-column: 1 / -1; grid-row: 2; } .rj-row .rn { display: none; } }
 @media (prefers-reduced-motion: reduce) { .card.search { transition: none; } }
+
+/* Agents view: interview prep, follow-up drafts, skill gaps and the sponsor map */
+.agents-lead { display: flex; justify-content: space-between; align-items: center; gap: 12px 20px; flex-wrap: wrap; margin: 16px 0 12px; }
+.agents-lead p { margin: 0; color: var(--ink-2); }
+.prepform { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 4px 0 10px; }
+.prepform select { flex: 1 1 260px; min-width: 0; }
+.prep { border: 1px solid var(--rule); border-radius: var(--radius-sm); margin: 8px 0; }
+.prep > summary { position: static; background: none; margin: 0; padding: 10px 12px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+.prep[open] > summary { border-bottom: 1px solid var(--rule); }
+.prep .pbody { padding: 4px 12px 12px; font-size: var(--fs-sm); }
+.prep .pbody > p { margin: 8px 0; }
+.prep h4, h4.minor { font-size: var(--fs-sm); color: var(--ink-2); font-weight: 600; margin: 14px 0 6px; }
+.prep ol, .prep ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.prep li, .prep p { max-width: 90ch; }
+.prep .from { display: block; color: var(--ink-2); }
+.story { border-left: 3px solid var(--rule-strong); padding: 2px 0 2px 10px; margin: 8px 0; max-width: 90ch; }
+.auth { border-left: 3px solid var(--maybe); padding-left: 10px; }
+.pnotes { margin: 10px 0 0; padding-left: 18px; color: var(--ink-3); font-size: var(--fs-xs); }
+.stage { font-size: var(--fs-xs); padding: 0 8px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); color: var(--accent); }
+.draft { white-space: pre-wrap; background: var(--surface-2); border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: 8px 10px; font-size: var(--fs-sm); max-width: 90ch; }
+.legend-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 6px 0 8px; }
+.seg.key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.hrow .obar { min-width: 0; height: 14px; }
+.hrow .hl .tag { margin-left: 6px; }
+.hbars.wideval .hrow { grid-template-columns: minmax(90px, 38%) 1fr 56px; }

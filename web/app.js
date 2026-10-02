@@ -477,7 +477,7 @@ function show() {
   document.querySelectorAll(".view").forEach(s => (s.hidden = s.dataset.view !== v));
   document.querySelectorAll(".nav a").forEach(a => a.classList.toggle("on", a.dataset.view === v));
   $("#datectl").hidden = v !== "today";
-  if (v === "today") loadToday(); if (v === "applied") loadApplied(); if (v === "setup") loadSetup();
+  if (v === "today") loadToday(); if (v === "applied") loadApplied(); if (v === "setup") loadSetup(); if (v === "agents") loadAgents();
 }
 /* A new view starts at the top; refreshes keep the place. Browsers with the View Transitions API cross-fade the
    swap; the CSS turns that off under prefers-reduced-motion. */
@@ -489,7 +489,7 @@ show();
 setupFirst();
 
 /* ---------- keyboard ---------- */
-/* j/k walk the visible postings on Today, a marks or undoes, o opens the posting, [ ] change the day, 1 2 3 switch
+/* j/k walk the visible postings on Today, a marks or undoes, o opens the posting, [ ] change the day, 1 to 4 switch
    views, / asks the assistant, ? lists this. Nothing fires while typing in a field or with a modifier held. */
 const K = { cur: null };
 const visibleRows = () => [...document.querySelectorAll("#today-body article.row")].filter(r => r.offsetParent !== null);
@@ -513,7 +513,7 @@ document.addEventListener("keydown", e => {
     a: () => today && K.cur?.querySelector("button.apply")?.click(),
     o: () => today && (K.cur?.querySelector("a.title") || K.cur?.querySelector("a[href][target]"))?.click(),
     "[": () => today && $("#prev").click(), "]": () => today && $("#next").click(),
-    1: () => (location.hash = "today"), 2: () => (location.hash = "tailor"), 3: () => (location.hash = "applied"),
+    1: () => (location.hash = "today"), 2: () => (location.hash = "tailor"), 3: () => (location.hash = "applied"), 4: () => (location.hash = "agents"),
     f: () => (location.hash === "#applied") && $("#appsearch")?.focus(),
     "/": () => { setChat(true); $("#chatin").focus(); },
     "?": () => $("#keys").showModal(),
