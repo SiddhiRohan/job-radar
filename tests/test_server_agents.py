@@ -7,6 +7,8 @@ import sys
 import pytest
 from fastapi import HTTPException
 
+from radar import runlock
+
 
 @pytest.fixture
 def server(tmp_path, monkeypatch):
@@ -23,8 +25,9 @@ def server(tmp_path, monkeypatch):
 
 def test_one_call_brings_every_agents_report(server):
     r = server.agent_reports()
-    assert set(r) == {"key", "prep", "followups", "gaps", "sponsors"}
-    assert r["key"] is False and r["prep"] == {"items": [], "due": 0} and r["followups"] == {"items": [], "due": 0}
+    assert set(r) == {"key", "waiting", "followup_after_days", "prep", "followups", "gaps", "sponsors"}
+    assert r["key"] is False and r["waiting"] == {"prep": 0, "followups": 0} and r["followup_after_days"] == 10
+    assert r["prep"] == {"items": []} and r["followups"] == {"items": []}
     assert r["gaps"]["skills"] == [] and r["sponsors"]["employers"] == []
 
 
@@ -32,9 +35,18 @@ def test_a_run_from_the_page_names_the_agent_and_the_application(server, monkeyp
     seen = []
     monkeypatch.setattr(server.agents, "run", lambda names, who: seen.append((names, who)) or {})
     monkeypatch.setattr(server, "background", lambda fn, *args: fn(*args))
+    with pytest.raises(HTTPException) as e:  # no API key: nothing would be written
+        server.agent_run({})
+    assert e.value.status_code == 409 and "No API key" in e.value.detail
+    monkeypatch.setattr(server.agents, "has_key", lambda: True)
     server.agent_run({"name": "prep", "company": "Contoso", "req_id": "R1"})
     server.agent_run({})
     assert seen == [(["prep"], ("Contoso", "R1")), (None, None)]
+    runlock.LOCK.parent.mkdir(parents=True, exist_ok=True)
+    runlock.LOCK.write_text("{}", encoding="utf-8")  # the morning run is going
+    with pytest.raises(HTTPException) as e:
+        server.agent_run({})
+    assert "morning run is going" in e.value.detail and len(seen) == 2
 
 
 def test_marking_a_draft_that_does_not_exist_is_refused(server):

@@ -1,8 +1,8 @@
 """python -m radar.agents: the agents that work from the radar's own records after each run.
 
-  run [prep|followups] [--for COMPANY [REQ_ID]]   write what is due, with the Anthropic API
+  run [prep|followups] [--for COMPANY [REQ_ID]]   write what is due, or one application's, with the Anthropic API
   next [prep|followups] [--for COMPANY [REQ_ID]]  no API key: put the tasks in .cache/agent_tasks.json for a
-                                                   coding assistant to answer
+                                                   coding assistant to answer (radar/agenttasks.py)
   save FILE                                        store the assistant's answers once they pass the checks
   show prep|followups [COMPANY]                    print what they wrote
 
@@ -12,19 +12,16 @@ live under "agents" in config.json; docs/CONFIG.md explains them."""
 
 import json
 import sys
+import threading
 from pathlib import Path
 
 import requests
 
-from radar import agentview, followup, handscore, llm, prep, score
+from radar import followup, handscore, llm, prep, runlock, score
 
 WRITERS = {"prep": prep, "followups": followup}
 PER_RUN = 5
-TASKS = Path(".cache/agent_tasks.json")
-HOW = (
-    "Answer each task as its agent's rules say, from the task's input alone, following that agent's schema exactly. "
-    'Write one JSON object {"<task id>": answer, ...} to a file, then run python -m radar.agents save <file>.'
-)
+BUSY = threading.Lock()  # the web app and the chat share one process: one writing run at a time
 
 
 def has_key():
@@ -38,19 +35,40 @@ def config():
         return {}
 
 
+def matching(items, company, req_id=None):
+    """One employer's items: its exact name in any case, else the only employer whose name starts with what was
+    typed. "GE" never reaches Target or Geico."""
+    typed = company.strip().lower()
+    found = [i for i in items if i["company"].lower() == typed]
+    if not found:
+        starts = {i["company"] for i in items if i["company"].lower().startswith(typed)}
+        found = [i for i in items if i["company"] in starts] if len(starts) == 1 else []
+    return [i for i in found if not req_id or i["req_id"] == req_id]
+
+
 def todo(name, cfg, who=None):
-    """One writer's work: what is due, or with who=(company, req_id or None) that employer's applications, the ones
-    at a screen or interview first. An agent turned off in config.json has nothing due but still answers by name."""
+    """One writer's work: what is due, or with who=(company, req_id or None) the one application its agent would
+    choose there. An agent turned off in config.json has nothing due but still answers for one application."""
     mod = WRITERS[name]
     if who is None:
         return mod.due(cfg) if (cfg.get("agents") or {}).get(name, True) else []
-    company, req_id = who[0].lower(), who[1]
-    every = mod.due(cfg, every=True)
-    found = [i for i in every if i["company"].lower() == company] or [
-        i for i in every if company in i["company"].lower()
-    ]
-    found = [i for i in found if not req_id or i["req_id"] == req_id]
-    return sorted(found, key=lambda i: i.get("stage") not in prep.STAGES)
+    one = mod.choose(matching(mod.due(cfg, every=True), *who))
+    return [one] if one else []
+
+
+def waiting(cfg=None):
+    """How many applications each writer has due, as the next run would see them."""
+    cfg = config() if cfg is None else cfg
+    return {name: len(todo(name, cfg)) for name in WRITERS}
+
+
+def refuse():
+    """Why the web app should not start a writing run now, or "" when it may."""
+    if not has_key():
+        return "No API key: add one on Setup, or run /radar-agents in a coding assistant."
+    if runlock.held():
+        return "The morning run is going; its agents step writes these when it gets there."
+    return ""
 
 
 def write(mod, item, complete):
@@ -74,85 +92,65 @@ def run(names=None, who=None, complete=None, key=None):
     cfg, complete = config(), complete or llm.complete
     key = score.load_api_key(required=False) if key is None else key
     cap = (cfg.get("agents") or {}).get("per_run", PER_RUN)
-    out = {}
-    for name, mod in WRITERS.items():
-        if names and name not in names:
-            continue
-        items, r = todo(name, cfg, who), {"made": [], "waiting": 0, "errors": []}
-        out[name] = r
-        if not key:
-            r["waiting"] = len(items)
-            continue
-        for item in items[:cap]:
-            try:
-                write(mod, item, complete)
-                r["made"].append(item["key"])
-            except (OSError, RuntimeError, ValueError, KeyError, requests.RequestException) as e:
-                r["errors"].append(f"{item['key']}: {str(e)[:160]}")
-        r["waiting"] = max(0, len(items) - cap)
-    return out
-
-
-def next_tasks(names=None, who=None):
-    """Write every due task, with each agent's rules and schema once, for a coding assistant. Returns the task ids."""
-    cfg, tasks, agents = config(), [], {}
-    for name, mod in WRITERS.items():
-        if names and name not in names:
-            continue
-        for item in todo(name, cfg, who):
-            agents[name] = {"rules": mod.rules(), "schema": mod.SCHEMA}
-            tasks.append({"id": f"{name}:{item['key']}", "agent": name, "input": mod.prompt(mod.packet(item))})
-    TASKS.parent.mkdir(parents=True, exist_ok=True)
-    TASKS.write_text(json.dumps({"how": HOW, "agents": agents, "tasks": tasks}, indent=1), encoding="utf-8")
-    return [t["id"] for t in tasks]
-
-
-def save_answers(answers):
-    """Store each answer that passes its agent's schema and checks. Returns (stored ids, {id: problems})."""
-    if not isinstance(answers, dict):
-        raise ValueError('the file should hold one JSON object, {"<task id>": answer, ...}')
-    cfg, stored, rejected = config(), [], {}
-    for tid, answer in answers.items():
-        name, _, key = tid.partition(":")
-        mod = WRITERS.get(name)
-        item = next((i for i in mod.due(cfg, every=True) if i["key"] == key), None) if mod else None
-        if item is None:
-            rejected[tid] = ["no such task: ids look like prep:<company>|<req_id>, as in the task file"]
-            continue
-        found = handscore.problems(answer, mod.SCHEMA, "answer") or mod.check(answer)
-        if found:
-            rejected[tid] = found
-            continue
-        mod.store_answer(item, answer, "assistant", mod.packet(item))
-        stored.append(tid)
-    return stored, rejected
+    names = [n for n in WRITERS if not names or n in names]
+    if not BUSY.acquire(blocking=False):
+        return {
+            n: {"made": [], "waiting": 0, "errors": ["the agents are already writing; try again shortly"]}
+            for n in names
+        }
+    try:
+        out = {}
+        for name in names:
+            items, r = todo(name, cfg, who), {"made": [], "waiting": 0, "errors": []}
+            out[name] = r
+            if not key:
+                r["waiting"] = len(items)
+                continue
+            for item in items[:cap]:
+                try:
+                    write(WRITERS[name], item, complete)
+                    r["made"].append(item["key"])
+                except (OSError, RuntimeError, ValueError, KeyError, requests.RequestException) as e:
+                    r["errors"].append(f"{item['key']}: {str(e)[:160]}")
+            r["waiting"] = max(0, len(items) - cap)
+        return out
+    finally:
+        BUSY.release()
 
 
 def main(argv):
+    from radar import agenttasks, agentview  # both import this module
+
     cmd, rest = (argv[0], list(argv[1:])) if argv else ("run", [])
     names = [rest.pop(0)] if rest and rest[0] in WRITERS else None
     who = (rest[1], rest[2] if len(rest) > 2 else None) if rest[:1] == ["--for"] and len(rest) > 1 else None
-    if cmd == "run":
-        for name, r in run(names, who).items():
+    try:
+        if cmd == "run":
+            for name, r in run(names, who).items():
+                print(
+                    f"{name}: wrote {len(r['made'])}, {r['waiting']} waiting"
+                    + "".join(f"\n  ! {e}" for e in r["errors"])
+                )
+            if not has_key():
+                print("no API key: python -m radar.agents next writes the waiting tasks for your coding assistant")
+            return 0
+        if cmd == "next":
+            ids = agenttasks.write(names, who)
+            print(f"tasks: {len(ids)}, in {agenttasks.TASKS}" if ids else "nothing is waiting for an agent")
+            return 0
+        if cmd == "save" and rest:
+            stored, rejected = agenttasks.save(json.loads(Path(rest[0]).read_text(encoding="utf-8")))
             print(
-                f"{name}: wrote {len(r['made'])}, {r['waiting']} waiting" + "".join(f"\n  ! {e}" for e in r["errors"])
+                f"stored: {len(stored)}"
+                + "".join(f"\n  not stored, {t}: " + "; ".join(p[:4]) for t, p in rejected.items())
             )
-        if not has_key():
-            print("no API key: python -m radar.agents next writes the waiting tasks for your coding assistant")
-        return 0
-    if cmd == "next":
-        ids = next_tasks(names, who)
-        print(f"tasks: {len(ids)}, in {TASKS}" if ids else "nothing is waiting for an agent")
-        return 0
-    if cmd == "save" and rest:
-        stored, rejected = save_answers(json.loads(Path(rest[0]).read_text(encoding="utf-8")))
-        print(
-            f"stored: {len(stored)}" + "".join(f"\n  not stored, {t}: " + "; ".join(p[:4]) for t, p in rejected.items())
-        )
-        return 1 if rejected else 0
-    if cmd == "show" and names:
-        print(agentview.text(names[0], rest[0] if rest else None))
-        return 0
+            return 1 if rejected else 0
+        if cmd == "show" and names:
+            print(agentview.text(names[0], rest[0] if rest else None))
+            return 0
+    except (OSError, ValueError) as e:
+        print(f"could not {cmd}: {e}")
+        return 1
     print(__doc__)
     return 2
 

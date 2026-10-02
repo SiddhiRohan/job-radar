@@ -67,3 +67,30 @@ def test_skill_gaps_and_the_sponsor_map_come_back_as_plain_lines(home, monkeypat
     monkeypatch.setattr(agentchat.sponsormap, "records", lambda: {})
     assert chat.server_tool("skill_gaps", {}, hooks={})["lines"][0].startswith("No skill is missing")
     assert chat.server_tool("sponsor_map", {}, hooks={})["lines"][0].startswith("No postings since")
+
+
+NOTE = {
+    "linkedin_note": "I applied for the Analyst role (R5).",
+    "email_subject": "Analyst, R5",
+    "email_body": " ".join(["word"] * 70),
+    "search_hint": "Contoso recruiter",
+}
+
+
+def test_a_follow_up_is_never_paid_for_twice_or_for_an_application_with_a_reply(home, monkeypatch):
+    monkeypatch.setattr(prep.resumes, "bases", lambda: {"entry": "Resume.", "experienced": "Resume."})
+    monkeypatch.setattr(
+        agents.llm, "complete", lambda system, user, schema, max_tokens=0: home.append(user) or (NOTE, "m")
+    )
+    applications.set_status("Contoso", "R5", "screen")
+    assert (
+        agentchat.page("followups", "Contoso")
+        == "every application at Contoso has had a reply, so there is nothing to follow up"
+    )
+    assert home == []
+    applications.set_status("Contoso", "R5", "applied")
+    first = agentchat.page("followups", "Contoso")
+    assert first.startswith("Follow-up: Analyst at Contoso") and len(home) == 1
+    agents.followup.done("Contoso|R5", "sent")
+    again = agentchat.page("followups", "Contoso")
+    assert "Already sent on " in again and len(home) == 1  # the sent draft is shown, not rewritten

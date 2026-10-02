@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from radar import agents, applications, followup, prep
+from radar import agents, agenttasks, agentview, applications, followup, prep
 
 NOW = datetime.now().strftime("%Y-%m-%d %H:%M")
 PREP = {
@@ -110,10 +110,14 @@ def test_an_agent_turned_off_does_nothing_until_asked_by_name(home):
     assert asked["followups"]["made"] == ["Northwind|R2"]
 
 
-def test_by_name_the_company_matches_loosely_and_an_interview_comes_first(home):
-    assert [i["key"] for i in agents.todo("prep", {}, ("contoso", None))] == ["Contoso|R1", "Contoso|R5"]
-    assert [i["key"] for i in agents.todo("prep", {}, ("North", None))] == ["Northwind|R2"]
+def test_by_name_one_application_is_chosen_from_an_exact_or_unique_name(home):
+    assert [i["key"] for i in agents.todo("prep", {}, ("contoso", None))] == ["Contoso|R1"]  # the interview
     assert [i["key"] for i in agents.todo("prep", {}, ("Contoso", "R5"))] == ["Contoso|R5"]
+    assert [i["key"] for i in agents.todo("prep", {}, ("North", None))] == ["Northwind|R2"]  # the only one
+    assert [i["key"] for i in agents.todo("followups", {}, ("Contoso", None))] == ["Contoso|R5"]  # no reply yet
+    applications.add("Contoso Health", "R7", "Analyst")
+    assert agents.todo("prep", {}, ("Cont", None)) == []  # two employers start so: never guess
+    assert agents.todo("prep", {}, ("ontoso", None)) == []  # not inside a name either
 
 
 def test_a_failure_is_reported_and_the_run_goes_on(home, monkeypatch):
@@ -128,12 +132,12 @@ def test_a_failure_is_reported_and_the_run_goes_on(home, monkeypatch):
 
 
 def test_an_assistant_answers_the_task_file_and_save_checks_each_answer(home):
-    ids = agents.next_tasks()
+    ids = agenttasks.write()
     assert ids == ["prep:Contoso|R1", "followups:Contoso|R5", "followups:Northwind|R2"]
-    packet = json.loads(agents.TASKS.read_text(encoding="utf-8"))
+    packet = json.loads(agenttasks.TASKS.read_text(encoding="utf-8"))
     assert set(packet["agents"]) == {"prep", "followups"} and "schema" in packet["agents"]["prep"]
     assert "requisition R1" in packet["tasks"][0]["input"]
-    stored, rejected = agents.save_answers(
+    stored, rejected = agenttasks.save(
         {
             "prep:Contoso|R1": PREP,
             "followups:Northwind|R2": NOTE | {"linkedin_note": 7},
@@ -147,11 +151,33 @@ def test_an_assistant_answers_the_task_file_and_save_checks_each_answer(home):
 
 def test_what_the_agents_wrote_reads_as_plain_pages(home, capsys):
     agents.run(complete=model(), key="k")
-    page = agents.agentview.text("prep")
+    page = agentview.text("prep")
     assert page.startswith("Interview prep: Data Scientist at Contoso, for the interview, made ")
     assert "Likely questions:\n1. Why us? (motivation) The pipelines." in page
     assert page.endswith("Work authorization:\nSay it plainly.")
-    assert agents.main(["show", "followups", "north"]) == 0
+    assert agents.main(["show", "followups", "northwind"]) == 0
     shown = capsys.readouterr().out
     assert 'Find them on LinkedIn: search "Northwind recruiter"' in shown and "Contoso" not in shown
-    assert agents.agentview.text("prep", "Adatum") == "nothing written yet for Adatum"
+    assert agentview.text("prep", "Adatum") == "nothing written yet for Adatum"
+
+
+def test_a_second_run_while_one_is_writing_does_nothing(home):
+    with agents.BUSY:
+        r = agents.run(complete=model(), key="k")
+    assert r["prep"]["errors"] == ["the agents are already writing; try again shortly"]
+    assert prep.load() == {} and followup.load() == {}
+
+
+def test_what_waits_follows_config(home):
+    assert agents.waiting({}) == {"prep": 1, "followups": 2}
+    assert agents.waiting({"agents": {"prep": False, "followup_after_days": 100000}}) == {"prep": 0, "followups": 0}
+
+
+def test_an_unreadable_state_file_reads_as_empty_and_the_brief_still_builds(home):
+    from radar import brief
+
+    for mod in (prep, followup):
+        mod.STATE.parent.mkdir(parents=True, exist_ok=True)
+        mod.STATE.write_text("{", encoding="utf-8")
+        assert mod.load() == {}
+    assert brief.build(jobs=[])["agents"] == []

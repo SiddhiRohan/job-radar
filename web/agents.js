@@ -13,20 +13,23 @@ async function loadAgents() {
   } catch (e) { fail(body, e, loadAgents); }
 }
 
-/* Run the writing agents, or one of them for one application, then show what they wrote. */
-async function runAgents(btn, body, label) {
-  btn.disabled = true; const was = btn.textContent; btn.textContent = "Writing";
+/* Run the writing agents, or one of them for one application, then show what they wrote. The server refuses with a
+   reason (no API key, the morning run is going), which the toast shows. The palette calls this with no button. */
+async function runAgents(btn, body = {}, label = "Agents") {
+  const was = btn?.textContent;
+  if (btn) { btn.disabled = true; btn.textContent = "Writing"; }
   try {
     const r = await waitJob((await api("/api/agents/run", body)).job_id);
-    const errors = Object.values(r).flatMap(x => x.errors);
-    toast(errors.length ? `${label}: ${errors[0]}` : `${label}: done`); loadAgents();
-  } catch (e) { toast(`${label} failed: ${e.message}`); btn.disabled = false; btn.textContent = was; }
+    const errors = Object.values(r).flatMap(x => x.errors), made = Object.values(r).flatMap(x => x.made);
+    toast(errors.length ? `${label}: ${errors[0]}` : made.length ? `${label}: wrote ${made.length}` : `${label}: nothing was waiting`);
+    if ((location.hash || "#today") === "#agents") loadAgents();
+  } catch (e) { toast(`${label}: ${e.message}`); if (btn) { btn.disabled = false; btn.textContent = was; } }
 }
 
 function agentsLead(r) {
-  const run = el("button", { type: "button", class: "primary", onclick: () => runAgents(run, {}, "Agents") }, "Run the agents now");
+  const run = el("button", { type: "button", class: "primary", onclick: () => runAgents(run) }, "Run the agents now");
   if (!r.key) run.disabled = true;
-  const waiting = r.prep.due + r.followups.due;
+  const waiting = r.waiting.prep + r.waiting.followups;
   const say = r.key
     ? `They run every morning after the radar. ${waiting ? `${waiting} waiting to be written.` : "Nothing is waiting."}`
     : "No API key, so prep and follow-ups wait: add one on Setup, or run /radar-agents in Claude Code or another coding assistant.";
@@ -70,8 +73,9 @@ function prepItem(rec, open) {
 /* ---------- follow-ups ---------- */
 function followCard(r) {
   const card = el("section", { class: "card wide" }, el("h3", {}, "Follow-ups"),
-    el("p", { class: "sub" }, "Drafts for applications quiet for ten days whose posting is still up. Nothing is sent: copy one, send it yourself, then mark it sent."));
-  if (!r.followups.items.length) card.append(el("p", { class: "kempty" }, r.followups.due ? `${r.followups.due} quiet applications wait for a draft.` : "No follow-ups waiting."));
+    el("p", { class: "sub" }, `Drafts for applications quiet for ${r.followup_after_days} days whose posting is still up. Nothing is sent: copy one, send it yourself, then mark it sent.`));
+  const due = r.waiting.followups;
+  if (!r.followups.items.length) card.append(el("p", { class: "kempty" }, due ? `${due} quiet application${due === 1 ? "" : "s"} wait${due === 1 ? "s" : ""} for a draft.` : "No follow-ups waiting."));
   for (const f of r.followups.items) card.append(followItem(f));
   return card;
 }

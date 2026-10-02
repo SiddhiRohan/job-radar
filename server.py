@@ -212,9 +212,11 @@ def posting_watch_run():
 @app.get("/api/agents")
 def agent_reports():
     """What the agents wrote and found: interview prep, follow-up drafts, skill gaps and the sponsor map."""
-    jobs = jobs_all()
+    jobs, cfg = jobs_all(), agents.config()
     return {
         "key": agents.has_key(),
+        "waiting": agents.waiting(cfg),
+        "followup_after_days": (cfg.get("agents") or {}).get("followup_after_days", followup.AFTER_DAYS),
         "prep": prep.report(),
         "followups": followup.report(),
         "gaps": gaps.analyse(jobs),
@@ -224,7 +226,10 @@ def agent_reports():
 
 @app.post("/api/agents/run")
 def agent_run(body: dict):
-    """Write what is due now, or with a company, that employer's prep or follow-up."""
+    """Write what is due now, or with a company, that employer's prep or follow-up. Refused without an API key or
+    while the morning run is going, since its own agents step is about to write the same things."""
+    if why := agents.refuse():
+        raise HTTPException(409, why)
     who = (body["company"], body.get("req_id")) if body.get("company") else None
     return background(agents.run, [body["name"]] if body.get("name") else None, who)
 

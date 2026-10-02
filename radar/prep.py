@@ -55,7 +55,11 @@ SCHEMA = _obj(
 
 
 def load():
-    return json.loads(STATE.read_text(encoding="utf-8")) if STATE.exists() else {}
+    """The preps written so far; a missing or unreadable file reads as none, so the brief and the page still load."""
+    try:
+        return json.loads(STATE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
 
 
 def due(cfg=None, every=False):
@@ -69,6 +73,12 @@ def due(cfg=None, every=False):
             fields = {k: a[k] for k in ("company", "req_id", "title")}
             out.append({"key": key, "stage": a["status"], "applied": a["date"][:10]} | fields)
     return out
+
+
+def choose(found):
+    """Of one employer's applications, the one to prepare for: the newest at a screen or interview, else the newest."""
+    staged = [i for i in found if i["stage"] in STAGES]
+    return max(staged or found, key=lambda i: i["applied"], default=None)
 
 
 def packet(item, jobs=None, recs=None):
@@ -130,22 +140,21 @@ def check(answer):
 
 
 def store_answer(item, answer, by, p, problems=()):
-    keys = ("posting", "fit", "sponsorship", "resume", "profile", "skills", "req_id", "title", "applied")
-    sources = [p[k] for k in keys]
-    clean, notes = facts.lock(answer, sources)
-    state = load()
-    state[item["key"]] = {k: item[k] for k in ("company", "req_id", "title", "stage")} | {
-        "made": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "by": by,
-        "prep": clean,
-        "notes": list(problems) + notes,
-    }
-    STATE.parent.mkdir(parents=True, exist_ok=True)
-    STATE.write_text(json.dumps(state, indent=1), encoding="utf-8")
+    keys = ("posting", "fit", "sponsorship", "resume", "profile", "skills", "company", "req_id", "title", "applied")
+    clean, notes = facts.lock(answer, [p[k] for k in keys])
+    with store.lock():  # the morning run and a click in the app may both be writing
+        state = load()
+        state[item["key"]] = {k: item[k] for k in ("company", "req_id", "title", "stage")} | {
+            "made": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "by": by,
+            "prep": clean,
+            "notes": list(problems) + notes,
+        }
+        store.write_json(STATE, state)
 
 
 def report():
-    """Every prep, newest first, with the application's current status, and how many applications wait for one."""
+    """Every prep, newest first, with the application's current status."""
     status = {f"{a['company']}|{a['req_id']}": a["status"] for a in applications.rows()}
     items = [dict(v, key=k, status=status.get(k, "")) for k, v in load().items()]
-    return {"items": sorted(items, key=lambda r: r["made"], reverse=True), "due": len(due())}
+    return {"items": sorted(items, key=lambda r: r["made"], reverse=True)}

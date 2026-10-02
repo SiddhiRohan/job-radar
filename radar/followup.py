@@ -31,12 +31,11 @@ SCHEMA = {
 
 
 def load():
-    return json.loads(STATE.read_text(encoding="utf-8")) if STATE.exists() else {}
-
-
-def save(state):
-    STATE.parent.mkdir(parents=True, exist_ok=True)
-    STATE.write_text(json.dumps(state, indent=1), encoding="utf-8")
+    """The drafts written so far; a missing or unreadable file reads as none, so the brief and the page still load."""
+    try:
+        return json.loads(STATE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
 
 
 def due(cfg=None, every=False, today=None):
@@ -50,9 +49,15 @@ def due(cfg=None, every=False, today=None):
         key = f"{a['company']}|{a['req_id']}"
         closed = (watched.get(key) or {}).get("status") == "closed"
         if every or (a["status"] == "applied" and a["date"][:10] <= cutoff and not closed and key not in made):
-            fields = {k: a[k] for k in ("company", "req_id", "title")}
+            fields = {k: a[k] for k in ("company", "req_id", "title", "status")}
             out.append({"key": key, "applied": a["date"][:10]} | fields)
     return out
+
+
+def choose(found):
+    """Of one employer's applications, the one to follow up: the quietest still at applied. None when every one has
+    had a reply, since a follow-up is for silence."""
+    return min((i for i in found if i["status"] == "applied"), key=lambda i: i["applied"], default=None)
 
 
 def packet(item, jobs=None):
@@ -86,25 +91,27 @@ def check(answer):
 
 
 def store_answer(item, answer, by, p, problems=()):
-    clean, notes = facts.lock(answer, [p[k] for k in ("posting", "resume", "req_id", "title", "applied")])
-    state = load()
-    state[item["key"]] = {k: item[k] for k in ("company", "req_id", "title", "applied")} | {
-        "made": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "by": by,
-        "draft": clean,
-        "notes": list(problems) + notes,
-        "done": None,
-    }
-    save(state)
+    clean, notes = facts.lock(answer, [p[k] for k in ("posting", "resume", "company", "req_id", "title", "applied")])
+    with store.lock():  # the morning run and a click in the app may both be writing
+        state = load()
+        state[item["key"]] = {k: item[k] for k in ("company", "req_id", "title", "applied")} | {
+            "made": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "by": by,
+            "draft": clean,
+            "notes": list(problems) + notes,
+            "done": None,
+        }
+        store.write_json(STATE, state)
 
 
 def done(key, how="sent"):
     """Take a draft off the list once it is sent, or dismissed. False when there is no such draft."""
-    state = load()
-    if key not in state or how not in ("sent", "dismissed"):
-        return False
-    state[key]["done"] = f"{how} {datetime.now().strftime('%Y-%m-%d')}"
-    save(state)
+    with store.lock():
+        state = load()
+        if key not in state or how not in ("sent", "dismissed"):
+            return False
+        state[key]["done"] = f"{how} {datetime.now().strftime('%Y-%m-%d')}"
+        store.write_json(STATE, state)
     return True
 
 
@@ -117,4 +124,4 @@ def report():
         for k, v in load().items()
         if not v.get("done") and status.get(k) == "applied" and (watched.get(k) or {}).get("status") != "closed"
     ]
-    return {"items": sorted(live, key=lambda r: r["applied"]), "due": len(due())}
+    return {"items": sorted(live, key=lambda r: r["applied"])}

@@ -41,15 +41,20 @@ NAMES = {t["name"] for t in TOOLS}
 
 
 def page(name, company=None, req_id=None, again=False):
-    """What one writer made, for one employer or all of them. Asked for an employer it has nothing for (or again),
-    it writes one first, for that employer's likeliest application: one at a screen or interview, else the oldest."""
-    text = agentview.text(name, company, req_id)
-    if not company or not (again or text.startswith("nothing written yet")):
-        return text
+    """What one writer made, for everyone or for one employer. For an employer it picks the one application its
+    agent would (radar/agents.py todo) and writes for it first when nothing is written yet, or when asked again."""
+    if not company:
+        return agentview.text(name)
     items = agents.todo(name, agents.config(), (company, req_id))
     if not items:
+        known = agents.matching(agents.WRITERS[name].due({}, every=True), company, req_id)
+        if known and name == "followups":
+            return f"every application at {known[0]['company']} has had a reply, so there is nothing to follow up"
         return f"no application at {company} on the Applied list"
     one = (items[0]["company"], items[0]["req_id"])
+    text = agentview.text(name, *one)
+    if not again and not text.startswith("nothing written yet"):
+        return text
     r = agents.run([name], one)[name]
     if r["errors"]:
         return "could not write it: " + r["errors"][0]
