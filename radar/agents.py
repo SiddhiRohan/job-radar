@@ -27,6 +27,10 @@ HOW = (
 )
 
 
+def has_key():
+    return bool(score.load_api_key(required=False))
+
+
 def config():
     try:
         return json.loads(Path("config.json").read_text(encoding="utf-8"))
@@ -133,7 +137,7 @@ def main(argv):
             print(
                 f"{name}: wrote {len(r['made'])}, {r['waiting']} waiting" + "".join(f"\n  ! {e}" for e in r["errors"])
             )
-        if not score.load_api_key(required=False):
+        if not has_key():
             print("no API key: python -m radar.agents next writes the waiting tasks for your coding assistant")
         return 0
     if cmd == "next":
