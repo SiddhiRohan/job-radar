@@ -52,6 +52,15 @@ def lock(wait=30, stale=120):
         LOCK.unlink(missing_ok=True)
 
 
+def write_json(path, data):
+    """Write a small state file whole or not at all, so a reader never sees half of it. Call it inside lock()."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(data, indent=1), encoding="utf-8")
+    tmp.replace(path)
+
+
 def append_new(rows, seen_keys=()):
     """Append only rows whose key is not on disk yet; merge seen.json. Returns the rows actually written."""
     with lock():

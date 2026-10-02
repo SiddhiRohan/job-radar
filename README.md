@@ -68,11 +68,28 @@ The hour of tab-hopping becomes one page you read with your coffee.
   open a group to see the applications behind it.
 - **Watches what you applied to.** It re-checks each posting behind an open application and tells you when one
   closes, which is often the only answer you get.
+- **Gets you ready for the interview.** When an email moves an application to a screen or an interview, an agent
+  writes the prep that morning: what they will probe, likely questions, stories from your resume, an honest answer
+  for each gap, and a plain answer to the sponsorship question. A number it cannot find in the posting or your
+  resume is taken out, never made up.
+- **Drafts the follow-up.** For an application quiet for ten days whose posting is still up, a LinkedIn note and an
+  email for you to send, and the LinkedIn search that finds the recruiter.
+- **Says what to learn, and who sponsors.** Skill gaps counts what a month of postings found missing from your
+  resume and how many of them were one point from Apply. The sponsor map shows which employers' own postings say
+  they sponsor, and which employer defaults their postings contradict.
 - **Stays on your machine.** Resumes, applications and chat history are local files, ignored by git.
 
 <img src="docs/img/drawer.png" alt="A posting opened in the side drawer: the fit by factor, with experience, level, skills, domain, sponsorship, location and pay each marked meets, partial or gap next to what the posting asks and what the resume shows, above the description with the pay sentence highlighted.">
 
 <sub>Any posting opens in a drawer with its fit, factor by factor. Demo data.</sub>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/agents-dark.png">
+  <img src="docs/img/agents.png" alt="The Agents view: an interview prep ready for a Northwind interview, a follow-up draft for Proseware with a LinkedIn note, an email and buttons to copy it or mark it sent, skill gap bars for Databricks, Azure, Snowflake, dbt and Kubernetes, and a sponsor map of which employers' postings say they sponsor, with one employer default to check.">
+</picture>
+
+<sub>The Agents view: interview prep, follow-up drafts, skill gaps and the sponsor map. Demo data and fictional
+employers.</sub>
 
 ## How it works
 
@@ -82,7 +99,7 @@ flowchart LR
   B --> C["filters<br/>role, seniority, US,<br/>years, sponsorship"]
   C --> D["score<br/>Claude verdict,<br/>two resumes"]
   D --> E["digest<br/>Apply, Entry level,<br/>Maybe, Skipped"]
-  E --> F["web app<br/>Today, Tailor, Applied,<br/>chat"]
+  E --> F["web app<br/>Today, Tailor, Applied,<br/>Agents, chat"]
 ```
 
 1. `radar.poll` searches every Workday employer with four role terms, plus three entry-level terms for the
@@ -94,7 +111,9 @@ flowchart LR
 4. `radar.digest` writes `digests/<date>.md` and the sections the web app shows.
 5. `radar.mail` and `radar.watch` then read hiring emails and re-check the postings behind open
    applications.
-6. `server.py` serves the app from `web/` and starts the day's run at `run_time` while it is open.
+6. `radar.agents` writes interview prep for new screens and interviews and follow-up drafts for quiet
+   applications, and `radar.brief` ends the run with the morning brief.
+7. `server.py` serves the app from `web/` and starts the day's run at `run_time` while it is open.
 
 Employers are tiered, and how deep each tier is searched is set in `config.json`. At one request every 1.5
 seconds, a full run of every tier takes about an hour.
@@ -136,6 +155,8 @@ the setup, asks what you are looking for, and tunes the search with you. After t
 | `/radar-mail` | Read hiring emails and update statuses |
 | `/radar-add <employer> [link]` | Add an employer to the daily search |
 | `/radar-score` | Score new postings with the assistant itself, no API key needed |
+| `/radar-prep <company>` | Interview prep for one application, then a practice round |
+| `/radar-agents` | Run the agents: interview prep, follow-up drafts, skill gaps and the sponsor map |
 | `/radar-tune <what>` | Change what it looks for, in plain words |
 
 Both ways use the same files, so you can set up in one and use the other.
@@ -146,7 +167,8 @@ The radar is free. Scoring and tailoring use your own API key: roughly a cent pe
 typically $10 to $20 a month at the default settings. `score_cap` in `config.json` caps a run, and
 `"score_batch": true` halves the scoring cost in exchange for results that take up to an hour. With a coding
 assistant you can skip the key: the radar finds and filters postings, and `/radar-score` has the assistant judge
-them against the same rules, on your assistant plan.
+them against the same rules, on your assistant plan. The agents add little: about five cents for an interview prep
+and a cent or two for a follow-up draft, and skill gaps and the sponsor map are free counts.
 
 ### Email statuses, optional
 
@@ -169,6 +191,9 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 | Check the setup | `python -m radar.doctor` |
 | The morning brief | Top of Today, or `python -m radar.brief` |
 | Add an employer | `python -m companies.add <name> <link to its careers site or board>` |
+| Get ready for an interview | The Agents view, the chat ("prep me for my Contoso interview"), or `/radar-prep` |
+| Follow up on quiet applications | Follow-ups on the Agents view: copy, send it yourself, mark it sent |
+| See what to learn, and who sponsors | The Agents view, or `python -m radar.gaps` and `python -m radar.sponsormap` |
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/applied-dark.png">
@@ -186,8 +211,8 @@ analytics.
 
 What leaves your machine, only to do the job:
 
-- **Anthropic's API**, when scoring or tailoring: the posting text and your resume, under your own key. If you
-  score with a coding assistant instead, the same text goes to that assistant.
+- **Anthropic's API**, when scoring, tailoring or writing a prep or follow-up: the posting text and your resume,
+  under your own key. If a coding assistant does that work instead, the same text goes to that assistant.
 - **Employers' career sites**: their public job listings only, one request at a time, with a pause between
   requests. It never logs in.
 - **Gmail**, only if you connect it: read over IMAP in read-only mode. Nothing is sent, moved or deleted.
@@ -195,8 +220,8 @@ What leaves your machine, only to do the job:
 
 ## FAQ
 
-**Does it apply for me?** No. It finds, ranks, tailors and tracks; you press submit. It never sends an
-application or an email on your behalf.
+**Does it apply for me?** No. It finds, ranks, tailors, prepares and tracks; you press submit. It never sends an
+application or an email on your behalf: a follow-up is a draft you send yourself.
 
 **Is the sponsorship call always right?** No. It reads the posting's own wording and the employer's public
 filing history, which is guidance, not legal advice. A posting that says nothing is marked likely, unlikely or
@@ -229,6 +254,7 @@ reading is written for US work visas.
 | `max_days_ago` | How recent a posting must be for the role searches |
 | `score_cap` | How many postings are sent to Claude per run |
 | `max_pages_by_tier`, `tier3_weekdays` | How deep each tier is searched, and which days tier 3 runs |
+| `agents` | Which agents write each morning, when a follow-up is drafted, and how many a run writes |
 
 `companies.json` lists each employer with its Workday address or job board, a tier, and a default for
 whether it sponsors. The posting text always overrides that default. The tools that found and verified
@@ -242,7 +268,7 @@ Every setting and field, with its current value and what changing it does, is in
 | Path | What is there |
 | --- | --- |
 | `start.py`, `start.bat`, `start.command`, `start.sh` | One-step start: sets up `.venv`, checks the setup, opens the app |
-| `run.py`, `radar/` | The daily pipeline, the Workday client, filters, scoring and the chat assistant |
+| `run.py`, `radar/` | The daily pipeline, the Workday client, filters, scoring, the agents and the chat assistant |
 | `tailoring/` | Resume planning, rewriting, final cleanup, cover letters and outreach |
 | `companies/` | Discovery and verification of employers, and the H-1B filing check |
 | `server.py`, `web/` | The local web app: FastAPI and plain HTML, CSS and JavaScript |

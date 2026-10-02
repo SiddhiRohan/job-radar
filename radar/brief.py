@@ -1,5 +1,5 @@
 """python -m radar.brief: the morning brief. Which postings to apply to first, what changed since the last brief,
-which applications have gone quiet, and one thing the rejections suggest.
+which applications have gone quiet, what the agents wrote, and one thing the rejections suggest.
 
 Built only from what the run already wrote (jobs.jsonl, applications.md, the mail and watch state), so it costs no
 model call. The run writes it last; the web app, the assistant and the terminal all read the same note."""
@@ -9,7 +9,7 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from radar import applications, digest, mail, patterns, salary, watch
+from radar import agentview, applications, digest, mail, patterns, salary, watch
 
 STATE = Path(".cache/ui/brief.json")
 QUIET_DAYS = 10
@@ -92,6 +92,7 @@ def build(now=None, jobs=None):
         "moved": moved,
         "closed": closed,
         "quiet": quiet(applications.rows(), w.get("postings", {}), now),
+        "agents": agentview.news(since),
         "suggestion": (
             f"Rejections cluster where {top['dimension'].lower()} is {top['bucket']}: {top['rejected']} of "
             f"{top['applied']} rejected, against {round(100 * found['overall_rate'])}% overall."
@@ -114,6 +115,7 @@ def text(b):
     out += [f"Moved: {x['company']} {x['from']} to {x['status']}" for x in b["moved"]]
     out += [f"Closed: {x['company']}, {x['title']}" for x in b["closed"]]
     out += [f"Quiet since {x['applied']}: {x['company']}, {x['title']} (posting {x['posting']})" for x in b["quiet"]]
+    out += [f"Agents: {x}" for x in b.get("agents", [])]
     if b["suggestion"]:
         out.append("Pattern: " + b["suggestion"])
     return "\n".join(out)

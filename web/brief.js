@@ -1,5 +1,5 @@
-/* The morning brief card at the top of Today: the postings to apply to first, what changed, what went quiet, and
-   one pattern. "Hide for today" is remembered per brief day, so tomorrow's brief shows again. Uses el and api. */
+/* The morning brief card at the top of Today: the postings to apply to first, what changed, what went quiet, what
+   the agents wrote, and one pattern. "Hide for today" is remembered per brief day, so tomorrow's brief shows again. Uses el and api. */
 async function loadBrief() {
   const box = $("#brief");
   if (!box) return;
@@ -20,6 +20,8 @@ async function loadBrief() {
     ...b.closed.map(x => item(x.company, `closed: ${x.title}`)),
   ];
   const quiet = b.quiet.map(x => item(x.company, `${x.title}, applied ${x.applied}: ${x.posting === "open" ? "still posted, so a short follow-up may help" : "no reply yet"}`));
+  const agents = (b.agents || []).map(x => el("li", {}, x));  /* a brief stored before the agents has none */
+  if (agents.length) agents.push(el("li", {}, el("a", { href: "#agents" }, "Open Agents")));
   const hide = el("button", { type: "button", class: "quiet", onclick: () => {
     try { localStorage.setItem(hideKey, "1"); } catch (e) {}
     box.replaceChildren();
@@ -29,6 +31,7 @@ async function loadBrief() {
     el("h4", {}, "Apply first"), picks,
     changes.length ? el("h4", {}, "Since the last brief") : null, changes.length ? el("ul", { class: "brief-list" }, ...changes) : null,
     quiet.length ? el("h4", {}, "Gone quiet") : null, quiet.length ? el("ul", { class: "brief-list" }, ...quiet) : null,
+    agents.length ? el("h4", {}, "From your agents") : null, agents.length ? el("ul", { class: "brief-list" }, ...agents) : null,
     b.suggestion ? el("p", { class: "brief-pattern" }, b.suggestion) : null,
     el("div", { class: "brief-foot" }, hide)));
 }

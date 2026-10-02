@@ -32,6 +32,7 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
     <a href="#today" data-view="today">Today</a>
     <a href="#tailor" data-view="tailor">Tailor</a>
     <a href="#applied" data-view="applied">Applied</a>
+    <a href="#agents" data-view="agents">Agents</a>
     <a href="#setup" data-view="setup">Setup</a>
   </nav>
   <div id="datectl" class="datectl" hidden>
@@ -78,6 +79,10 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
     <div id="applied-body"></div>
   </section>
 
+  <section id="view-agents" data-view="agents" class="view" hidden>
+    <div id="agents-body"></div>
+  </section>
+
   <section id="view-setup" data-view="setup" class="view" hidden>
     <div id="setup-body" class="setup-grid"></div>
   </section>
@@ -105,7 +110,7 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
     <dt><kbd>&crarr;</kbd></dt><dd>Read the current posting in the drawer</dd>
     <dt><kbd>o</kbd></dt><dd>Open the current posting in a new tab</dd>
     <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Earlier and later day</dd>
-    <dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></dt><dd>Today, Tailor, Applied</dd>
+    <dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></dt><dd>Today, Tailor, Applied, Agents</dd>
     <dt><kbd>Ctrl</kbd> <kbd>K</kbd></dt><dd>Search and commands</dd>
     <dt><kbd>f</kbd></dt><dd>Find an application on Applied</dd>
     <dt><kbd>/</kbd></dt><dd>Ask the assistant</dd>
@@ -119,6 +124,8 @@ try { const a = localStorage.getItem("radar-accent"); if (a) document.documentEl
 <script src="insights.js"></script>
 <script src="rejections.js"></script>
 <script src="appsearch.js"></script>
+<script src="agentfacts.js"></script>
+<script src="agents.js"></script>
 <script src="setup.js"></script>
 <script src="brief.js"></script>
 <script src="app.js"></script>

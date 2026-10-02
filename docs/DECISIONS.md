@@ -403,3 +403,55 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     does not play video files from a repository inline, so the README plays the whole video as a silent animated WebP
     (10 frames a second, under 5 MB) linked to the MP4 with sound. At the owner's request it carries no "watch with
     sound" badge or link text.
+
+67. **Four agents, chosen for what only this radar can see.** Interview prep, follow-up drafts, skill gaps and the
+    sponsor map each read records a general assistant does not have: the posting as it was on the day it was found,
+    its fit factor by factor, the email that moved the application, the watcher's word that the posting is still up,
+    and a month of verdicts. Two need judgment over free text and use the model; two are counts and use none, so
+    they cost nothing and cannot invent anything. None of them sends, submits or applies: drafts are copied and sent
+    by the person, and a prep is something to read. They live in `radar/` like the watcher and the rejection
+    patterns, one module each, with `radar/agents.py` running the two that write.
+
+68. **When each agent runs.** A prep is written when an application reaches a screen or an interview, once per
+    stage, because a prep for every application would spend money on the many that never get a reply; any
+    application can still have one by name. A follow-up waits ten days, the brief's own quiet threshold, skips a
+    posting the watcher found closed, since a note about a filled role is wasted, and is written once per
+    application. Each run writes at most five of each (`per_run`), the oldest quiet applications first, so a first
+    run on a long list does not surprise anyone with a bill. A draft leaves the list when it is marked sent or
+    dismissed, when its application moves on, or when its posting closes. Skill gaps read thirty days of verdicts
+    and the sponsor map sixty days of postings: the skills asked for change with the market, sponsorship wording
+    less often.
+
+69. **Numbers in a prep or a draft come only from the posting and the resume.** Tailoring already locks numbers
+    (`docs/RESUME_RULES.md`). A prep is read aloud in an interview and a draft goes out under the person's name, so
+    an invented "cut latency by 40%" does more harm there. `radar/facts.py` replaces any figure not found in what
+    the agent was given with [?] and names it in the notes, whatever its units: 40%, 800ms, $2B, a 12-person team
+    and 2019-2021 are all checked, and 1,200 and 1200 count as the same number. Digits that belong to a name or a
+    ratio (H-1B, S3, GPT-4, Neo4j, 1:1, 24/7) are not figures; a first version checked them too and could turn a
+    sponsorship answer into "H-[?]B". Any number in a source counts, inside a date or a name too, and the sources
+    include the employer's name (3M) and the application date: the first live run took the 14 out of "applied
+    September 14". A LinkedIn note over 300 characters goes back to the model once with the problem named, then is
+    kept with a note, since a long draft is still worth trimming by hand.
+
+70. **No API key: the coding assistant writes; one application at a time by name.** As with hand scoring,
+    `python -m radar.agents next` puts every due task, with each agent's rules and schema once, in
+    `.cache/agent_tasks.json` (`radar/agenttasks.py`), and `save` stores an answer only after the same schema check
+    the API path gets, plus the agent's own length and count checks. The schema reader is the one in
+    `radar/handscore.py`; its message for an unknown field now says "not in the schema". Asked for one employer, in
+    the chat or with `--for`, an agent writes for one application only: for a prep the newest at a screen or
+    interview, else the newest; for a follow-up the quietest still waiting for a reply, and none when every
+    application there has had one. A name matches exactly, in any case, or by a prefix only one employer has, so
+    "GE" never reaches Target or Geico. In the chat an existing prep or draft is returned rather than rewritten,
+    even once a draft is marked sent. One writing run happens at a time in the app, none while the morning run is
+    going, and the state files are written whole under the jobs lock, so a click and the morning run never lose each
+    other's work; an unreadable state file reads as empty instead of stopping the brief.
+
+71. **Skill names from free text; sponsorship from wording first.** The skills factor's "Missing: ..." note, the
+    hard requirements and the not-have tools are free text. `radar/gaps.py` keeps the first clause, drops
+    parentheses, years and anything over three words, splits on and, or, slashes and commas, folds a few aliases
+    (Google Cloud is GCP), and drops words too broad to act on (AI, ML, API). A skill must be missing from two
+    postings to be listed. The sponsor map reads a posting as no when its wording rules sponsorship out, it reads as
+    a PERM ad, or the model read a no, the same order the digest uses, and as yes when either says so. It flags a
+    default only when its own postings clearly disagree: a sponsor whose three or more postings, three in four of
+    them at least, rule it out while none says yes, or a no or missing default with a posting that says yes. It
+    never edits `companies.json`; the person decides.

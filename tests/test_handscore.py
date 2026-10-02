@@ -49,7 +49,7 @@ def test_a_complete_verdict_passes():
         ({"score_entry": 6}, "verdict.score_entry should be one of 1, 2, 3, 4, 5"),
         ({"score_entry": True}, "verdict.score_entry should be integer"),
         ({"apply": "yes"}, "verdict.apply should be boolean"),
-        ({"mood": "great"}, "verdict.mood is not a verdict field"),
+        ({"mood": "great"}, "verdict.mood is not in the schema"),
         ({"factors": [factor("skills", "strong")]}, "verdict.factors.0.verdict should be one of meets, partial, gap"),
     ],
 )

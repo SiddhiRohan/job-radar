@@ -23,7 +23,7 @@ HOW = (
 
 
 def problems(value, schema, where="verdict"):
-    """What breaks the schema, for the part of JSON Schema that radar/fit.py uses."""
+    """What breaks the schema, for the part of JSON Schema that radar/fit.py and the agents use."""
     kinds = schema.get("type", [])
     kinds = [kinds] if isinstance(kinds, str) else kinds
     fits = [k for k in kinds if isinstance(value, TYPES[k]) and not (k == "integer" and isinstance(value, bool))]
@@ -34,7 +34,7 @@ def problems(value, schema, where="verdict"):
     found = []
     if isinstance(value, dict) and "properties" in schema:
         found += [f"{where}.{k} is missing" for k in schema.get("required", []) if k not in value]
-        found += [f"{where}.{k} is not a verdict field" for k in value if k not in schema["properties"]]
+        found += [f"{where}.{k} is not in the schema" for k in value if k not in schema["properties"]]
         for k, sub in schema["properties"].items():
             found += problems(value[k], sub, f"{where}.{k}") if k in value else []
     if isinstance(value, list) and "items" in schema:

@@ -1,6 +1,6 @@
 # STATUS
 
-## Current state (2026-09-27)
+## Current state (2026-10-01)
 
 Job radar runs every morning on one machine for one person: it polls employer career sites, keeps the postings
 that fit the configured roles, scores them against the user's resume, and serves a local web app for the shortlist,
@@ -29,15 +29,24 @@ tailoring and tracking. The dated history of the author's own runs is kept in a 
 - Email statuses over read-only IMAP: automatic with a requisition id, and for rejections that name the role of
   exactly one application; everything else waits for review.
 - A daily watcher for the postings behind open applications, on Workday and on the three boards.
-- A chat assistant with tools over the shortlist, tailoring, email, posting status and the brief; it judges a
-  pasted job link and adds an employer from a link too.
+- Four agents after each run: interview prep when an email brings a screen or an interview, follow-up drafts for
+  quiet applications whose posting is still up, skill gaps across a month of verdicts, and a sponsor map of what
+  each employer's own postings say. The first two write with the API or a coding assistant, with numbers held to
+  the posting and the resume; the other two only count. They show on an Agents view, in the brief, in the chat and
+  in the terminal.
+- A chat assistant with tools over the shortlist, tailoring, email, posting status, the brief and the agents; it
+  judges a pasted job link and adds an employer from a link too.
 - The server accepts changes only from its own pages. A pre-commit check keeps personal details out of commits.
-- 398 offline tests, CI on every PR, pre-commit with ruff and gitleaks.
+- 456 offline tests, CI on every PR, pre-commit with ruff and gitleaks.
 
 **Next**
 
 - Record H-1B filings for the six board employers with no sponsorship data, so recomputing tiers keeps them in
   tier 2.
+- An interview debrief: notes typed into the chat after an interview become what was asked, what to improve and a
+  thank-you draft, and feed the next round's prep.
+- A filter auditor: a weekly look, with the model, at titles the seniority and domain rules removed, to find the
+  postings worth getting back.
 
 **Known gaps**
 

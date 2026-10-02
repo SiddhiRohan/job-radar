@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+**Interview prep, written for you.** When an email moves an application to a screen or an interview, an agent writes
+the prep that morning from the stored posting, its fit factor by factor, your resume and the employer's sponsorship
+record: what they will probe, likely questions with what to answer from, stories from your resume, the gaps and an
+honest way to answer them, questions to ask, and a plain answer to the sponsorship question. A number that is not in
+the posting or your resume is replaced by [?] and named, never made up. Ask the chat ("prep me for my Contoso
+interview"), use `/radar-prep`, or write one for any application on the new Agents view.
+
+**Follow-up drafts.** For applications quiet for ten days whose posting the watcher still finds open, an agent
+drafts a LinkedIn note under 300 characters, an email, and the LinkedIn search that finds the recruiter. Nothing is
+sent: copy it, send it yourself, and mark it sent. Five a run at most, oldest first.
+
+**Skill gaps and the sponsor map.** Two agents that only count, so they cost nothing: the skills a month of scored
+postings found missing, with how many of those postings scored 3, one point below Apply, and the confirmed skills
+your resume fails to show; and what each employer's own recent postings say about sponsorship, next to its default,
+with the defaults its postings contradict. `python -m radar.gaps`, `python -m radar.sponsormap`.
+
+**Agents, from anywhere.** The morning run writes the prep and drafts after the watcher (`python -m radar.agents
+run`), the brief says what they wrote, and the Agents view, the chat and the terminal all read the same files.
+Without an API key, `python -m radar.agents next` and `save` let a coding assistant write them, checked against the
+same schema; `/radar-agents` runs the loop. Settings are under `agents` in `config.json`.
+
 **Find an application.** A search at the top of Applied lists the applications whose company, role or status
 matches what you type, word by word, with the matches highlighted and the status still changeable. Press `f` to
 jump to it.
