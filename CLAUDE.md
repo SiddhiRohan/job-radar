@@ -46,6 +46,11 @@ whether they need visa sponsorship, a pay floor, and anything they never want to
 | Run even when the app is closed | | `python -m radar.schedule install` (or `status`, `remove`) asks the computer's own scheduler to start the run at `run_time`. |
 | Make it cheaper | | Set `"score_batch": true` in `config.json`: half the scoring cost, scores within the hour. Or lower `score_cap`. |
 | Why am I getting rejected? | | `python -c "from radar import patterns; print(chr(10).join(patterns.summary(patterns.analyse())))"` |
+| I have an interview | `/radar-prep <company>` | `python -m radar.agents run prep --for "<company>"` writes the prep: likely questions, stories from their resume, gaps and how to answer them, and the sponsorship answer. `python -m radar.agents show prep "<company>"` prints it. |
+| Run the agents | `/radar-agents` | `python -m radar.agents run` writes interview prep and follow-up drafts; with no API key, `next` and `save` let you write them. They run every morning anyway. |
+| Help me follow up | `/radar-agents followups` | `python -m radar.agents show followups` lists drafts for quiet applications whose posting is still up. They send them; you never do. |
+| What should I learn? | | `python -m radar.gaps`: the skills postings keep finding missing, and confirmed skills the resume fails to show. |
+| Who sponsors right now? | | `python -m radar.sponsormap`: employers whose recent postings say they sponsor, and defaults their own postings contradict. |
 | Open the app | | `python start.py`, then http://localhost:8000 |
 
 ## Rules
