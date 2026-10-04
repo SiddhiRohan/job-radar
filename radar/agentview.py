@@ -38,9 +38,10 @@ def followup_text(rec):
 
 
 def news(since):
-    """What the writing agents made since a time ("%Y-%m-%d %H:%M"), as short lines for the morning brief."""
-    out = [f"Interview prep ready: {p['company']}, {p['title']}" for p in prep.report()["items"] if p["made"] >= since]
-    drafts = [d for d in followup.report()["items"] if d["made"] >= since]
+    """What the writing agents made after a time ("%Y-%m-%d %H:%M"), as short lines for the morning brief. After, not
+    from: the run writes its drafts and then its brief, often in the same minute, and those drafts were announced."""
+    out = [f"Interview prep ready: {p['company']}, {p['title']}" for p in prep.report()["items"] if p["made"] > since]
+    drafts = [d for d in followup.report()["items"] if d["made"] > since]
     if drafts:
         names = ", ".join(sorted({d["company"] for d in drafts})[:4])
         out.append(f"{len(drafts)} follow-up draft{'s' if len(drafts) > 1 else ''} ready: {names}")
