@@ -1,5 +1,6 @@
 """Follow-ups: for applications still at applied after `followup_after_days` (10) whose posting is still up, a short
-note to send a recruiter or the hiring manager, drafted from the posting and the resume. Drafts only: nothing is sent.
+note to send a recruiter or the hiring manager, drafted from the posting and the resume, one employer at a time.
+Drafts only: nothing is sent.
 
 Made by radar/agents.py with the API or a coding assistant; kept in .cache/ui/followups.json. A draft leaves the list
 when it is marked sent or dismissed, when the application moves on, or when the watcher finds its posting closed."""
@@ -13,6 +14,7 @@ from tailoring import resumes
 
 STATE = Path(".cache/ui/followups.json")
 AFTER_DAYS = 10
+EMPLOYER_GAP_DAYS = 14
 RULES = """Write a short follow-up for one job application that has had no reply, for the person to send themselves.
 Use only the posting and the resume. No number that is not in them, no visa or sponsorship mention, no em dashes.
 linkedin_note: under 300 characters, to a recruiter or the hiring manager for this role: the role and its requisition
@@ -38,19 +40,30 @@ def load():
         return {}
 
 
+def held_back(made, today):
+    """Employers that already have a follow-up in hand: a draft still waiting, or one written in the last
+    EMPLOYER_GAP_DAYS. Three notes to one recruiter about three roles in a week reads as spam."""
+    gap = (today - timedelta(days=EMPLOYER_GAP_DAYS)).strftime("%Y-%m-%d")
+    return {v["company"] for v in made.values() if not v.get("done") or v.get("made", "")[:10] >= gap}
+
+
 def due(cfg=None, every=False, today=None):
-    """Applications quiet for the set number of days, oldest first, whose posting is not known to be closed and that
-    have no draft yet; with every, all applications, for a draft asked for by name."""
+    """Applications quiet for the set number of days, oldest first, whose posting is not known to be closed, that
+    have no draft yet, and whose employer has no follow-up in hand: one per employer at a time. With every, all
+    applications, for a draft asked for by name."""
     days = ((cfg or {}).get("agents") or {}).get("followup_after_days", AFTER_DAYS)
-    cutoff = ((today or datetime.now()) - timedelta(days=days)).strftime("%Y-%m-%d")
+    today = today or datetime.now()
+    cutoff = (today - timedelta(days=days)).strftime("%Y-%m-%d")
     made, watched = load(), watch.load()["postings"]
-    out = []
+    busy, out = held_back(made, today), []
     for a in sorted(applications.rows(), key=lambda a: a["date"]):
         key = f"{a['company']}|{a['req_id']}"
         closed = (watched.get(key) or {}).get("status") == "closed"
-        if every or (a["status"] == "applied" and a["date"][:10] <= cutoff and not closed and key not in made):
+        quiet = a["status"] == "applied" and a["date"][:10] <= cutoff and not closed and key not in made
+        if every or (quiet and a["company"] not in busy):
             fields = {k: a[k] for k in ("company", "req_id", "title", "status")}
             out.append({"key": key, "applied": a["date"][:10]} | fields)
+            busy.add(a["company"])
     return out
 
 
