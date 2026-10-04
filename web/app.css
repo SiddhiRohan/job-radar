@@ -484,3 +484,7 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .card h3 .n { color: var(--ink-3); font-weight: 400; font-size: var(--fs-sm); }
 .sub.over { color: var(--danger); font-weight: 600; }
 .fdraft .tag.no { color: var(--danger); }
+.debform { display: grid; gap: 8px; margin: 4px 0 10px; }
+.debform textarea { width: 100%; resize: vertical; font: inherit; font-size: var(--fs-sm); }
+.went { font-size: var(--fs-xs); padding: 0 7px; border-radius: 999px; border: 1px solid currentColor; margin-left: 6px; }
+.went.strong { color: var(--apply); } .went.okay { color: var(--maybe); } .went.weak { color: var(--danger); }
