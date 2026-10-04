@@ -25,8 +25,12 @@ def server(tmp_path, monkeypatch):
 
 def test_one_call_brings_every_agents_report(server):
     r = server.agent_reports()
-    assert set(r) == {"key", "waiting", "followup_after_days", "prep", "followups", "gaps", "sponsors"}
-    assert r["key"] is False and r["waiting"] == {"prep": 0, "followups": 0} and r["followup_after_days"] == 10
+    assert set(r) == {"key", "waiting", "followup_after_days", "prep", "debriefs", "followups", "gaps", "sponsors"}
+    assert (
+        r["key"] is False
+        and r["waiting"] == {"prep": 0, "followups": 0, "debrief": 0}
+        and r["followup_after_days"] == 10
+    )
     assert r["prep"] == {"items": []} and r["followups"] == {"items": []}
     assert r["gaps"]["skills"] == [] and r["sponsors"]["employers"] == []
 
@@ -53,3 +57,19 @@ def test_marking_a_draft_that_does_not_exist_is_refused(server):
     with pytest.raises(HTTPException) as e:
         server.followup_done({"key": "Contoso|R1"})
     assert e.value.status_code == 404
+
+
+def test_an_interview_account_is_kept_even_without_a_key(server, monkeypatch):
+    server.applications.add("Contoso", "R1", "Analytics Engineer")
+    kept = server.debrief_add({"company": "Contoso", "req_id": "R1", "account": "They asked about dbt."})
+    assert kept["kept"] is True and "No API key" in kept["note"]
+    assert server.debrief.load()["Contoso|R1"][0]["account"] == "They asked about dbt."
+    with pytest.raises(HTTPException) as e:
+        server.debrief_add({"company": "Contoso", "req_id": "R1", "account": " "})
+    assert e.value.status_code == 400
+    seen = []
+    monkeypatch.setattr(server.agents, "has_key", lambda: True)
+    monkeypatch.setattr(server.agents, "run", lambda names, who: seen.append((names, who)) or {})
+    monkeypatch.setattr(server, "background", lambda fn, *args: fn(*args))
+    server.debrief_add({"company": "Contoso", "req_id": "R1", "account": "And about Airflow."})
+    assert seen == [(["debrief"], ("Contoso", "R1"))]

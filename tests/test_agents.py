@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from radar import agents, agenttasks, agentview, applications, followup, prep
+from radar import agentcli, agents, agenttasks, agentview, applications, followup, prep
 
 NOW = datetime.now().strftime("%Y-%m-%d %H:%M")
 PREP = {
@@ -81,7 +81,11 @@ def model(*answers):
 
 def test_without_a_key_nothing_is_written_and_the_work_waits(home):
     r = agents.run(key="")
-    assert {k: (v["made"], v["waiting"]) for k, v in r.items()} == {"prep": ([], 1), "followups": ([], 2)}
+    assert {k: (v["made"], v["waiting"]) for k, v in r.items()} == {
+        "prep": ([], 1),
+        "followups": ([], 2),
+        "debrief": ([], 0),
+    }
     assert prep.load() == {} and followup.load() == {}
 
 
@@ -155,7 +159,7 @@ def test_what_the_agents_wrote_reads_as_plain_pages(home, capsys):
     assert page.startswith("Interview prep: Data Scientist at Contoso, for the interview, made ")
     assert "Likely questions:\n1. Why us? (motivation) The pipelines." in page
     assert page.endswith("Work authorization:\nSay it plainly.")
-    assert agents.main(["show", "followups", "northwind"]) == 0
+    assert agentcli.main(["show", "followups", "northwind"]) == 0
     shown = capsys.readouterr().out
     assert 'Find them on LinkedIn: search "Northwind recruiter"' in shown and "Contoso" not in shown
     assert agentview.text("prep", "Adatum") == "nothing written yet for Adatum"
@@ -169,8 +173,9 @@ def test_a_second_run_while_one_is_writing_does_nothing(home):
 
 
 def test_what_waits_follows_config(home):
-    assert agents.waiting({}) == {"prep": 1, "followups": 2}
-    assert agents.waiting({"agents": {"prep": False, "followup_after_days": 100000}}) == {"prep": 0, "followups": 0}
+    assert agents.waiting({}) == {"prep": 1, "followups": 2, "debrief": 0}
+    off = {"agents": {"prep": False, "followup_after_days": 100000}}
+    assert agents.waiting(off) == {"prep": 0, "followups": 0, "debrief": 0}
 
 
 def test_an_unreadable_state_file_reads_as_empty_and_the_brief_still_builds(home):

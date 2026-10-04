@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from radar import applications, facts, fit, sponsormap, store
+from radar import applications, debrief, facts, fit, sponsormap, store
 from tailoring import resumes, skills
 
 STATE = Path(".cache/ui/prep.json")
@@ -106,6 +106,7 @@ def packet(item, jobs=None, recs=None):
         "resume": resume[:9000],
         "profile": resumes.profile_text()[:3000],
         "skills": ", ".join(skills.load()),
+        "earlier": debrief.earlier(item["key"]),  # what the debriefs of earlier rounds found
     }
 
 
@@ -123,6 +124,7 @@ def prompt(p):
                 else "no reply yet: prepare for a first screen."
             ),
             "POSTING:\n" + (p["posting"] or "(not stored: work from the title and the company)"),
+            "EARLIER ROUNDS, FROM THEIR DEBRIEFS (weight these):\n" + (p["earlier"] or "(none)"),
             "FIT NOTES FROM THE RADAR:\n" + (p["fit"] or "(none)"),
             "SPONSORSHIP:\n" + p["sponsorship"],
             "RESUME:\n" + p["resume"],
@@ -140,8 +142,8 @@ def check(answer):
 
 
 def store_answer(item, answer, by, p, problems=()):
-    keys = ("posting", "fit", "sponsorship", "resume", "profile", "skills", "company", "req_id", "title", "applied")
-    clean, notes = facts.lock(answer, [p[k] for k in keys])
+    keys = ("posting", "fit", "sponsorship", "resume", "profile", "skills", "earlier", "company", "req_id", "title")
+    clean, notes = facts.lock(answer, [p[k] for k in keys] + [p["applied"]])
     with store.lock():  # the morning run and a click in the app may both be writing
         state = load()
         state[item["key"]] = {k: item[k] for k in ("company", "req_id", "title", "stage")} | {
