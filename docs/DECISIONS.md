@@ -455,3 +455,12 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     default only when its own postings clearly disagree: a sponsor whose three or more postings, three in four of
     them at least, rule it out while none says yes, or a no or missing default with a posting that says yes. It
     never edits `companies.json`; the person decides.
+
+72. **One follow-up per employer at a time, from the first real runs.** The first two morning runs drafted three
+    follow-ups to one employer, one per role, and the next run would have added two for another. A recruiter who
+    gets three notes in a week stops reading them, so `radar/followup.py` holds an employer back while a draft for
+    it is waiting or one was written in the last 14 days, and drafts for its oldest quiet role first. Asked for
+    notes under 300 characters, the model wrote 291 to 319, so one in ten went back for a rewrite and one stayed too
+    long; it is now asked for 280, and the check still holds LinkedIn's limit of 300. The same runs showed the brief
+    announcing four of the previous day's drafts again: they were written in the same minute as that day's brief,
+    and the brief counted from that minute rather than after it.
