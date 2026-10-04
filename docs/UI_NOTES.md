@@ -140,3 +140,7 @@ missing it, with the part that scored 3 in green; an employer's bar is its posti
 silent, in the colours the rejections card uses for good, rejected and waiting. The prep picker lists every
 application, newest first, so a prep can be written before any email arrives. Without an API key the run and write
 buttons are disabled and the lead line says how to use a coding assistant instead.
+
+## Interview debrief (2026-10-04)
+
+A card under Interview prep on the Agents view: pick the application (screens and interviews first), write how it went, and press Write debrief. Without an API key the account is kept and the card says how many wait for a coding assistant. Each round folds like a prep; its questions carry a strong, okay or weak mark, and the thank-you note has its own copy button.

@@ -464,3 +464,13 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     long; it is now asked for 280, and the check still holds LinkedIn's limit of 300. The same runs showed the brief
     announcing four of the previous day's drafts again: they were written in the same minute as that day's brief,
     and the brief counted from that minute rather than after it.
+
+73. **The debrief works from the person's own account, and every round feeds the next.** Only the person knows what
+    was asked and how it went, so the debrief is written on demand from their account rather than on a schedule: the
+    chat, the Agents view, `/radar-debrief` or `python -m radar.agents debrief` keep the account first
+    (`radar/debrief.py`), then the usual runner writes it with the API, or a coding assistant does through `next`
+    and `save`, so an account given without a key is never lost. A second account before the debrief is written adds
+    to the first; one given after starts the next round. Each round's weak answers, concerns and next steps go into
+    that round's successor and into the next prep for the role, under their own heading. Numbers may come from the
+    account as well as the posting and resume, since the person said them. The thank-you note is a draft they send,
+    never sent. The command line moved to `radar/agentcli.py` so `radar/agents.py` stays the runner.

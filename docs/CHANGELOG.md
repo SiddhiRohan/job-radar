@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+**Interview debriefs.** Right after a screen or an interview, say how it went, in the chat, on the Agents view or
+with `/radar-debrief`, and an agent writes what was asked with a stronger answer for each weak one, what the
+interviewer seemed unsure about, what you said you would send, what to prepare next, and a thank-you note to send
+yourself. Every round is kept, and the next prep for that role starts from what the debriefs found. Numbers stay to
+what you said and your resume. From a terminal: `python -m radar.agents debrief "<company>" < account.txt`.
+
 **Follow-ups, one employer at a time.** An employer with a follow-up draft waiting, or one written in the last two
 weeks, gets no second draft for its other roles until then, so a recruiter never receives three notes in a week.
 LinkedIn notes are asked for at 280 characters, leaving room under the limit, and the Follow-ups card folds each
