@@ -9,7 +9,7 @@ async function loadAgents() {
   try {
     const [r, apps] = await Promise.all([api("/api/agents"), api("/api/applied")]);
     AG.apps = apps;
-    body.replaceChildren(agentsLead(r), el("div", { class: "vgrid" }, prepCard(r), followCard(r), gapsCard(r.gaps), sponsorCard(r.sponsors)));
+    body.replaceChildren(agentsLead(r), el("div", { class: "vgrid" }, prepCard(r), debriefCard(r), followCard(r), gapsCard(r.gaps), sponsorCard(r.sponsors)));
   } catch (e) { fail(body, e, loadAgents); }
 }
 
@@ -29,11 +29,11 @@ async function runAgents(btn, body = {}, label = "Agents") {
 function agentsLead(r) {
   const run = el("button", { type: "button", class: "primary", onclick: () => runAgents(run) }, "Run the agents now");
   if (!r.key) run.disabled = true;
-  const waiting = r.waiting.prep + r.waiting.followups;
+  const waiting = r.waiting.prep + r.waiting.followups + r.waiting.debrief;
   const say = r.key
     ? `They run every morning after the radar. ${waiting ? `${waiting} waiting to be written.` : "Nothing is waiting."}`
     : "No API key, so prep and follow-ups wait: add one on Setup, or run /radar-agents in Claude Code or another coding assistant.";
-  return el("div", { class: "agents-lead" }, el("p", {}, "Four agents work from your own records. ", say), run);
+  return el("div", { class: "agents-lead" }, el("p", {}, "Five agents work from your own records. ", say), run);
 }
 
 /* ---------- interview prep ---------- */

@@ -47,6 +47,7 @@ whether they need visa sponsorship, a pay floor, and anything they never want to
 | Make it cheaper | | Set `"score_batch": true` in `config.json`: half the scoring cost, scores within the hour. Or lower `score_cap`. |
 | Why am I getting rejected? | | `python -c "from radar import patterns; print(chr(10).join(patterns.summary(patterns.analyse())))"` |
 | I have an interview | `/radar-prep <company>` | `python -m radar.agents run prep --for "<company>"` writes the prep: likely questions, stories from their resume, gaps and how to answer them, and the sponsorship answer. `python -m radar.agents show prep "<company>"` prints it. |
+| I just had an interview | `/radar-debrief <company>` | Ask how it went, then `python -m radar.agents debrief "<company>" < account.txt` writes what was asked with stronger answers, their concerns, what they owe, and a thank-you note. Offer to practise the weak answers. |
 | Run the agents | `/radar-agents` | `python -m radar.agents run` writes interview prep and follow-up drafts; with no API key, `next` and `save` let you write them. They run every morning anyway. |
 | Help me follow up | `/radar-agents followups` | `python -m radar.agents show followups` lists drafts for quiet applications whose posting is still up. They send them; you never do. |
 | What should I learn? | | `python -m radar.gaps`: the skills postings keep finding missing, and confirmed skills the resume fails to show. |

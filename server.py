@@ -22,6 +22,7 @@ from radar import (
     autorun,
     brief,
     chat,
+    debrief,
     digest,
     doctor,
     evaluate,
@@ -218,6 +219,7 @@ def agent_reports():
         "waiting": agents.waiting(cfg),
         "followup_after_days": (cfg.get("agents") or {}).get("followup_after_days", followup.AFTER_DAYS),
         "prep": prep.report(),
+        "debriefs": debrief.report(),
         "followups": followup.report(),
         "gaps": gaps.analyse(jobs),
         "sponsors": sponsormap.analyse(jobs),
@@ -232,6 +234,17 @@ def agent_run(body: dict):
         raise HTTPException(409, why)
     who = (body["company"], body.get("req_id")) if body.get("company") else None
     return background(agents.run, [body["name"]] if body.get("name") else None, who)
+
+
+@app.post("/api/agents/debrief")
+def debrief_add(body: dict):
+    """Keep their account of an interview, then write its debrief; with no API key it is kept and waits."""
+    company, req_id = body.get("company", ""), body.get("req_id", "")
+    if not debrief.add(company, req_id, body.get("account", "")):
+        raise HTTPException(400, "pick an application and say how it went")
+    if why := agents.refuse():
+        return {"kept": True, "note": why}
+    return background(agents.run, ["debrief"], (company, req_id))
 
 
 @app.post("/api/agents/followups/done")

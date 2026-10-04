@@ -240,13 +240,14 @@ employer's posting is looked up on its board, which one cached request reads who
 
 ## Agents
 
-After the watcher, the morning run hands what changed to the agents (`python -m radar.agents run`). Two write for
+After the watcher, the morning run hands what changed to the agents (`python -m radar.agents run`). Three write for
 you and need the model; two only count.
 
 | Agent | When | Model | Where it shows |
 | --- | --- | --- | --- |
 | Interview prep, `radar/prep.py` | An application reaches screen or interview, once per stage | yes | Agents view, brief, chat, `/radar-prep`, `python -m radar.agents show prep` |
 | Follow-ups, `radar/followup.py` | Still at applied after `followup_after_days`, posting not closed, one employer at a time | yes | Agents view, brief, chat, `python -m radar.agents show followups` |
+| Interview debrief, `radar/debrief.py` | When they say how a screen or interview went | yes | Agents view, brief, chat, `/radar-debrief`, `python -m radar.agents show debrief` |
 | Skill gaps, `radar/gaps.py` | When asked, over the last 30 days of verdicts | no | Agents view, chat, `python -m radar.gaps` |
 | Sponsor map, `radar/sponsormap.py` | When asked, over the last 60 days of postings | no | Agents view, chat, `python -m radar.sponsormap` |
 
@@ -256,6 +257,7 @@ Settings, under `"agents"` in `config.json`:
 | --- | --- | --- |
 | `prep` | true | false stops the morning run writing preps. One asked for by name is still written. |
 | `followups` | true | The same for follow-up drafts. |
+| `debrief` | true | false stops the morning run writing debriefs for accounts that are waiting; one asked for in the chat or on the page is still written. |
 | `followup_after_days` | 10 | Days at applied with no reply before a follow-up is drafted. |
 | `per_run` | 5 | The most preps, and the most drafts, one run writes; the rest wait for the next run. |
 

@@ -113,6 +113,7 @@
   "agents": {
     "prep": true,
     "followups": true,
+    "debrief": true,
     "followup_after_days": 10,
     "per_run": 5
   }

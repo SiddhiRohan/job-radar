@@ -1,14 +1,8 @@
-"""python -m radar.agents: the agents that work from the radar's own records after each run.
-
-  run [prep|followups] [--for COMPANY [REQ_ID]]   write what is due, or one application's, with the Anthropic API
-  next [prep|followups] [--for COMPANY [REQ_ID]]  no API key: put the tasks in .cache/agent_tasks.json for a
-                                                   coding assistant to answer (radar/agenttasks.py)
-  save FILE                                        store the assistant's answers once they pass the checks
-  show prep|followups [COMPANY]                    print what they wrote
-
-Two agents write for the person: interview prep (radar/prep.py) and follow-up drafts (radar/followup.py). Two more
-read the records and need no model: skill gaps (radar/gaps.py) and the sponsor map (radar/sponsormap.py). Settings
-live under "agents" in config.json; docs/CONFIG.md explains them."""
+"""python -m radar.agents: the agents that work from the radar's own records after each run, and the runner for the
+three that write: interview prep (radar/prep.py), follow-up drafts (radar/followup.py) and interview debriefs
+(radar/debrief.py). They write with the Anthropic API when a key is set, or through task files a coding assistant
+answers (radar/agenttasks.py). Two more read the records and need no model: skill gaps (radar/gaps.py) and the sponsor
+map (radar/sponsormap.py). The command line is in radar/agentcli.py; settings live under "agents" in config.json."""
 
 import json
 import sys
@@ -17,9 +11,9 @@ from pathlib import Path
 
 import requests
 
-from radar import followup, handscore, llm, prep, runlock, score
+from radar import debrief, followup, handscore, llm, prep, runlock, score
 
-WRITERS = {"prep": prep, "followups": followup}
+WRITERS = {"prep": prep, "followups": followup, "debrief": debrief}
 PER_RUN = 5
 BUSY = threading.Lock()  # the web app and the chat share one process: one writing run at a time
 
@@ -118,43 +112,8 @@ def run(names=None, who=None, complete=None, key=None):
         BUSY.release()
 
 
-def main(argv):
-    from radar import agenttasks, agentview  # both import this module
-
-    cmd, rest = (argv[0], list(argv[1:])) if argv else ("run", [])
-    names = [rest.pop(0)] if rest and rest[0] in WRITERS else None
-    who = (rest[1], rest[2] if len(rest) > 2 else None) if rest[:1] == ["--for"] and len(rest) > 1 else None
-    try:
-        if cmd == "run":
-            for name, r in run(names, who).items():
-                print(
-                    f"{name}: wrote {len(r['made'])}, {r['waiting']} waiting"
-                    + "".join(f"\n  ! {e}" for e in r["errors"])
-                )
-            if not has_key():
-                print("no API key: python -m radar.agents next writes the waiting tasks for your coding assistant")
-            return 0
-        if cmd == "next":
-            ids = agenttasks.write(names, who)
-            print(f"tasks: {len(ids)}, in {agenttasks.TASKS}" if ids else "nothing is waiting for an agent")
-            return 0
-        if cmd == "save" and rest:
-            stored, rejected = agenttasks.save(json.loads(Path(rest[0]).read_text(encoding="utf-8")))
-            print(
-                f"stored: {len(stored)}"
-                + "".join(f"\n  not stored, {t}: " + "; ".join(p[:4]) for t, p in rejected.items())
-            )
-            return 1 if rejected else 0
-        if cmd == "show" and names:
-            print(agentview.text(names[0], rest[0] if rest else None))
-            return 0
-    except (OSError, ValueError) as e:
-        print(f"could not {cmd}: {e}")
-        return 1
-    print(__doc__)
-    return 2
-
-
 if __name__ == "__main__":
+    from radar import agentcli  # the command line lives there; it imports this module
+
     sys.stdout.reconfigure(encoding="utf-8")
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(agentcli.main(sys.argv[1:]))

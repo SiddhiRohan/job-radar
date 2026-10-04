@@ -48,8 +48,8 @@ and Northwind.
 - `radar/`: the daily pipeline (wd and boards, poll, filters, sponsor, store, score and batch, digest, prepare,
   mail, watch, agents, brief) plus `llm`, `fit`, `factors`, `chat`, `salary`, `mailmatch`, `rolematch`,
   `applications`, `evaluate`, `doctor`, `firstrun`, `autorun`, `schedule`, `runlock`. The agents are `prep`,
-  `followup`, `gaps` and `sponsormap`, with `facts` (the number lock), `agenttasks` (the no-key task files),
-  `agentview` (plain pages) and `agentchat` (their chat tools).
+  `debrief`, `followup`, `gaps` and `sponsormap`, with `facts` (the number lock), `agenttasks` (the no-key task
+  files), `agentcli` (their command line), `agentview` (plain pages) and `agentchat` (their chat tools).
 - `tailoring/`: apply, plan, tailor, letters, finalize, skills, resumes, skills_extract.
 - `companies/`: finding and verifying employers, with their data files; `add` adds one from a link.
 - `web/` the UI, `tests/` pytest, `scripts/` the privacy guard, `.claude/commands/` the assistant commands,

@@ -72,6 +72,9 @@ The hour of tab-hopping becomes one page you read with your coffee.
   writes the prep that morning: what they will probe, likely questions, stories from your resume, an honest answer
   for each gap, and a plain answer to the sponsorship question. A number it cannot find in the posting or your
   resume is taken out, never made up.
+- **Debriefs you after it.** Say how a screen or interview went and it writes a stronger answer for each weak one,
+  what they seemed unsure about, what you promised to send, and a thank-you note. The next round's prep starts from
+  it.
 - **Drafts the follow-up.** For an application quiet for ten days whose posting is still up, a LinkedIn note and an
   email for you to send, and the LinkedIn search that finds the recruiter.
 - **Says what to learn, and who sponsors.** Skill gaps counts what a month of postings found missing from your
@@ -156,6 +159,7 @@ the setup, asks what you are looking for, and tunes the search with you. After t
 | `/radar-add <employer> [link]` | Add an employer to the daily search |
 | `/radar-score` | Score new postings with the assistant itself, no API key needed |
 | `/radar-prep <company>` | Interview prep for one application, then a practice round |
+| `/radar-debrief <company>` | Debrief a screen or interview, then practise the weak answers |
 | `/radar-agents` | Run the agents: interview prep, follow-up drafts, skill gaps and the sponsor map |
 | `/radar-tune <what>` | Change what it looks for, in plain words |
 
@@ -168,7 +172,7 @@ typically $10 to $20 a month at the default settings. `score_cap` in `config.jso
 `"score_batch": true` halves the scoring cost in exchange for results that take up to an hour. With a coding
 assistant you can skip the key: the radar finds and filters postings, and `/radar-score` has the assistant judge
 them against the same rules, on your assistant plan. The agents add little: about five cents for an interview prep
-and a cent or two for a follow-up draft, and skill gaps and the sponsor map are free counts.
+or a debrief and a cent or two for a follow-up draft, and skill gaps and the sponsor map are free counts.
 
 ### Email statuses, optional
 
@@ -192,6 +196,7 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 | The morning brief | Top of Today, or `python -m radar.brief` |
 | Add an employer | `python -m companies.add <name> <link to its careers site or board>` |
 | Get ready for an interview | The Agents view, the chat ("prep me for my Contoso interview"), or `/radar-prep` |
+| Debrief an interview | The Agents view, or the chat ("I just had my Contoso screen: they asked ...") |
 | Follow up on quiet applications | Follow-ups on the Agents view: copy, send it yourself, mark it sent |
 | See what to learn, and who sponsors | The Agents view, or `python -m radar.gaps` and `python -m radar.sponsormap` |
 
@@ -211,7 +216,7 @@ analytics.
 
 What leaves your machine, only to do the job:
 
-- **Anthropic's API**, when scoring, tailoring or writing a prep or follow-up: the posting text and your resume,
+- **Anthropic's API**, when scoring, tailoring or writing a prep, debrief or follow-up: the posting text and your resume,
   under your own key. If a coding assistant does that work instead, the same text goes to that assistant.
 - **Employers' career sites**: their public job listings only, one request at a time, with a pause between
   requests. It never logs in.

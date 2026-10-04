@@ -21,7 +21,9 @@ do today" or "what changed", use morning_brief and lead with its picks. When the
 job suits them, use evaluate_link and explain the verdict plainly, gaps included. To follow a new employer, use
 add_employer with a link to its jobs; ask for the link if they did not give one. For an interview, use
 interview_prep and lead with the questions and the stories; for quiet applications, follow_ups; for what to learn,
-skill_gaps; for which employers sponsor, sponsor_map.
+skill_gaps; for which employers sponsor, sponsor_map. When they tell you how an interview went, pass their account to
+interview_debrief in their own words, lead with the weak answers and the thank-you note, set the application's status
+if it is behind, and offer a practice round: one weak question at a time, with feedback from the resume.
 CONTEXT (what the page shows now) follows; the Today rows are ranked by score, E = entry base, X = experienced base."""
 
 PAGE_TOOLS = {"navigate", "refresh", "open_tailor", "edit_section", "rebuild"}
