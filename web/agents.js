@@ -76,11 +76,14 @@ function followCard(r) {
     el("p", { class: "sub" }, `Drafts for applications quiet for ${r.followup_after_days} days whose posting is still up. Nothing is sent: copy one, send it yourself, then mark it sent.`));
   const due = r.waiting.followups;
   if (!r.followups.items.length) card.append(el("p", { class: "kempty" }, due ? `${due} quiet application${due === 1 ? "" : "s"} wait${due === 1 ? "s" : ""} for a draft.` : "No follow-ups waiting."));
-  for (const f of r.followups.items) card.append(followItem(f));
+  if (r.followups.items.length) card.querySelector("h3").append(el("span", { class: "n" }, ` ${r.followups.items.length}`));
+  r.followups.items.forEach((f, i) => card.append(followItem(f, i === 0)));
+  if (r.followups.items.length && due) card.append(el("p", { class: "kempty" }, `${due} more wait${due === 1 ? "s" : ""} for a later run.`));
   return card;
 }
 
-function followItem(f) {
+/* One draft per row, folded to its employer, role and date so a long list stays readable; the oldest opens. */
+function followItem(f, open) {
   const d = f.draft;
   const copy = (text, what) => el("button", { type: "button", class: "quiet", onclick: async () => {
     try { await navigator.clipboard.writeText(text); toast(`${what} copied`); } catch (e) { toast("Copy is blocked here: select the text instead"); }
@@ -90,10 +93,12 @@ function followItem(f) {
     catch (e) { toast(`Could not save: ${e.message}`); }
   } }, how === "sent" ? "Mark sent" : "Dismiss");
   const find = el("a", { href: `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(d.search_hint)}`, target: "_blank", rel: "noopener" }, `Search LinkedIn: ${d.search_hint}`);
-  return el("div", { class: "mailitem" },
-    el("div", { class: "mailmeta" }, el("b", {}, f.company), el("span", {}, f.title), el("span", {}, `applied ${f.applied}`), find),
-    el("div", { class: "draft" }, d.linkedin_note), el("div", { class: "mailacts" }, copy(d.linkedin_note, "Note"), el("span", { class: "sub" }, `${d.linkedin_note.length} of 300 characters`)),
-    el("div", { class: "draft" }, el("b", {}, d.email_subject), "\n\n", d.email_body),
-    el("div", { class: "mailacts" }, copy(`${d.email_subject}\n\n${d.email_body}`, "Email"), done("sent"), done("dismissed")),
-    f.notes.length ? el("ul", { class: "pnotes" }, ...f.notes.map(n => el("li", {}, n))) : null);
+  const over = d.linkedin_note.length >= 300;
+  return el("details", { class: "prep fdraft", ...(open ? { open: "" } : {}) },
+    el("summary", {}, el("b", {}, f.company), ` ${f.title}`, el("span", { class: "sub" }, `applied ${f.applied}`), over ? el("span", { class: "tag no" }, "note too long") : null),
+    el("div", { class: "pbody" }, el("div", { class: "mailmeta" }, find),
+      el("div", { class: "draft" }, d.linkedin_note), el("div", { class: "mailacts" }, copy(d.linkedin_note, "Note"), el("span", { class: over ? "sub over" : "sub" }, `${d.linkedin_note.length} of 300 characters`)),
+      el("div", { class: "draft" }, el("b", {}, d.email_subject), "\n\n", d.email_body),
+      el("div", { class: "mailacts" }, copy(`${d.email_subject}\n\n${d.email_body}`, "Email"), done("sent"), done("dismissed")),
+      f.notes.length ? el("ul", { class: "pnotes" }, ...f.notes.map(n => el("li", {}, n))) : null));
 }

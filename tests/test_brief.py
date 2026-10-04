@@ -179,3 +179,28 @@ def test_the_brief_says_what_the_agents_wrote_since_the_last_one(tmp_path, monke
     b = brief.build(now=datetime(2026, 9, 28, 9, 0), jobs=[])
     assert b["agents"] == ["Interview prep ready: Contoso, Data Scientist", "1 follow-up draft ready: Northwind"]
     assert "Agents: 1 follow-up draft ready: Northwind" in brief.text(b)
+
+
+def test_drafts_written_in_the_minute_of_the_last_brief_are_not_announced_again(tmp_path, monkeypatch):
+    isolate(tmp_path, monkeypatch)
+    applications.write(
+        [
+            {
+                "date": "2026-09-01 09:00",
+                "company": "Northwind",
+                "title": "ML Engineer",
+                "status": "applied",
+                "req_id": "R2",
+            }
+        ]
+    )
+    brief.STATE.write_text(json.dumps({"made_at": "2026-09-27 09:30"}), encoding="utf-8")
+    same = {
+        "company": "Northwind",
+        "title": "ML Engineer",
+        "applied": "2026-09-01",
+        "made": "2026-09-27 09:30",
+        "done": None,
+    }
+    followup.STATE.write_text(json.dumps({"Northwind|R2": same}), encoding="utf-8")
+    assert brief.build(now=datetime(2026, 9, 28, 9, 0), jobs=[])["agents"] == []

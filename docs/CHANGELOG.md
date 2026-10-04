@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Follow-ups, one employer at a time.** An employer with a follow-up draft waiting, or one written in the last two
+weeks, gets no second draft for its other roles until then, so a recruiter never receives three notes in a week.
+LinkedIn notes are asked for at 280 characters, leaving room under the limit, and the Follow-ups card folds each
+draft to one line. The brief no longer announces the previous day's drafts again.
+
 **Interview prep, written for you.** When an email moves an application to a screen or an interview, an agent writes
 the prep that morning from the stored posting, its fit factor by factor, your resume and the employer's sponsorship
 record: what they will probe, likely questions with what to answer from, stories from your resume, the gaps and an

@@ -246,7 +246,7 @@ you and need the model; two only count.
 | Agent | When | Model | Where it shows |
 | --- | --- | --- | --- |
 | Interview prep, `radar/prep.py` | An application reaches screen or interview, once per stage | yes | Agents view, brief, chat, `/radar-prep`, `python -m radar.agents show prep` |
-| Follow-ups, `radar/followup.py` | Still at applied after `followup_after_days`, posting not closed | yes | Agents view, brief, chat, `python -m radar.agents show followups` |
+| Follow-ups, `radar/followup.py` | Still at applied after `followup_after_days`, posting not closed, one employer at a time | yes | Agents view, brief, chat, `python -m radar.agents show followups` |
 | Skill gaps, `radar/gaps.py` | When asked, over the last 30 days of verdicts | no | Agents view, chat, `python -m radar.gaps` |
 | Sponsor map, `radar/sponsormap.py` | When asked, over the last 60 days of postings | no | Agents view, chat, `python -m radar.sponsormap` |
 

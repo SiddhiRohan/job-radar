@@ -1,7 +1,7 @@
 """Follow-up drafts: only quiet applications whose posting is still up, kept until sent, dismissed or moot. Offline."""
 
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -118,3 +118,22 @@ def test_the_application_date_is_a_known_number(home):
     body = "I applied on September 10 and wanted to follow up."
     followup.store_answer(item, draft(email_body=body), "test", followup.packet(item, jobs=[]))
     assert followup.load()["Contoso|R1"]["draft"]["email_body"] == body
+
+
+def test_one_follow_up_per_employer_at_a_time(home):
+    rows = applications.rows() + [
+        {"date": "2026-09-11 09:00", "company": "Contoso", "title": "ML Engineer", "status": "applied", "req_id": "R5"}
+    ]
+    applications.write(rows)
+    assert [i["key"] for i in followup.due(today=TODAY)] == ["Contoso|R1", "Northwind|R2"]  # the oldest Contoso role
+    followup.store_answer(followup.due(today=TODAY)[0], draft(), "test", followup.packet(followup.due()[0], jobs=[]))
+    assert [i["key"] for i in followup.due(today=TODAY)] == ["Northwind|R2"]  # a draft is waiting for Contoso
+    followup.done("Contoso|R1", "sent")
+    assert [i["key"] for i in followup.due(today=TODAY)] == ["Northwind|R2"]  # sent today: give the recruiter time
+    later = datetime.now() + timedelta(days=15)  # drafts are stamped with the real date
+    assert "Contoso|R5" in [i["key"] for i in followup.due(today=later)]  # two weeks on, the other role may follow
+
+
+def test_the_note_is_asked_for_with_room_under_linkedins_limit():
+    assert "at most 280 characters" in followup.RULES  # asked for 300, the model wrote 291 to 319
+    assert followup.check(draft(linkedin_note="x" * 299)) == []  # the hard limit stays LinkedIn's own

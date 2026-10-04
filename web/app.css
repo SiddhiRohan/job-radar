@@ -480,3 +480,7 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .hrow .obar { min-width: 0; height: 14px; }
 .hrow .hl .tag { margin-left: 6px; }
 .hbars.wideval .hrow { grid-template-columns: minmax(90px, 38%) 1fr 56px; }
+.fdraft .pbody { display: grid; gap: 6px; padding-top: 8px; }
+.card h3 .n { color: var(--ink-3); font-weight: 400; font-size: var(--fs-sm); }
+.sub.over { color: var(--danger); font-weight: 600; }
+.fdraft .tag.no { color: var(--danger); }
