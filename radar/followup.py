@@ -17,7 +17,7 @@ AFTER_DAYS = 10
 EMPLOYER_GAP_DAYS = 14
 RULES = """Write a short follow-up for one job application that has had no reply, for the person to send themselves.
 Use only the posting and the resume. No number that is not in them, no visa or sponsorship mention, no em dashes.
-linkedin_note: under 300 characters, to a recruiter or the hiring manager for this role: the role and its requisition
+linkedin_note: at most 280 characters, to a recruiter or the hiring manager for this role: the role and its requisition
 id, one specific reason the person fits from the resume, and a polite ask to be considered. No greeting by name.
 email_subject: under 70 characters.
 email_body: 60 to 110 words with the same content, plain and warm, ending with the sign-off {name}.

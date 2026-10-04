@@ -132,3 +132,8 @@ def test_one_follow_up_per_employer_at_a_time(home):
     assert [i["key"] for i in followup.due(today=TODAY)] == ["Northwind|R2"]  # sent today: give the recruiter time
     later = datetime.now() + timedelta(days=15)  # drafts are stamped with the real date
     assert "Contoso|R5" in [i["key"] for i in followup.due(today=later)]  # two weeks on, the other role may follow
+
+
+def test_the_note_is_asked_for_with_room_under_linkedins_limit():
+    assert "at most 280 characters" in followup.RULES  # asked for 300, the model wrote 291 to 319
+    assert followup.check(draft(linkedin_note="x" * 299)) == []  # the hard limit stays LinkedIn's own
