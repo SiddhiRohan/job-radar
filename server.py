@@ -38,6 +38,7 @@ from radar import (
     prepare,
     salary,
     schedule,
+    scout,
     sponsormap,
     watch,
 )
@@ -222,6 +223,7 @@ def agent_reports():
         "prep": prep.report(),
         "debriefs": debrief.report(),
         "audit": audit.report(),
+        "scout": scout.report(),
         "followups": followup.report(),
         "gaps": gaps.analyse(jobs),
         "sponsors": sponsormap.analyse(jobs),
@@ -261,6 +263,20 @@ def audit_run():
 def audit_apply(body: dict):
     """Make one change the audit suggested, because the person pressed Apply."""
     return {"result": audit.apply(int(body.get("n", -1)))}
+
+
+@app.post("/api/scout/run")
+def scout_run():
+    """Check the next few leads now. No model, but not during the morning run, which checks them itself."""
+    if agents.runlock.held():
+        raise HTTPException(409, "The morning run is going; it checks leads itself.")
+    return background(scout.check, agents.config())
+
+
+@app.post("/api/scout/decide")
+def scout_decide(body: dict):
+    """Follow a found employer, which adds it to companies.json, or skip it."""
+    return scout.decide(body.get("name", ""), "follow" if body.get("how") == "follow" else "skip")
 
 
 @app.post("/api/agents/followups/done")

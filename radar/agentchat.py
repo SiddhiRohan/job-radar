@@ -1,7 +1,7 @@
 """The agents as tools for the chat assistant: interview prep and debriefs, follow-up drafts, skill gaps, the sponsor
-map and the filter audit."""
+map, the filter audit and the company scout."""
 
-from radar import agents, agentview, debrief, gaps, sponsormap
+from radar import agents, agentview, debrief, gaps, scout, sponsormap
 
 COMPANY = {"type": "string", "description": "The employer, as on the application"}
 TOOLS = [
@@ -62,6 +62,13 @@ TOOLS = [
         "filters too strict'. A change is only made when they apply it on the Agents view or say so.",
         "input_schema": {"type": "object", "properties": {"run": {"type": "boolean"}}},
     },
+    {
+        "name": "company_scout",
+        "description": "Employers the company scout found that the radar does not follow yet, each checked live: its "
+        "careers system, open roles, how many match the target roles, its H-1B record, and why it came up. Use for "
+        "'find me more employers'. follow or skip takes a name from that list; follow only when they say so.",
+        "input_schema": {"type": "object", "properties": {"follow": {"type": "string"}, "skip": {"type": "string"}}},
+    },
 ]
 NAMES = {t["name"] for t in TOOLS}
 
@@ -120,6 +127,10 @@ def call(name, args):
         return {"lines": gaps.summary(gaps.analyse(), limit=8)}
     if name == "filter_audit":
         return {"text": audit_page(bool(args.get("run")))[:8000]}
+    if name == "company_scout":
+        if args.get("follow") or args.get("skip"):
+            return scout.decide(args.get("follow") or args.get("skip"), "follow" if args.get("follow") else "skip")
+        return {"lines": scout.summary(scout.report())}
     return {"lines": sponsormap.summary(sponsormap.analyse())}
 
 

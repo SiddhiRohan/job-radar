@@ -1,9 +1,10 @@
 """python -m radar.agents: the agents that work from the radar's own records after each run, and the runner for the
-four that use the model: interview prep (radar/prep.py), follow-up drafts (radar/followup.py), interview debriefs
-(radar/debrief.py) and the weekly filter audit (radar/audit.py). They write with the Anthropic API when a key is set,
-or through task files a coding assistant answers (radar/agenttasks.py). Two more read the records and need no model:
-skill gaps (radar/gaps.py) and the sponsor map (radar/sponsormap.py). The command line is in radar/agentcli.py;
-settings live under "agents" in config.json. The audit has no employer: who=("", None) asks for one now."""
+five that use the model: interview prep (radar/prep.py), follow-up drafts (radar/followup.py), interview debriefs
+(radar/debrief.py), the weekly filter audit (radar/audit.py) and the company scout's weekly leads (radar/leads.py).
+They write with the Anthropic API when a key is set, or through task files a coding assistant answers
+(radar/agenttasks.py). The rest need no model: skill gaps (radar/gaps.py), the sponsor map (radar/sponsormap.py) and
+the scout's checks (radar/scout.py). The command line is in radar/agentcli.py; settings live under "agents" in
+config.json. The audit and the leads have no employer: who=("", None) asks for one now."""
 
 import json
 import sys
@@ -12,9 +13,9 @@ from pathlib import Path
 
 import requests
 
-from radar import audit, debrief, followup, handscore, llm, prep, runlock, score
+from radar import audit, debrief, followup, handscore, leads, llm, prep, runlock, score
 
-WRITERS = {"prep": prep, "followups": followup, "debrief": debrief, "audit": audit}
+WRITERS = {"prep": prep, "followups": followup, "debrief": debrief, "audit": audit, "scout": leads}
 PER_RUN = 5
 BUSY = threading.Lock()  # the web app and the chat share one process: one writing run at a time
 

@@ -115,8 +115,11 @@
     "followups": true,
     "debrief": true,
     "audit": true,
+    "scout": true,
     "followup_after_days": 10,
     "audit_every_days": 7,
+    "scout_every_days": 7,
+    "scout_per_run": 5,
     "per_run": 5
   }
 }

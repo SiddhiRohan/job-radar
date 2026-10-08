@@ -86,6 +86,7 @@ def test_without_a_key_nothing_is_written_and_the_work_waits(home):
         "followups": ([], 2),
         "debrief": ([], 0),
         "audit": ([], 0),
+        "scout": ([], 1),
     }
     assert prep.load() == {} and followup.load() == {}
 
@@ -138,9 +139,10 @@ def test_a_failure_is_reported_and_the_run_goes_on(home, monkeypatch):
 
 def test_an_assistant_answers_the_task_file_and_save_checks_each_answer(home):
     ids = agenttasks.write()
-    assert ids == ["prep:Contoso|R1", "followups:Contoso|R5", "followups:Northwind|R2"]
+    assert ids[:3] == ["prep:Contoso|R1", "followups:Contoso|R5", "followups:Northwind|R2"]
+    assert ids[3:] == [f"scout:leads|{datetime.now():%Y-%m-%d}"]  # the weekly employer leads
     packet = json.loads(agenttasks.TASKS.read_text(encoding="utf-8"))
-    assert set(packet["agents"]) == {"prep", "followups"} and "schema" in packet["agents"]["prep"]
+    assert set(packet["agents"]) == {"prep", "followups", "scout"} and "schema" in packet["agents"]["prep"]
     assert "requisition R1" in packet["tasks"][0]["input"]
     stored, rejected = agenttasks.save(
         {
@@ -174,9 +176,9 @@ def test_a_second_run_while_one_is_writing_does_nothing(home):
 
 
 def test_what_waits_follows_config(home):
-    assert agents.waiting({}) == {"prep": 1, "followups": 2, "debrief": 0, "audit": 0}
+    assert agents.waiting({}) == {"prep": 1, "followups": 2, "debrief": 0, "audit": 0, "scout": 1}
     off = {"agents": {"prep": False, "followup_after_days": 100000}}
-    assert agents.waiting(off) == {"prep": 0, "followups": 0, "debrief": 0, "audit": 0}
+    assert agents.waiting(off) == {"prep": 0, "followups": 0, "debrief": 0, "audit": 0, "scout": 1}
 
 
 def test_an_unreadable_state_file_reads_as_empty_and_the_brief_still_builds(home):

@@ -43,6 +43,7 @@ def steps(poll_args):
     step("radar.mail", [])  # reads hiring emails and moves application statuses; off until Gmail is set up
     step("radar.watch", [])  # re-reads the posting behind every open application: closed, retitled, repriced
     step("radar.agents", ["run"])  # prep, follow-ups and waiting debriefs; without a key they wait for an assistant
+    step("radar.scout", [])  # checks a few leads for employers worth following; adds none on its own
     step("radar.brief", [])  # what to apply to first, what changed, what went quiet
 
 
