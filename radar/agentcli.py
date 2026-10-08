@@ -6,14 +6,15 @@
   save FILE                               store the assistant's answers once they pass the checks
   show AGENT [COMPANY]                    print what an agent wrote
   debrief COMPANY [REQ_ID] < account.txt  keep how an interview went, then write its debrief
+  audit [apply N]                         write the filter audit now, or make its suggested change N
 
-AGENT is prep, followups or debrief."""
+AGENT is prep, followups, debrief or audit."""
 
 import json
 import sys
 from pathlib import Path
 
-from radar import agents, agenttasks, agentview, debrief
+from radar import agents, agenttasks, agentview, audit, debrief
 
 
 def pick(name, company, req_id=None):
@@ -67,6 +68,13 @@ def main(argv, stdin=sys.stdin):
             return 0
         if cmd == "debrief" and rest:
             return keep_account(rest, stdin.read())
+        if cmd == "audit" and rest[:1] == ["apply"] and len(rest) > 1:
+            print(audit.apply(int(rest[1]) - 1))  # numbered from 1, as the audit lists them
+            return 0
+        if cmd == "audit":
+            report(agents.run(["audit"], ("", None)))
+            print(agentview.text("audit"))
+            return 0
     except (OSError, ValueError) as e:
         print(f"could not {cmd}: {e}")
         return 1

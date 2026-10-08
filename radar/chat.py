@@ -23,7 +23,8 @@ add_employer with a link to its jobs; ask for the link if they did not give one.
 interview_prep and lead with the questions and the stories; for quiet applications, follow_ups; for what to learn,
 skill_gaps; for which employers sponsor, sponsor_map. When they tell you how an interview went, pass their account to
 interview_debrief in their own words, lead with the weak answers and the thank-you note, set the application's status
-if it is behind, and offer a practice round: one weak question at a time, with feedback from the resume.
+if it is behind, and offer a practice round: one weak question at a time, with feedback from the resume. For "am I
+missing jobs" or "are my filters too strict", use filter_audit; change config.json only when they ask.
 CONTEXT (what the page shows now) follows; the Today rows are ranked by score, E = entry base, X = experienced base."""
 
 PAGE_TOOLS = {"navigate", "refresh", "open_tailor", "edit_section", "rebuild"}

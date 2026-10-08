@@ -1,5 +1,5 @@
-"""The agents as tools for the chat assistant: interview prep and debriefs, follow-up drafts, skill gaps and the
-sponsor map."""
+"""The agents as tools for the chat assistant: interview prep and debriefs, follow-up drafts, skill gaps, the sponsor
+map and the filter audit."""
 
 from radar import agents, agentview, debrief, gaps, sponsormap
 
@@ -53,6 +53,14 @@ TOOLS = [
         "description": "Which employers' recent postings say they sponsor, decide per posting or rule it out, and "
         "employer defaults their own postings contradict. Use for 'who sponsors' or 'where should I apply on a visa'.",
         "input_schema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "filter_audit",
+        "description": "The weekly filter audit: which postings the title, seniority, domain and location rules dropped "
+        "that they would probably have wanted, and the config.json changes that would have kept them. Returns the "
+        "latest audit; run=true writes a new one now (needs an API key). Use for 'am I missing jobs' or 'are my "
+        "filters too strict'. A change is only made when they apply it on the Agents view or say so.",
+        "input_schema": {"type": "object", "properties": {"run": {"type": "boolean"}}},
     },
 ]
 NAMES = {t["name"] for t in TOOLS}
@@ -110,4 +118,17 @@ def call(name, args):
         return {"text": page("followups", args.get("company"), args.get("req_id"))[:8000]}
     if name == "skill_gaps":
         return {"lines": gaps.summary(gaps.analyse(), limit=8)}
+    if name == "filter_audit":
+        return {"text": audit_page(bool(args.get("run")))[:8000]}
     return {"lines": sponsormap.summary(sponsormap.analyse())}
+
+
+def audit_page(run=False):
+    """The latest filter audit, written first when asked or when there is none yet."""
+    if run or not agents.audit.load().get("made"):
+        r = agents.run(["audit"], ("", None))["audit"]  # no employer: the audit is one item, asked for now
+        if r["errors"]:
+            return "the audit could not be written: " + r["errors"][0]
+        if not r["made"]:
+            return "no API key, so no audit was written: add one on Setup, or run /radar-audit in a coding assistant"
+    return agentview.text("audit")

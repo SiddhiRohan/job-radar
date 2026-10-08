@@ -25,10 +25,20 @@ def server(tmp_path, monkeypatch):
 
 def test_one_call_brings_every_agents_report(server):
     r = server.agent_reports()
-    assert set(r) == {"key", "waiting", "followup_after_days", "prep", "debriefs", "followups", "gaps", "sponsors"}
+    assert set(r) == {
+        "key",
+        "waiting",
+        "followup_after_days",
+        "prep",
+        "debriefs",
+        "audit",
+        "followups",
+        "gaps",
+        "sponsors",
+    }
     assert (
         r["key"] is False
-        and r["waiting"] == {"prep": 0, "followups": 0, "debrief": 0}
+        and r["waiting"] == {"prep": 0, "followups": 0, "debrief": 0, "audit": 0}
         and r["followup_after_days"] == 10
     )
     assert r["prep"] == {"items": []} and r["followups"] == {"items": []}
@@ -73,3 +83,16 @@ def test_an_interview_account_is_kept_even_without_a_key(server, monkeypatch):
     monkeypatch.setattr(server, "background", lambda fn, *args: fn(*args))
     server.debrief_add({"company": "Contoso", "req_id": "R1", "account": "And about Airflow."})
     assert seen == [(["debrief"], ("Contoso", "R1"))]
+
+
+def test_the_audit_runs_from_the_page_and_a_change_applies_by_number(server, monkeypatch):
+    with pytest.raises(HTTPException) as e:  # no API key: nothing would be written
+        server.audit_run()
+    assert e.value.status_code == 409
+    seen = []
+    monkeypatch.setattr(server.agents, "has_key", lambda: True)
+    monkeypatch.setattr(server.agents, "run", lambda names, who: seen.append((names, who)) or {})
+    monkeypatch.setattr(server, "background", lambda fn, *args: fn(*args))
+    server.audit_run()
+    assert seen == [(["audit"], ("", None))]
+    assert server.audit_apply({"n": 0}) == {"result": "nothing to apply"}
