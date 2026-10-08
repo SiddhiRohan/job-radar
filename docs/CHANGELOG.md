@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+**A weekly filter audit.** The title, seniority, domain and location rules drop most of what the searches return
+before anything is scored. The radar now logs every drop for two weeks, and once a week an agent sends a sample of
+the titles dropped most often, with postings skipped for sponsorship or years, to the model: it names the ones you
+would probably have wanted and suggests the narrowest `config.json` change that would have kept them. Nothing
+changes until you press Apply on the Agents view or run `python -m radar.agents audit apply N`. Also in the chat
+("am I missing jobs?") and with `/radar-audit`.
+
 **Interview debriefs.** Right after a screen or an interview, say how it went, in the chat, on the Agents view or
 with `/radar-debrief`, and an agent writes what was asked with a stronger answer for each weak one, what the
 interviewer seemed unsure about, what you said you would send, what to prepare next, and a thank-you note to send
