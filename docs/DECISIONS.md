@@ -490,3 +490,16 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
 75. **Co-authored commits are back.** The owner earned GitHub's Pair Extraordinaire badge for a co-authored PR and
     asked for more like it, so commits and squash merges carry Claude as co-author again; PR descriptions still
     carry no tool name. CONTRIBUTING.md now says a co-author trailer is fine and other attribution is not.
+
+76. **The company scout checks before it proposes, and the person decides.** Leads come from where the person
+    applied or looked without following (with the posting's link), the H-1B sponsor lists and the not-on-Workday and
+    recheck lists in `companies/`, and the model's weekly suggestions (`radar/leads.py`), which give careers links
+    for listed names and up to ten new employers. Nothing a lead says is taken on trust: `radar/scoutprobe.py`
+    checks a link with the request the poll would make, and looks for a lead without one on the three boards under
+    its squeezed and hyphenated name, never on Workday, which answers alike for real and made-up tenants. A model
+    link that is made up simply finds nothing. Five leads a morning (`scout_per_run`), linked ones and the person's
+    own first, keep the run short and the employers' sites unbothered. Each find carries its open roles, the roles
+    whose titles match the target patterns (a board gives all of them; a Workday site, one search for the first
+    term) and its H-1B record from `companies/expand.py`. Following goes through `companies.add`, which checks once
+    more and writes `companies.json`; skipping only hides it. `companies.json` is a file people edit and share, so
+    nothing reaches it without that click.
