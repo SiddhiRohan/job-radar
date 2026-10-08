@@ -148,3 +148,7 @@ A card under Interview prep on the Agents view: pick the application (screens an
 ## Filter audit (2026-10-07)
 
 A card after Follow-ups: the week's drops by rule, Audit now, then the latest audit's summary, the dropped postings worth seeing (linked, with the rule and how many postings shared the title), and each suggested change as `setting: action "value"` with its reason and an Apply button that turns into Applied.
+
+## Company scout (2026-10-08)
+
+A card after Filter audit: how far the scout got (found, followed, not on a system the radar reads, still to check), Check more now, and each found employer with its system, open roles, roles matching the titles, an H-1B tag, a careers link, why it came up, and Follow or Skip.

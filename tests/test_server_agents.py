@@ -32,13 +32,14 @@ def test_one_call_brings_every_agents_report(server):
         "prep",
         "debriefs",
         "audit",
+        "scout",
         "followups",
         "gaps",
         "sponsors",
     }
     assert (
         r["key"] is False
-        and r["waiting"] == {"prep": 0, "followups": 0, "debrief": 0, "audit": 0}
+        and r["waiting"] == {"prep": 0, "followups": 0, "debrief": 0, "audit": 0, "scout": 1}
         and r["followup_after_days"] == 10
     )
     assert r["prep"] == {"items": []} and r["followups"] == {"items": []}
@@ -96,3 +97,18 @@ def test_the_audit_runs_from_the_page_and_a_change_applies_by_number(server, mon
     server.audit_run()
     assert seen == [(["audit"], ("", None))]
     assert server.audit_apply({"n": 0}) == {"result": "nothing to apply"}
+
+
+def test_the_scout_checks_from_the_page_and_follows_only_on_request(server, monkeypatch):
+    seen = []
+    monkeypatch.setattr(server.scout, "check", lambda cfg: seen.append("check") or [])
+    monkeypatch.setattr(server.scout, "decide", lambda name, how: seen.append((name, how)) or {"ok": True})
+    monkeypatch.setattr(server, "background", lambda fn, *args: fn(*args))
+    server.scout_run()
+    server.scout_decide({"name": "Contoso", "how": "follow"})
+    server.scout_decide({"name": "Northwind", "how": "anything else"})
+    assert seen == ["check", ("Contoso", "follow"), ("Northwind", "skip")]
+    runlock.LOCK.parent.mkdir(parents=True, exist_ok=True)
+    runlock.LOCK.write_text("{}", encoding="utf-8")  # the morning run is going: it checks leads itself
+    with pytest.raises(HTTPException):
+        server.scout_run()

@@ -29,16 +29,17 @@ tailoring and tracking. The dated history of the author's own runs is kept in a 
 - Email statuses over read-only IMAP: automatic with a requisition id, and for rejections that name the role of
   exactly one application; everything else waits for review.
 - A daily watcher for the postings behind open applications, on Workday and on the three boards.
-- Six agents: interview prep when an email brings a screen or an interview, a debrief from the person's own account
-  after each round that feeds the next prep, follow-up drafts for quiet applications whose posting is still up, one
-  employer at a time, a weekly filter audit of what the rules dropped with changes to apply, skill gaps across a
-  month of verdicts, and a sponsor map of what each employer's own postings say. The first four use the API or a
-  coding assistant, with numbers held to what they were given; the other two only count. They show on an Agents
-  view, in the brief, in the chat and in the terminal.
+- Seven agents: interview prep when an email brings a screen or an interview, a debrief from the person's own
+  account after each round that feeds the next prep, follow-up drafts for quiet applications whose posting is still
+  up, one employer at a time, a weekly filter audit of what the rules dropped with changes to apply, a company scout
+  that checks a few employer leads each morning and proposes the ones worth following, skill gaps across a month of
+  verdicts, and a sponsor map of what each employer's own postings say. Model-written parts use the API or a coding
+  assistant, with numbers held to what they were given; the rest only count or check. They show on an Agents view,
+  in the brief, in the chat and in the terminal.
 - A chat assistant with tools over the shortlist, tailoring, email, posting status, the brief and the agents; it
   judges a pasted job link and adds an employer from a link too.
 - The server accepts changes only from its own pages. A pre-commit check keeps personal details out of commits.
-- 477 offline tests, CI on every PR, pre-commit with ruff and gitleaks.
+- 486 offline tests, CI on every PR, pre-commit with ruff and gitleaks.
 
 **Next**
 

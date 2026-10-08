@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+**A company scout.** More employers is the other way to more postings. Each morning the scout checks a few leads at
+their careers sites, with the request the poll would make: employers you applied to or evaluated without following,
+the H-1B sponsor lists and earlier searches in `companies/`, and, once a week, careers links and new employers
+suggested by the model. A lead without a link is looked for on Greenhouse, Lever and Ashby under its name; a Workday
+site is never guessed. Each find shows its open roles, how many match your titles and its H-1B record, and joins the
+daily search only when you press Follow on the Agents view or run `python -m radar.scout follow "<name>"`. Also in
+the chat ("find me more employers") and with `/radar-scout`.
+
 **A weekly filter audit.** The title, seniority, domain and location rules drop most of what the searches return
 before anything is scored. The radar now logs every drop for two weeks, and once a week an agent sends a sample of
 the titles dropped most often, with postings skipped for sponsorship or years, to the model: it names the ones you

@@ -250,6 +250,7 @@ weeks, for the filter audit; a suggested change reaches `config.json` only when 
 | Follow-ups, `radar/followup.py` | Still at applied after `followup_after_days`, posting not closed, one employer at a time | yes | Agents view, brief, chat, `python -m radar.agents show followups` |
 | Interview debrief, `radar/debrief.py` | When they say how a screen or interview went | yes | Agents view, brief, chat, `/radar-debrief`, `python -m radar.agents show debrief` |
 | Filter audit, `radar/audit.py` | Once a week (`audit_every_days`) when 20 or more drops were logged | yes | Agents view, brief, chat, `/radar-audit`, `python -m radar.agents audit` |
+| Company scout, `radar/scout.py` and `radar/leads.py` | Each morning for a few leads; the model's leads weekly (`scout_every_days`) | leads only | Agents view, brief, chat, `/radar-scout`, `python -m radar.scout` |
 | Skill gaps, `radar/gaps.py` | When asked, over the last 30 days of verdicts | no | Agents view, chat, `python -m radar.gaps` |
 | Sponsor map, `radar/sponsormap.py` | When asked, over the last 60 days of postings | no | Agents view, chat, `python -m radar.sponsormap` |
 
@@ -262,6 +263,9 @@ Settings, under `"agents"` in `config.json`:
 | `debrief` | true | false stops the morning run writing debriefs for accounts that are waiting; one asked for in the chat or on the page is still written. |
 | `audit` | true | false stops the weekly filter audit; one asked for in the chat or on the page still runs. |
 | `audit_every_days` | 7 | Days between filter audits. |
+| `scout` | true | false stops the model's weekly employer leads; the scout still checks the leads it has. |
+| `scout_every_days` | 7 | Days between the model's employer leads. |
+| `scout_per_run` | 5 | Leads the scout checks each morning. |
 | `followup_after_days` | 10 | Days at applied with no reply before a follow-up is drafted. |
 | `per_run` | 5 | The most preps, and the most drafts, one run writes; the rest wait for the next run. |
 

@@ -1,6 +1,6 @@
 """What the writing agents made, as plain pages for the terminal (python -m radar.agents show) and the assistant."""
 
-from radar import audit, debrief, dropped, followup, prep
+from radar import audit, debrief, dropped, followup, prep, scout
 
 
 def notes(rec):
@@ -85,6 +85,9 @@ def news(since):
     out += [
         f"Interview debrief ready: {d['company']}, {d['title']}" for d in debrief.report()["items"] if d["made"] > since
     ]
+    found = [f["name"] for f in scout.report()["found"] if (f.get("checked") or "") > since[:10]]
+    if found:
+        out.append("Company scout found: " + ", ".join(found[:4]) + (" and more" if len(found) > 4 else ""))
     a = audit.report()
     if (a.get("made") or "") > since:
         out.append(

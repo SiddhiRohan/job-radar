@@ -80,6 +80,9 @@ The hour of tab-hopping becomes one page you read with your coffee.
 - **Checks its own filters.** Once a week it samples what the title, seniority and location rules threw away,
   names the postings you would have wanted, and suggests the setting that would have kept them, applied only
   when you say so.
+- **Finds more employers.** A scout checks a few leads each morning, from where you applied, the H-1B sponsor
+  lists and the model's suggestions, and proposes the ones whose careers sites answer, with open roles and how many
+  match your titles. One click follows an employer.
 - **Says what to learn, and who sponsors.** Skill gaps counts what a month of postings found missing from your
   resume and how many of them were one point from Apply. The sponsor map shows which employers' own postings say
   they sponsor, and which employer defaults their postings contradict.
@@ -164,6 +167,7 @@ the setup, asks what you are looking for, and tunes the search with you. After t
 | `/radar-prep <company>` | Interview prep for one application, then a practice round |
 | `/radar-debrief <company>` | Debrief a screen or interview, then practise the weak answers |
 | `/radar-audit` | Check whether the filters drop jobs you would want, and fix them |
+| `/radar-scout` | Find more employers worth adding to the daily search |
 | `/radar-agents` | Run the agents: interview prep, follow-up drafts, skill gaps and the sponsor map |
 | `/radar-tune <what>` | Change what it looks for, in plain words |
 
@@ -203,6 +207,7 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 | Debrief an interview | The Agents view, or the chat ("I just had my Contoso screen: they asked ...") |
 | Follow up on quiet applications | Follow-ups on the Agents view: copy, send it yourself, mark it sent |
 | Check the filters | The Filter audit card on the Agents view, or `python -m radar.agents audit` |
+| Find more employers | The Company scout card on the Agents view, or `python -m radar.scout` |
 | See what to learn, and who sponsors | The Agents view, or `python -m radar.gaps` and `python -m radar.sponsormap` |
 
 <picture>
