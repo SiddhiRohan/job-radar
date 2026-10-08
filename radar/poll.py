@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from radar import boards, filters, sponsor, store, wd
+from radar import boards, dropped, filters, sponsor, store, wd
 
 sys.stdout.reconfigure(encoding="utf-8")
 MAX_DESC = 15000
@@ -18,12 +18,13 @@ def load_json(path, default):
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else default
 
 
-def search_all(cfg, companies, max_days, removed):
-    """Search each Workday site per term and read each job board whole; return (found by company|req_id, errors)."""
-    found, errors = {}, {}
+def search_all(cfg, companies, max_days, removed, log=None):
+    """Search each Workday site per term and read each job board whole; return (found by company|req_id, errors).
+    Each drop goes to log, when given, for the filter auditor (radar/dropped.py)."""
+    found, errors, log = {}, {}, ([] if log is None else log)
     for c in companies:
         if boards.system(c):  # Greenhouse, Lever or Ashby: one request, then the same title and location rules
-            boards.poll(cfg, c, max_days, found, removed, errors)
+            boards.poll(cfg, c, max_days, found, removed, errors, log=log)
             continue
         entry_terms = cfg.get("entry_terms", []) if c.get("tier", 1) <= 2 else []
         for term in cfg["search_terms"] + list(c.get("extra_terms") or []) + entry_terms:
@@ -44,12 +45,15 @@ def search_all(cfg, companies, max_days, removed):
                     continue
                 fresh += 1
                 if cfg.get("title_must_match_term", True) and not filters.title_matches_term(j["title"], term, cfg):
+                    log.append(dropped.item(c["name"], j, "off_target"))
                     continue
                 reason = filters.title_exclusion(j["title"], cfg)
                 if reason:
                     removed[reason].add(key)
+                    log.append(dropped.item(c["name"], j, reason))
                 elif cfg["us_only"] and (filters.looks_non_us(j["location"]) or filters.path_non_us(j["url"])):
                     removed["non_us"].add(key)
+                    log.append(dropped.item(c["name"], j, "non_us"))
                 else:
                     j["search_term"] = term
                     found[key] = j
@@ -97,7 +101,8 @@ def main():
 
     n_terms = len(cfg["search_terms"]) + len(cfg.get("entry_terms", []))
     print(f"polling {len(companies)} companies x {n_terms} terms, max_days_ago={max_days}")
-    found, errors = search_all(cfg, companies.values(), max_days, removed)
+    log = []  # what the rules dropped, for the filter auditor
+    found, errors = search_all(cfg, companies.values(), max_days, removed, log)
     new = [(k, j) for k, j in found.items() if k not in seen]
     print(f"\n{len(found)} matching postings, {len(new)} new; fetching details for the new ones", flush=True)
 
@@ -111,6 +116,7 @@ def main():
             errors[f"{j['company']} {j['req_id']}"] = f"detail: {str(e)[:120]}"
         if j.get("non_us"):
             removed["non_us"].add(key)
+            log.append(dropped.item(j["company"], j, "non_us"))
             continue
         if j.get("years_gate"):
             removed["years_gate"].add(key)
@@ -126,6 +132,7 @@ def main():
     if len(written) < len(kept):
         print(f"{len(kept) - len(written)} postings were already stored by another run; skipped", flush=True)
     kept = written
+    dropped.record([i for i in log if i["key"] not in seen])  # postings seen before were dropped and logged then
     Path("last_run.json").write_text(
         json.dumps(
             {

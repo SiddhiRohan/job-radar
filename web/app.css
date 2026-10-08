@@ -488,3 +488,8 @@ details[open] > .det-body { animation: reveal .18s ease-out; }
 .debform textarea { width: 100%; resize: vertical; font: inherit; font-size: var(--fs-sm); }
 .went { font-size: var(--fs-xs); padding: 0 7px; border-radius: 999px; border: 1px solid currentColor; margin-left: 6px; }
 .went.strong { color: var(--apply); } .went.okay { color: var(--maybe); } .went.weak { color: var(--danger); }
+.fixes { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.fixes li { max-width: none; display: grid; grid-template-columns: minmax(0, auto) 1fr auto; gap: 4px 12px; align-items: baseline; font-size: var(--fs-sm); }
+.fixes code { font-size: var(--fs-xs); background: var(--surface-2); border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: 1px 6px; }
+.fixes span { color: var(--ink-2); }
+@media (max-width: 720px) { .fixes li { grid-template-columns: 1fr auto; } .fixes span { grid-column: 1 / -1; } }

@@ -77,6 +77,9 @@ The hour of tab-hopping becomes one page you read with your coffee.
   it.
 - **Drafts the follow-up.** For an application quiet for ten days whose posting is still up, a LinkedIn note and an
   email for you to send, and the LinkedIn search that finds the recruiter.
+- **Checks its own filters.** Once a week it samples what the title, seniority and location rules threw away,
+  names the postings you would have wanted, and suggests the setting that would have kept them, applied only
+  when you say so.
 - **Says what to learn, and who sponsors.** Skill gaps counts what a month of postings found missing from your
   resume and how many of them were one point from Apply. The sponsor map shows which employers' own postings say
   they sponsor, and which employer defaults their postings contradict.
@@ -160,6 +163,7 @@ the setup, asks what you are looking for, and tunes the search with you. After t
 | `/radar-score` | Score new postings with the assistant itself, no API key needed |
 | `/radar-prep <company>` | Interview prep for one application, then a practice round |
 | `/radar-debrief <company>` | Debrief a screen or interview, then practise the weak answers |
+| `/radar-audit` | Check whether the filters drop jobs you would want, and fix them |
 | `/radar-agents` | Run the agents: interview prep, follow-up drafts, skill gaps and the sponsor map |
 | `/radar-tune <what>` | Change what it looks for, in plain words |
 
@@ -198,6 +202,7 @@ With a Gmail app password in `.env` it reads hiring emails, read-only, and moves
 | Get ready for an interview | The Agents view, the chat ("prep me for my Contoso interview"), or `/radar-prep` |
 | Debrief an interview | The Agents view, or the chat ("I just had my Contoso screen: they asked ...") |
 | Follow up on quiet applications | Follow-ups on the Agents view: copy, send it yourself, mark it sent |
+| Check the filters | The Filter audit card on the Agents view, or `python -m radar.agents audit` |
 | See what to learn, and who sponsors | The Agents view, or `python -m radar.gaps` and `python -m radar.sponsormap` |
 
 <picture>

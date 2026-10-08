@@ -114,7 +114,9 @@
     "prep": true,
     "followups": true,
     "debrief": true,
+    "audit": true,
     "followup_after_days": 10,
+    "audit_every_days": 7,
     "per_run": 5
   }
 }

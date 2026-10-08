@@ -1,10 +1,27 @@
 """What the writing agents made, as plain pages for the terminal (python -m radar.agents show) and the assistant."""
 
-from radar import debrief, followup, prep
+from radar import audit, debrief, dropped, followup, prep
 
 
 def notes(rec):
     return ["", "Notes:"] + [f"- {n}" for n in rec["notes"]] if rec.get("notes") else []
+
+
+def audit_text(r):
+    """The latest filter audit, or what the rules dropped this week when there is none yet."""
+    week = ", ".join(f"{n} {dropped.LABELS.get(k, k)}" for k, n in sorted(r["dropped"].items(), key=lambda kv: -kv[1]))
+    if not r.get("made"):
+        return "No filter audit yet. Dropped in the last week: " + (week or "nothing logged yet") + "."
+    out = [f"Filter audit, {r['made']}, of what the rules dropped since {r['since']}", "", r["summary"]]
+    if r["wanted"]:
+        out += ["", "Dropped, but probably worth seeing:"]
+        out += [f"- {w['company']}, {w['title']} ({w['reason']}, {w['count']}): {w['why']}" for w in r["wanted"]]
+    if r["changes"]:
+        out += ["", "Changes that would have kept them (python -m radar.agents audit apply N):"]
+        for n, c in enumerate(r["changes"], 1):
+            done = " Applied." if n - 1 in (r["applied"] or []) else ""
+            out.append(f'{n}. {c["setting"]}: {c["action"]} "{c["value"]}". {c["why"]}{done}')
+    return "\n".join(out + notes(r))
 
 
 def prep_text(rec):
@@ -68,13 +85,20 @@ def news(since):
     out += [
         f"Interview debrief ready: {d['company']}, {d['title']}" for d in debrief.report()["items"] if d["made"] > since
     ]
+    a = audit.report()
+    if (a.get("made") or "") > since:
+        out.append(
+            f"Filter audit: {len(a['wanted'])} dropped posting(s) worth a look, {len(a['changes'])} change(s) to try"
+        )
     return out
 
 
 def text(name, company=None, req_id=None):
     """Everything one writer made, one employer's (its exact name, any case), or one application's. One
     application's shows even after its draft was marked sent, so asking for it again never pays for another; a
-    debrief keeps every round, so all of an application's rounds show, newest first."""
+    debrief keeps every round, so all of an application's rounds show, newest first. The audit has one page."""
+    if name == "audit":
+        return audit_text(audit.report())
     mod, page = PAGES[name]
     if company and req_id and name != "debrief":
         rec = mod.load().get(f"{company}|{req_id}")

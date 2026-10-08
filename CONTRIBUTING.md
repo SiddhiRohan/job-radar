@@ -27,7 +27,7 @@ Tests are offline and fast: `python -m pytest -q`. Run `pre-commit run --all-fil
 - Never stack PRs. Every PR is based on `main`; if a change needs another PR first, wait for that one to merge.
 - One change per commit. Message: `area: what changed`, imperative, under 60 characters. The body says why, not
   what. Examples: `sponsor: treat "no visa sponsorship" as no`, `ui: minimize chat to a pill`.
-- No attribution trailers in commits or PR text.
+- A `Co-authored-by:` trailer is welcome; no other attribution in commits or PR text.
 
 ## Personal data never enters git
 
@@ -48,8 +48,9 @@ and Northwind.
 - `radar/`: the daily pipeline (wd and boards, poll, filters, sponsor, store, score and batch, digest, prepare,
   mail, watch, agents, brief) plus `llm`, `fit`, `factors`, `chat`, `salary`, `mailmatch`, `rolematch`,
   `applications`, `evaluate`, `doctor`, `firstrun`, `autorun`, `schedule`, `runlock`. The agents are `prep`,
-  `debrief`, `followup`, `gaps` and `sponsormap`, with `facts` (the number lock), `agenttasks` (the no-key task
-  files), `agentcli` (their command line), `agentview` (plain pages) and `agentchat` (their chat tools).
+  `debrief`, `followup`, `audit` (with `dropped`, the poll's log, and `configedit`), `gaps` and `sponsormap`, with
+  `facts` (the number lock), `agenttasks` (the no-key task files), `agentcli` (their command line), `agentview`
+  (plain pages) and `agentchat` (their chat tools).
 - `tailoring/`: apply, plan, tailor, letters, finalize, skills, resumes, skills_extract.
 - `companies/`: finding and verifying employers, with their data files; `add` adds one from a link.
 - `web/` the UI, `tests/` pytest, `scripts/` the privacy guard, `.claude/commands/` the assistant commands,

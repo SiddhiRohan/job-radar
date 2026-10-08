@@ -144,3 +144,7 @@ buttons are disabled and the lead line says how to use a coding assistant instea
 ## Interview debrief (2026-10-04)
 
 A card under Interview prep on the Agents view: pick the application (screens and interviews first), write how it went, and press Write debrief. Without an API key the account is kept and the card says how many wait for a coding assistant. Each round folds like a prep; its questions carry a strong, okay or weak mark, and the thank-you note has its own copy button.
+
+## Filter audit (2026-10-07)
+
+A card after Follow-ups: the week's drops by rule, Audit now, then the latest audit's summary, the dropped postings worth seeing (linked, with the rule and how many postings shared the title), and each suggested change as `setting: action "value"` with its reason and an Apply button that turns into Applied.

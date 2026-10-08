@@ -19,6 +19,7 @@ from fastapi.staticfiles import StaticFiles
 from radar import (
     agents,
     applications,
+    audit,
     autorun,
     brief,
     chat,
@@ -220,6 +221,7 @@ def agent_reports():
         "followup_after_days": (cfg.get("agents") or {}).get("followup_after_days", followup.AFTER_DAYS),
         "prep": prep.report(),
         "debriefs": debrief.report(),
+        "audit": audit.report(),
         "followups": followup.report(),
         "gaps": gaps.analyse(jobs),
         "sponsors": sponsormap.analyse(jobs),
@@ -245,6 +247,20 @@ def debrief_add(body: dict):
     if why := agents.refuse():
         return {"kept": True, "note": why}
     return background(agents.run, ["debrief"], (company, req_id))
+
+
+@app.post("/api/agents/audit/run")
+def audit_run():
+    """Write the filter audit now instead of waiting for the week to pass."""
+    if why := agents.refuse():
+        raise HTTPException(409, why)
+    return background(agents.run, ["audit"], ("", None))
+
+
+@app.post("/api/agents/audit/apply")
+def audit_apply(body: dict):
+    """Make one change the audit suggested, because the person pressed Apply."""
+    return {"result": audit.apply(int(body.get("n", -1)))}
 
 
 @app.post("/api/agents/followups/done")

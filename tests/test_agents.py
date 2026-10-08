@@ -85,6 +85,7 @@ def test_without_a_key_nothing_is_written_and_the_work_waits(home):
         "prep": ([], 1),
         "followups": ([], 2),
         "debrief": ([], 0),
+        "audit": ([], 0),
     }
     assert prep.load() == {} and followup.load() == {}
 
@@ -173,9 +174,9 @@ def test_a_second_run_while_one_is_writing_does_nothing(home):
 
 
 def test_what_waits_follows_config(home):
-    assert agents.waiting({}) == {"prep": 1, "followups": 2, "debrief": 0}
+    assert agents.waiting({}) == {"prep": 1, "followups": 2, "debrief": 0, "audit": 0}
     off = {"agents": {"prep": False, "followup_after_days": 100000}}
-    assert agents.waiting(off) == {"prep": 0, "followups": 0, "debrief": 0}
+    assert agents.waiting(off) == {"prep": 0, "followups": 0, "debrief": 0, "audit": 0}
 
 
 def test_an_unreadable_state_file_reads_as_empty_and_the_brief_still_builds(home):

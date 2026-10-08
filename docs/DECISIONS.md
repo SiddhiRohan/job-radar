@@ -474,3 +474,19 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     that round's successor and into the next prep for the role, under their own heading. Numbers may come from the
     account as well as the posting and resume, since the person said them. The thank-you note is a draft they send,
     never sent. The command line moved to `radar/agentcli.py` so `radar/agents.py` stays the runner.
+
+74. **The filter auditor checks the rules against what they threw away.** Most postings never reach scoring: a title
+    naming no target role, a seniority or domain word, or a place outside the US drops them, and until now nothing
+    kept them, so a rule that was too tight could not be seen. The poll now logs each drop (`radar/dropped.py`), two
+    weeks of them and one row per posting and rule. Once a week, when at least 20 were logged, `radar/audit.py`
+    sends the model the titles each rule dropped most often, one example and a count per title (25 off-target, 15
+    seniority, 10 domain, 5 location), so a few dozen lines stand for hundreds of drops; postings the fixed rules
+    skipped for sponsorship or years go too, with the words that decided it, so a misread can be caught even though
+    those rules are not settings. The model names the items worth seeing by id, and suggests at most four changes; a
+    change that cannot be made as written (removing an entry that is not there, a pattern that does not compile) is
+    left out and noted. Nothing touches `config.json` until the person applies a change, which `radar/configedit.py`
+    makes one entry at a time, keeping the file's layout. One audit a week costs a few cents.
+
+75. **Co-authored commits are back.** The owner earned GitHub's Pair Extraordinaire badge for a co-authored PR and
+    asked for more like it, so commits and squash merges carry Claude as co-author again; PR descriptions still
+    carry no tool name. CONTRIBUTING.md now says a co-author trailer is fine and other attribution is not.
