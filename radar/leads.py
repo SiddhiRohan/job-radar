@@ -12,9 +12,10 @@ EVERY_DAYS, ASK = 7, 25  # days between suggestions; names sent for links each t
 RULES = """You help one person's US job search find employers to follow. For each name under CHECK, give the link
 to its jobs only if it is on one of four systems: an address on myworkdayjobs.com, job-boards.greenhouse.io or
 boards.greenhouse.io, jobs.lever.co, or jobs.ashbyhq.com. An employer's own careers page does not count: give "".
-Then suggest up to ten employers that are not under FOLLOWED or CHECK, hire for the target roles in the US and
-sponsor work visas, each with such a link if you know one, and why in one sentence. Never make up a link: when
-unsure, give "". Plain sentences, no em dashes."""
+Then suggest up to ten employers that are not under FOLLOWED or CHECK under any name, hire for the target roles in
+the US and sponsor work visas, each with such a link if you know one, and why in one sentence written to the person
+as "you", never by name. Never make up a link: a Workday address differs by employer in its wd number and site name,
+so give one only when you know it exactly, and when unsure, give "". Plain sentences, no em dashes."""
 S = {"type": "string"}
 
 
