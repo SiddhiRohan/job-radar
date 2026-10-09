@@ -94,6 +94,15 @@ def test_a_wrong_or_empty_link_sends_the_scout_to_the_boards_by_name(home, monke
     assert (now["Tailspin"]["status"], now["Tailspin"]["note"]) == ("none", "no open roles there")
 
 
+def test_one_employer_under_two_names_is_one_lead(home):
+    w = scout.words
+    assert w("The Contoso Group, Inc.") == w("Contoso (Research Division)") == ["contoso"]
+    assert scout.alike(w("Northwind Traders Health"), w("Northwind Traders & Co."))
+    assert not scout.alike(w("Contoso Health"), w("Contoso"))  # one word is too often another employer's first
+    state = {"leads": {"Contoso Corporation": {"source": "suggested", "link": "", "status": "found"}}}
+    assert scout.gather(state, jobs=[])["leads"]["Contoso Corporation"]["status"] == "followed"  # followed since
+
+
 def test_following_adds_the_employer_and_skipping_only_hides_it(home, monkeypatch):
     monkeypatch.setattr(scout.store, "load", jobs)
     scout.check(CFG, limit=4)
@@ -129,14 +138,14 @@ def test_the_weekly_leads_add_links_and_new_employers_but_never_followed_ones(ho
             {"name": "Litware", "link": ""},
         ],
         "new": [
-            {"name": "Contoso", "link": "", "why": "Already followed."},
+            {"name": "Contoso Ltd (Research)", "link": "", "why": "Already followed, under another name."},
             {"name": "Tailspin", "link": "", "why": "Hires ML."},
         ],
     }
     leads.store_answer(leads.due(CFG)[0], answer, "m", p)
     state = scout.load()
     assert state["leads"]["Adatum"]["link"].startswith("https://adatum.wd1") and state["leads"]["Litware"]["link"] == ""
-    assert state["leads"]["Tailspin"]["source"] == "suggested" and "Contoso" not in state["leads"]
+    assert state["leads"]["Tailspin"]["source"] == "suggested" and not [n for n in state["leads"] if "Contoso" in n]
     assert leads.due(CFG) == [] and len(leads.due(CFG, every=True)) == 1  # weekly, or now when asked
 
 

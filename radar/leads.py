@@ -74,14 +74,13 @@ def store_answer(item, answer, by, p, problems=()):
     today = datetime.now().strftime("%Y-%m-%d")
     with store.lock():
         state = scout.gather(scout.load())
-        taken = scout.followed() | {n.lower() for n in state["leads"]}
+        have = [scout.words(n) for n in scout.followed() | set(state["leads"])]
         for k in answer["known"]:  # a link on a system the poll cannot read is no help: dropped
             lead = state["leads"].get(k["name"])
             if lead and scoutprobe.readable(k["link"].strip()) and lead["status"] in ("new", "none"):
                 lead |= {"link": k["link"].strip(), "status": "new"}
-        for n in answer["new"][:10]:
-            if n["name"].strip() and n["name"].lower() not in taken:
-                taken.add(n["name"].lower())
+        for n in answer["new"][:10]:  # an employer followed or known under another spelling is no news
+            if scout.newcomer(n["name"].strip(), have):
                 link = n["link"].strip() if scoutprobe.readable(n["link"].strip()) else ""
                 lead = {"source": "suggested", "link": link, "why": n["why"], "status": "new"}
                 state["leads"][n["name"].strip()] = lead | {"added": today}

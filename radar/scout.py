@@ -3,11 +3,13 @@ daily search and checks each with the requests the poll would make, a few a morn
 
 Leads: employers the person applied to or evaluated without following them, the H-1B sponsor lists and earlier
 searches in companies/, and the model's weekly suggestions (radar/leads.py). A lead with a careers link is checked at
-that link; one without is looked for on Greenhouse, Lever and Ashby under its name. Workday addresses are never
-guessed, since Workday answers alike for real and made-up tenants. Found employers wait on the Agents view until the
+that link; one without, or whose link finds no open roles, is looked for on Greenhouse, Lever and Ashby under its
+name. Workday addresses are never guessed, since Workday answers alike for real and made-up tenants. An employer
+already followed under any spelling of its name is never a lead. Found employers wait on the Agents view until the
 person follows or skips them; nothing joins companies.json without that. State in .cache/ui/scout.json."""
 
 import json
+import re
 import sys
 from collections import Counter
 from datetime import datetime
@@ -27,6 +29,8 @@ FIRST = {
     "top H-1B sponsor": 3,
     "earlier search": 4,
 }
+ENDINGS = {"inc", "incorporated", "llc", "llp", "lp", "ltd", "limited", "corp", "corporation", "co", "company"}
+ENDINGS |= {"companies", "plc", "group", "holdings", "and"}
 
 
 def load():
@@ -47,13 +51,44 @@ def followed():
     return {c["name"].lower() for c in read("companies.json", [])}
 
 
+def words(name):
+    """A name as plain words, leaving out what is in brackets or after a dash or comma, a leading "the" and legal
+    endings: "The Contoso Group, Inc." and "Contoso (Research Division)" both come to ["contoso"]."""
+    name = re.split(r"\s[-\u2013]\s|[,:]", re.sub(r"\([^)]*\)", " ", name.lower()))[0]
+    w = re.findall(r"[a-z0-9]+", name.replace("&", " and "))
+    while w and w[-1] in ENDINGS:
+        w.pop()
+    return w[1:] if w[:1] == ["the"] else w
+
+
+def alike(x, y):
+    """Two names, as words, for one employer: the same words, or the longer starting with all of the shorter when
+    that has two words or more. "Northwind Traders" and "Northwind Traders Health" are one; "Contoso" and "Contoso
+    Health" stay two, since one word is too often the first word of another employer's name."""
+    short, long = sorted((x, y), key=len)
+    return x == y or (len(short) >= 2 and long[: len(short)] == short)
+
+
+def newcomer(name, have):
+    """Whether name is an employer not among have (names as words), which it then joins."""
+    w = words(name)
+    if not w or any(alike(w, h) for h in have):
+        return False
+    have.append(w)
+    return True
+
+
 def gather(state, jobs=None):
-    """Add the leads not known yet, best first: where they applied or looked, then the lists in companies/."""
-    have, today = followed() | {n.lower() for n in state["leads"]}, datetime.now().strftime("%Y-%m-%d")
+    """Add the leads not known yet, best first: where they applied or looked, then the lists in companies/. A lead
+    whose employer has been followed since, under any spelling, is marked followed."""
+    mine, today = [words(n) for n in followed()], datetime.now().strftime("%Y-%m-%d")
+    for name, v in state["leads"].items():
+        if v["status"] in ("new", "none", "found") and any(alike(words(name), f) for f in mine):
+            v["status"] = "followed"
+    have = mine + [words(n) for n in state["leads"]]
 
     def lead(name, source, link=""):
-        if name and name.lower() not in have:
-            have.add(name.lower())
+        if newcomer(name, have):
             state["leads"][name] = {"source": source, "link": link, "status": "new", "added": today}
 
     links = {j["company"]: j.get("url", "") for j in (store.load() if jobs is None else jobs)}
