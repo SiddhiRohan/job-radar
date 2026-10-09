@@ -25,7 +25,7 @@ def home(tmp_path, monkeypatch):
 
 def answer(**over):
     a = {
-        "role": "A data science role on a 9 person team.",
+        "role": "A data science role on a 45 person team.",  # never a day or a month: the applied date is a source
         "focus": [
             {"topic": "Retrieval", "why": "The posting leads with it.", "evidence": "Built a retrieval chatbot."}
         ],
@@ -96,7 +96,7 @@ def test_numbers_that_are_not_on_the_resume_are_taken_out_and_named(home):
     assert rec["prep"]["stories"][0]["result"] == "Used by 2,000 people and cut handling time by [?]%."
     assert rec["prep"]["role"] == "A data science role on a [?] person team."
     assert rec["notes"] == [
-        "9 in role is not in the posting or your resume, so it was taken out.",
+        "45 in role is not in the posting or your resume, so it was taken out.",
         "40 in stories.1.result is not in the posting or your resume, so it was taken out.",
     ]
 

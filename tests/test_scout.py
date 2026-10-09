@@ -69,11 +69,38 @@ def test_a_link_is_checked_there_and_a_name_on_the_boards_a_few_a_run(home, monk
     assert now["Litware"]["status"] == "none"
 
 
-def test_a_workday_link_counts_its_roles_and_the_matching_titles(home):
+def test_a_workday_link_counts_its_roles_and_the_matching_titles(home, monkeypatch):
     site = scoutprobe.at_link("https://contoso.wd5.myworkdayjobs.com/en-US/External/job/X_R1", CFG)
     assert site == ("workday", "https://contoso.wd5.myworkdayjobs.com/External", 40, 1)
     with pytest.raises(ValueError):
         scoutprobe.at_link("https://careers.example.com/jobs", CFG)
+    monkeypatch.setattr(scoutprobe.wd, "count", lambda tenant, shard, site: 0)
+    with pytest.raises(ValueError, match="no open roles"):  # a site with nothing open is not a find
+        scoutprobe.at_link("https://contoso.wd5.myworkdayjobs.com/External", CFG)
+
+
+def test_a_wrong_or_empty_link_sends_the_scout_to_the_boards_by_name(home, monkeypatch):
+    monkeypatch.setitem(BOARDS, ("lever", "tailspin"), [])  # a board with nothing open
+    monkeypatch.setattr(scout.store, "load", lambda: [])
+    state = scout.gather({"leads": {}})
+    state["leads"]["Fabrikam Labs"]["link"] = "https://jobs.lever.co/fabrikam"  # no such board: it is on Ashby
+    state["leads"]["Tailspin"] = {"source": "suggested", "link": "https://jobs.lever.co/tailspin", "status": "new"}
+    scout.store.write_json(scout.STATE, state)
+    assert scout.check(CFG, limit=2) == ["Fabrikam Labs"]
+    now = scout.load()["leads"]
+    assert (
+        now["Fabrikam Labs"]["url"] == "https://jobs.ashbyhq.com/fabrikam-labs" and "note" not in now["Fabrikam Labs"]
+    )
+    assert (now["Tailspin"]["status"], now["Tailspin"]["note"]) == ("none", "no open roles there")
+
+
+def test_one_employer_under_two_names_is_one_lead(home):
+    w = scout.words
+    assert w("The Contoso Group, Inc.") == w("Contoso (Research Division)") == ["contoso"]
+    assert scout.alike(w("Northwind Traders Health"), w("Northwind Traders & Co."))
+    assert not scout.alike(w("Contoso Health"), w("Contoso"))  # one word is too often another employer's first
+    state = {"leads": {"Contoso Corporation": {"source": "suggested", "link": "", "status": "found"}}}
+    assert scout.gather(state, jobs=[])["leads"]["Contoso Corporation"]["status"] == "followed"  # followed since
 
 
 def test_following_adds_the_employer_and_skipping_only_hides_it(home, monkeypatch):
@@ -111,14 +138,14 @@ def test_the_weekly_leads_add_links_and_new_employers_but_never_followed_ones(ho
             {"name": "Litware", "link": ""},
         ],
         "new": [
-            {"name": "Contoso", "link": "", "why": "Already followed."},
+            {"name": "Contoso Ltd (Research)", "link": "", "why": "Already followed, under another name."},
             {"name": "Tailspin", "link": "", "why": "Hires ML."},
         ],
     }
     leads.store_answer(leads.due(CFG)[0], answer, "m", p)
     state = scout.load()
     assert state["leads"]["Adatum"]["link"].startswith("https://adatum.wd1") and state["leads"]["Litware"]["link"] == ""
-    assert state["leads"]["Tailspin"]["source"] == "suggested" and "Contoso" not in state["leads"]
+    assert state["leads"]["Tailspin"]["source"] == "suggested" and not [n for n in state["leads"] if "Contoso" in n]
     assert leads.due(CFG) == [] and len(leads.due(CFG, every=True)) == 1  # weekly, or now when asked
 
 
