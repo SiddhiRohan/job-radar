@@ -26,14 +26,19 @@ def matching(postings, cfg):
 
 
 def at_link(link, cfg):
-    """(system, careers url, open roles, roles matching the titles) for a careers link. Raises when it answers no."""
+    """(system, careers url, open roles, roles matching the titles) for a careers link. Raises when it answers no,
+    or has no open roles: an empty board is no reason to follow an employer."""
     found, site = board.board_from_url(link), add.workday_from_url(link)
     if found:
         postings = boards.fetch({"name": found["board"]} | found)
+        if not postings:
+            raise ValueError("no open roles there")
         return found["ats"], BOARD_URL[found["ats"]].format(found["board"]), len(postings), matching(postings, cfg)
     if site:
         roles = wd.count(*site)
-        hits = wd.search(*site, cfg["search_terms"][0], max_pages=1) if roles and cfg.get("search_terms") else []
+        if not roles:
+            raise ValueError("no open roles there")
+        hits = wd.search(*site, cfg["search_terms"][0], max_pages=1) if cfg.get("search_terms") else []
         return "workday", f"https://{site[0]}.{site[1]}.myworkdayjobs.com/{site[2]}", roles, matching(hits, cfg)
     raise ValueError("not a Workday, Greenhouse, Lever or Ashby link")
 

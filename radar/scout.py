@@ -81,15 +81,20 @@ def check(cfg, limit=None):
     found = []
     for name in new[: limit or (cfg.get("agents") or {}).get("scout_per_run", PER_RUN)]:
         lead, today = state["leads"][name], datetime.now().strftime("%Y-%m-%d")
-        try:
-            linked = scoutprobe.readable(lead["link"])  # any other careers page: look on the boards by name
-            hit = scoutprobe.at_link(lead["link"], cfg) if linked else scoutprobe.on_boards(name, cfg)
-        except (requests.RequestException, ValueError, KeyError) as e:
-            hit, lead["note"] = None, str(e)[:120]
+        hit, why_not = None, ""
+        if scoutprobe.readable(lead["link"]):  # any other careers page: straight to the boards by name
+            try:
+                hit = scoutprobe.at_link(lead["link"], cfg)
+            except (requests.RequestException, ValueError, KeyError) as e:
+                why_not = str(e)[:120]  # a wrong or empty link; the boards may still have it under its name
+        hit = hit or scoutprobe.on_boards(name, cfg)
+        lead.pop("note", None)
         lead |= {"checked": today, "status": "found" if hit else "none"}
         if hit:
             lead |= dict(zip(("ats", "url", "roles", "matching"), hit))
             found.append(name)
+        elif why_not:
+            lead["note"] = why_not
         with store.lock():
             latest = load()
             latest["leads"][name] = lead
