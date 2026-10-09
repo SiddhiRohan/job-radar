@@ -496,10 +496,14 @@ Each entry: what was ambiguous or blocked, what I chose, why. Reverse these if y
     recheck lists in `companies/`, and the model's weekly suggestions (`radar/leads.py`), which give careers links
     for listed names and up to ten new employers. Nothing a lead says is taken on trust: `radar/scoutprobe.py`
     checks a link with the request the poll would make, and looks for a lead without one on the three boards under
-    its squeezed and hyphenated name, never on Workday, which answers alike for real and made-up tenants. A model
-    link that is made up simply finds nothing. Five leads a morning (`scout_per_run`), linked ones and the person's
-    own first, keep the run short and the employers' sites unbothered. Each find carries its open roles, the roles
-    whose titles match the target patterns (a board gives all of them; a Workday site, one search for the first
-    term) and its H-1B record from `companies/expand.py`. Following goes through `companies.add`, which checks once
-    more and writes `companies.json`; skipping only hides it. `companies.json` is a file people edit and share, so
-    nothing reaches it without that click.
+    its squeezed and hyphenated name, never on Workday, which answers alike for real and made-up tenants. A link
+    that answers no, or has no open roles, still sends the scout to the boards under the name: on the first real
+    run, three of the four links the model gave named the wrong board for employers that were on another. Names are
+    compared as words, leaving out brackets and legal endings, and a longer name that starts with all of a followed
+    one of two words or more is the same employer; a single word is too often the start of another employer's name.
+    Five leads a morning (`scout_per_run`), linked ones and the person's own first, keep the run short and the
+    employers' sites unbothered. Each find carries its open roles, the roles whose titles match the target patterns
+    (a board gives all of them; a Workday site, one search for the first term) and its H-1B record from
+    `companies/expand.py`. Following goes through `companies.add`, which checks once more and writes
+    `companies.json`; skipping only hides it. `companies.json` is a file people edit and share, so nothing reaches
+    it without that click.
