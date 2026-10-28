@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Retry no longer throws away your edits.** When the server stops answering, a view retries on its own five seconds
+later. That timer used to fire even after you had pressed Retry yourself and the view had come back, reloading it and
+discarding anything typed in between; two failed retries in a row also reloaded twice. It now retries only while its
+own message is still on screen.
+
 **A company scout.** More employers is the other way to more postings. Each morning the scout checks a few leads at
 their careers sites, with the request the poll would make: employers you applied to or evaluated without following,
 the H-1B sponsor lists and earlier searches in `companies/`, and, once a week, careers links and new employers

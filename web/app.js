@@ -34,8 +34,10 @@ const fail = (where, e, retry) => {
   const offline = /Failed to fetch|NetworkError|Load failed/.test(e.message);
   const msg = offline ? "The server is not answering. Start it with: python server.py (in the job-radar folder), then retry."
     : `${e.message}. Check the server terminal, then retry.`;
-  where.replaceChildren(el("p", { class: "error" }, msg, " ", retry ? el("button", { type: "button", onclick: retry }, "Retry") : null));
-  if (offline && retry) setTimeout(() => { if (where.querySelector(".error")) retry(); }, 5000);
+  const note = el("p", { class: "error" }, msg, " ", retry ? el("button", { type: "button", onclick: retry }, "Retry") : null);
+  where.replaceChildren(note);
+  // Retry only while this exact message is still showing: after a manual retry succeeds or fails again, it is gone.
+  if (offline && retry) setTimeout(() => { if (note.isConnected) retry(); }, 5000);
 };
 /* Placeholder cards while a list loads. Shown only after 150 ms so a fast answer never flickers. */
 const skeleton = n => Array.from({ length: n }, () => el("div", { class: "row skel", "aria-hidden": "true" },
